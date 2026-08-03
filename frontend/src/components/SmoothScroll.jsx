@@ -48,6 +48,24 @@ export function scrollToSection(target) {
 }
 
 /**
+ * Instantly jump to a section id (or 'top'), no glide. Used when returning from
+ * a project so the page is already positioned on the shelf behind the closed
+ * route-transition cover. Reuses the active Lenis instance so its internal
+ * scroll position stays in sync (a bare window.scrollTo would desync Lenis).
+ */
+export function jumpToSection(target) {
+  const dest = target === 'top' ? 0 : document.getElementById(target);
+  if (dest !== 0 && !dest) return;
+  if (lenisInstance) {
+    lenisInstance.scrollTo(dest, { immediate: true });
+  } else if (dest === 0) {
+    window.scrollTo(0, 0);
+  } else {
+    dest.scrollIntoView();
+  }
+}
+
+/**
  * Site-wide smooth scroll (Lenis), kept on the same frame clock as GSAP so it
  * never fights ScrollTrigger's pinned curtain transition:
  *  - Lenis's raf loop is driven by `gsap.ticker` instead of its own rAF, so

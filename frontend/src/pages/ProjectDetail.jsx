@@ -88,7 +88,12 @@ export default function ProjectDetail() {
   }, [slug]);
 
   const goBack = () =>
-    transitionTo('/', { color: '#171717', title: 'Back to the Library', category: 'The Library' });
+    transitionTo('/', {
+      color: '#171717',
+      title: 'Back to the Library',
+      category: 'The Library',
+      landAt: 'shelf',
+    });
 
   const goToProject = (p) => {
     if (!p) return;

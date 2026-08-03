@@ -24,8 +24,11 @@ export default function PageTransitionProvider({ children }) {
   const onCoverSettled = () => {
     if (!state) return;
     if (state.phase === 'in') {
-      navigate(state.path);
-      window.scrollTo(0, 0);
+      navigate(state.path, state.landAt ? { state: { landAt: state.landAt } } : undefined);
+      // When landing on a specific section (e.g. returning to the shelf), Home
+      // places the scroll itself while the cover is still closed — don't force
+      // the top here.
+      if (!state.landAt) window.scrollTo(0, 0);
       // brief hold while the new page mounts behind the closed cover
       setTimeout(() => setState((s) => (s ? { ...s, phase: 'out' } : s)), 420);
     } else {
