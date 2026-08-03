@@ -67,7 +67,9 @@
       "Bash(grep -rn 'line$\\\\|lineColor\\\\|line=\\\\| line\\\\b' src/components/Footer.jsx)",
       "Bash(curl -sL \"https://www.nithinmwarrier.com/\" -o nmw.html)",
       "Bash(grep -oiE '<h1[^>]*>.{0,120}' nmw.html)",
-      "Bash(grep -oiE '.{0,90}\\(something people remember|global tech|Let.s talk\\).{0,90}' nmw.html)"
+      "Bash(grep -oiE '.{0,90}\\(something people remember|global tech|Let.s talk\\).{0,90}' nmw.html)",
+      "Bash(ls -la /Users/dev/workspace-f383199e)",
+      "Read(//Users/dev/**)"
     ]
   }
 }

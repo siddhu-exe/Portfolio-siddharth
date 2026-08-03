@@ -41,7 +41,7 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
   return (
     <motion.footer
       style={panelStyle}
-      className="fixed bottom-0 left-0 z-20 flex h-screen w-full flex-col overflow-hidden bg-mustard will-change-[clip-path]"
+      className="fixed bottom-0 left-0 z-20 flex h-[100dvh] w-full flex-col overflow-hidden bg-mustard will-change-[clip-path] md:h-screen"
     >
       {/* denser dot grid on yellow */}
       <div
@@ -67,7 +67,7 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
           </div>
 
         {/* ghost name with the signature floating over it — masked line reveal */}
-        <div ref={sigRef} className="relative flex min-h-0 flex-1 items-center justify-center">
+        <div ref={sigRef} className="relative flex min-h-0 max-h-[38vh] flex-1 items-center justify-center md:max-h-none">
           <MaskedRevealText
             as="h2"
             inView={sigInView}
