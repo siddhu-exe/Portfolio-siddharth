@@ -81,6 +81,16 @@ The presentation is engineering-first. Project data, shelf grouping, chapter nav
 - `react-dom`
 - `autoprefixer`
 
+### Responsive / mobile
+
+The experience is desktop-first, with mobile support layered on **without
+changing desktop rendering** (everything is gated behind the `md` breakpoint).
+On phones: the scroll pins are skipped and sections fade-stack; the fixed footer
+uses `100dvh` and stacks its top links; the book modal switches to a single-page
+flip layout; returning from a project skips the intro and lands on the shelf; and
+the Reading Corner becomes a tap-to-expand vertical timeline. See
+[`docs/PROJECT_GUIDE.md` §12](docs/PROJECT_GUIDE.md) for the full breakdown.
+
 ### Deployment
 
 No deployment configuration is committed. The frontend is a standard Vite build, and the backend runs as a FastAPI application under Uvicorn.

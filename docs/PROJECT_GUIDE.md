@@ -254,3 +254,95 @@ mirrors it for offline use — keep them roughly in sync.
   open a book → its project page, submit the contact form.
 - `.dot-grid` + the `px-8 md:px-16` padding + `FrameLines` together create the
   framed look; changing one without the others looks broken.
+
+## 12. Mobile / responsive behavior (added later — read before touching mobile)
+
+The site is desktop-first; mobile support was layered on **without changing any
+desktop rendering**. The consistent pattern here (follow it for any new mobile
+work): keep the existing desktop markup exactly as-is and gate mobile behind the
+`md` breakpoint — either Tailwind `md:` utilities, a `hidden md:block` /
+`md:hidden` pair, or a JS media-query check at `max-width: 767px` (mirrors `md`).
+Never fork desktop values; only add mobile ones. Verify every change on a narrow
+width AND on desktop.
+
+**Breakpoint:** `md` = 768px everywhere. The `(max-width: 767px)` matchMedia in
+JS (below) is the JS twin of `md:`.
+
+### 12.1 Scroll engine already has a mobile path (don't "add pinning" on mobile)
+`PinnedCurtainChain.jsx` and `SmoothScroll.jsx` intentionally behave differently
+below `md`:
+- **PinnedCurtainChain** skips all GSAP pinning under 768px (`mm.add('(max-width:
+  767px)', …)`); sections just stack in normal flow with a light fade-in. The
+  curtain/scale transitions run only at `min-width: 768px`. This is by design
+  (touch-scroll pinning is janky) — see §8.
+- **SmoothScroll** disables Lenis on touch / coarse-pointer devices (native
+  scroll is used). So `lenisInstance` is `null` on most phones — any scroll
+  helper must handle that (both `scrollToSection` and `jumpToSection` do).
+
+### 12.2 Footer visibility on mobile (`Footer.jsx`)
+The fixed footer is `h-[100dvh] md:h-screen` — mobile uses **dynamic** viewport
+height so the bottom bar isn't hidden behind the browser chrome (the classic
+`100vh` bug). The giant ghost name block is capped `max-h-[38vh] md:max-h-none`
+so the cream strip below always fits on short phones. The top bar (GitHub /
+LinkedIn / email) stacks vertically on mobile (`flex-col … md:flex-row
+md:justify-between`) instead of the desktop row. Keep the footer `position:
+fixed` with the `riseStyle` wrapper (§5, §10).
+
+### 12.3 Book modal has a separate mobile layout (`BookModal.jsx`)
+Desktop is a two-page spread (image left / writeup right) with a cover that flips
+around its **left** edge. On phones each page was ~180px wide (unreadable), so a
+`useIsMobile()` hook (`max-width: 767px`) swaps in a **single-page** layout via
+the `MobileSpread` component: same cover-flip motion, but the cover flips **up**
+around its top edge (rotateX) to reveal the image as a top banner, with the
+full-width writeup below. The desktop spread JSX is unchanged — it's just wrapped
+`{isMobile ? <MobileSpread/> : (…original…)}`. Shared `content`/`line` variants,
+`OPEN`/`CLOSE`, and `transitionTo` are reused by both.
+
+### 12.4 Return-from-project: skip intro, land on the shelf
+Returning from a project page skips the Hero intro and opens directly on the
+bookshelf (both mobile and desktop). Flow:
+- `ProjectDetail.jsx` `goBack()` calls `transitionTo('/', { …, landAt: 'shelf' })`.
+- `PageTransition.jsx` forwards `landAt` into React Router location state
+  (`navigate(path, { state:{ landAt } })`) and **skips its usual
+  `window.scrollTo(0,0)`** when `landAt` is set (Home places the scroll instead).
+- `Home.jsx` reads `location.state?.landAt` **once** into `skipIntro` (captured
+  in `useState(() => …)` so it's stable), seeds `introComplete` from it (so
+  `BookmarkProgress` shows immediately), passes `skipIntro` to `<Hero>`, and — in
+  an effect — waits two `requestAnimationFrame`s, calls `ScrollTrigger.refresh()`,
+  then `jumpToSection('shelf')`. It also clears the history state
+  (`navigate('.', { replace:true, state:null })`) so a **manual reload of `/`
+  still plays the intro** from the top.
+- `Hero.jsx` takes `skipIntro`: initial `phase` is `'hero'` (not `'intro'`) and
+  the intro timer is guarded off, so no signature-draw/lift — the hero text block
+  still mounts (off-screen above the shelf).
+- `jumpToSection(target)` (`SmoothScroll.jsx`) is the **instant** (no-glide) twin
+  of `scrollToSection`; uses Lenis `{ immediate: true }` when active, else native.
+  The jump happens while the route-transition cover is still closed, so it's
+  hidden — the cover opens already on the shelf. `#shelf`'s offset is stable
+  (Hero + Statement have fixed heights), so this is valid before any pin engages.
+
+### 12.5 Reading Corner has a mobile timeline (`ReadingCorner.jsx`)
+The desktop 3D "article books" are hover-driven (lift + face-on + Read↗), which
+is dead on touch. On mobile the book row is replaced by `ReadingTimeline` — a
+vertical timeline (terracotta dots on a connecting line) where each row is a
+single-open **accordion** (first item open by default) revealing blurb + read
+time + a **"Read ↗"** link that opens `article.url` in a new tab. Gating:
+`<ReadingTimeline/>` is `md:hidden`; the original books wrapper is `hidden
+md:block` — desktop untouched. Articles gained an optional `readTime` field
+(rendered only when present); the section stays data-driven off the `ARTICLES`
+array, so both layouts pick up new entries automatically.
+
+### 12.6 Mobile verification checklist
+Run the app (`npm run dev`) and check at a narrow width (DevTools device mode or
+a real phone) AND at desktop width:
+- Footer: scroll to bottom — full cream strip + stacked GitHub/LinkedIn/email are
+  visible, nothing clipped by the browser bar.
+- Book: tap a spine — cover flips up, image banner + readable full-width writeup;
+  "View Full Project" works.
+- Back from a project → lands on the shelf, no intro; a fresh reload of `/` still
+  plays the intro from the top.
+- Reading Corner: timeline with first item open; tap rows to expand, "Read ↗"
+  opens the article.
+- Desktop width still shows the two-page book spread, the 3D reading books, and
+  the full intro + curtain transitions — unchanged.
+
