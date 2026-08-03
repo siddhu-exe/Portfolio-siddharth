@@ -53,8 +53,8 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
       <motion.div style={riseStyle} className="relative flex min-h-0 flex-1 flex-col">
       <div className="relative flex min-h-0 flex-1 flex-col px-8 pt-6 md:px-16">
         {/* top bar: socials + email */}
-        <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-widest text-ink/70 md:text-xs">
-            <div className="flex gap-4 md:gap-6">
+        <div className="flex flex-col items-start gap-2 text-[11px] font-semibold uppercase tracking-widest text-ink/70 md:flex-row md:items-center md:justify-between md:gap-0 md:text-xs">
+            <div className="flex flex-col gap-2 md:flex-row md:gap-6">
               {SOCIALS.map((s) => (
                 <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="transition-colors hover:text-ink">
                   {s.label}
