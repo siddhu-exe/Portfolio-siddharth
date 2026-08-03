@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useScroll, useTransform } from 'framer-motion';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Hero from '../components/Hero.jsx';
 import Statement from '../components/Statement.jsx';
 import ProjectShelf from '../components/ProjectShelf.jsx';
@@ -9,13 +11,20 @@ import Footer from '../components/Footer.jsx';
 import PinnedCurtainChain from '../components/PinnedCurtainChain.jsx';
 import ContactModal from '../components/ContactModal.jsx';
 import BookmarkProgress from '../components/BookmarkProgress.jsx';
+import { jumpToSection } from '../components/SmoothScroll.jsx';
 import { fetchProjects } from '../api.js';
 import { fallbackProjects } from '../data/fallbackProjects.js';
 
 export default function Home() {
+  // When returning from a project we land directly on the shelf and skip the
+  // hero intro (see PageTransition / ProjectDetail goBack). Captured once on
+  // mount so clearing the history state below can't change it mid-session.
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [skipIntro] = useState(() => location.state?.landAt === 'shelf');
   const [projects, setProjects] = useState([]);
   const [contactOpen, setContactOpen] = useState(false);
-  const [introComplete, setIntroComplete] = useState(false);
+  const [introComplete, setIntroComplete] = useState(skipIntro);
   const statementRef = useRef(null);
   const contactRef = useRef(null);
   const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
@@ -25,6 +34,27 @@ export default function Home() {
       .then(setProjects)
       .catch(() => setProjects(fallbackProjects));
   }, []);
+
+  // Returning from a project: jump straight to the shelf while the route
+  // transition cover is still closed over the screen, so the reveal opens on
+  // the bookshelf instead of the hero. #shelf's offset is stable (hero +
+  // statement have fixed heights), so this is valid before any GSAP pin runs.
+  useEffect(() => {
+    if (!skipIntro) return;
+    // Drop the marker from history so a manual reload of "/" plays the intro.
+    if (location.state?.landAt) navigate('.', { replace: true, state: null });
+    let raf2;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        jumpToSection('shelf');
+      });
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      if (raf2) cancelAnimationFrame(raf2);
+    };
+  }, [skipIntro]);
 
   // Stage transition #1: the hero is pinned (sticky) while the black
   // Statement section's stepped podium edge rises over it; the hero sinks and
@@ -83,7 +113,7 @@ export default function Home() {
             while the Statement covers it, then releases. */}
         <div className="relative">
           <div className="dot-grid sticky top-0 z-10 h-screen md:h-[170vh] bg-cream">
-            <Hero sinkStyle={heroSink} onIntroComplete={handleIntroComplete} />
+            <Hero sinkStyle={heroSink} skipIntro={skipIntro} onIntroComplete={handleIntroComplete} />
           </div>
           <div ref={statementRef} className="relative z-30">
             <Statement />

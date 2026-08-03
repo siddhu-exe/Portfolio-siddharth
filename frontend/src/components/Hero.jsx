@@ -23,8 +23,8 @@ gsap.registerPlugin(useGSAP, SplitText);
  * After the intro, a blue "Hey there!" badge follows the cursor over the hero
  * (typed out with a blinking caret), mirroring the reference site.
  */
-export default function Hero({ sinkStyle, onIntroComplete }) {
-  const [phase, setPhase] = useState('intro');
+export default function Hero({ sinkStyle, onIntroComplete, skipIntro = false }) {
+  const [phase, setPhase] = useState(skipIntro ? 'hero' : 'intro');
   const [cursorOn, setCursorOn] = useState(false);
   const [cursorSequenceComplete, setCursorSequenceComplete] = useState(false);
   const heroTextRef = useRef(null);
@@ -36,10 +36,12 @@ export default function Hero({ sinkStyle, onIntroComplete }) {
   const introCompleteRef = useRef(false);
 
   useEffect(() => {
+    // Skip the intro entirely when returning from a project — start on 'hero'.
+    if (skipIntro) return;
     // Signature draw takes ~2.4s; a short beat, then lift.
     const t = setTimeout(() => setPhase((p) => (p === 'intro' ? 'lift' : p)), 3100);
     return () => clearTimeout(t);
-  }, []);
+  }, [skipIntro]);
 
   useGSAP(
     () => {
