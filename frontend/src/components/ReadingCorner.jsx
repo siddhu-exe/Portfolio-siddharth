@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -13,6 +13,7 @@ const ARTICLES = [
     tag: 'Ensemble Learning',
     blurb: 'How bootstrap aggregation tames variance.',
     color: '#8F3A31',
+    readTime: '4 min read',
     url: 'https://medium.com/',
   },
   {
@@ -20,6 +21,7 @@ const ARTICLES = [
     tag: 'From Trees to Forests',
     blurb: 'Why many weak trees beat one deep one.',
     color: '#2E6149',
+    readTime: '5 min read',
     url: 'https://medium.com/',
   },
   {
@@ -27,6 +29,7 @@ const ARTICLES = [
     tag: 'The Classic Classifier',
     blurb: 'The workhorse behind probability outputs.',
     color: '#2F5170',
+    readTime: '6 min read',
     url: 'https://medium.com/',
   },
 ];
@@ -136,6 +139,100 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
 };
 
+/**
+ * Mobile-only Reading Corner: a vertical timeline of articles. Each node is a
+ * terracotta dot on a connecting line; tapping a row expands its blurb + read
+ * time + a "Read ↗" link (single-open accordion, first item open by default).
+ * This replaces the 3D book row on phones, where the hover-driven lift/face-on
+ * effect never fires. Desktop keeps the books unchanged.
+ */
+function ReadingTimeline({ articles }) {
+  const [openIndex, setOpenIndex] = useState(0);
+
+  return (
+    <ul className="relative mx-auto max-w-md">
+      {/* the connecting line running through the dots */}
+      <span
+        aria-hidden
+        className="absolute left-[7px] top-2 bottom-2 w-px bg-gradient-to-b from-terracotta/70 via-terracotta/40 to-transparent"
+      />
+      {articles.map((a, i) => {
+        const open = openIndex === i;
+        return (
+          <li key={a.title} className="relative pl-8">
+            {/* node dot */}
+            <span
+              aria-hidden
+              className="absolute left-0 top-[18px] flex h-4 w-4 items-center justify-center rounded-full border-2 border-terracotta bg-black transition-colors"
+              style={open ? { backgroundColor: a.color, borderColor: a.color } : undefined}
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-terracotta" style={open ? { backgroundColor: '#fff' } : undefined} />
+            </span>
+
+            <div className="border-b border-cream/10 py-3">
+              <button
+                type="button"
+                onClick={() => setOpenIndex(open ? -1 : i)}
+                aria-expanded={open}
+                className="flex w-full items-center justify-between gap-3 text-left"
+              >
+                <span className="min-w-0">
+                  <span className="block text-[9px] font-semibold uppercase tracking-[0.22em] text-terracotta/90">
+                    {a.tag}
+                  </span>
+                  <span className="mt-0.5 block truncate text-lg font-bold leading-tight tracking-tight text-cream">
+                    {a.title}
+                  </span>
+                </span>
+                <motion.span
+                  aria-hidden
+                  animate={{ rotate: open ? 45 : 0 }}
+                  transition={{ duration: 0.3, ease: EASE }}
+                  className="shrink-0 text-xl leading-none text-cream/70"
+                >
+                  +
+                </motion.span>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {open && (
+                  <motion.div
+                    key="panel"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.35, ease: EASE }}
+                    className="overflow-hidden"
+                  >
+                    <p className="pt-3 text-sm leading-relaxed text-cream/70">{a.blurb}</p>
+                    <div className="mt-3 flex items-center justify-between">
+                      {a.readTime && (
+                        <span className="text-[11px] font-medium uppercase tracking-widest text-cream/45">
+                          {a.readTime}
+                        </span>
+                      )}
+                      <a
+                        href={a.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-black transition-transform active:scale-95"
+                        style={{ backgroundColor: a.color, color: '#fff' }}
+                        aria-label={`Read "${a.title}" on Medium`}
+                      >
+                        Read&nbsp;&#8599;
+                      </a>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 export default function ReadingCorner() {
   const sectionRef = useRef(null);
   const listRef = useRef(null);
@@ -203,7 +300,13 @@ export default function ReadingCorner() {
           </p>
         </motion.header>
 
-        <div className="mx-auto max-w-4xl">
+        {/* Mobile: vertical reading timeline (books' hover effect is dead on
+            touch). Desktop keeps the 3D book shelf below. */}
+        <div className="md:hidden">
+          <ReadingTimeline articles={ARTICLES} />
+        </div>
+
+        <div className="mx-auto hidden max-w-4xl md:block">
           <div ref={listRef} className="flex flex-wrap items-end justify-center gap-x-14 gap-y-16 md:gap-x-24">
             {ARTICLES.map((a, i) => (
               <div key={a.title} className="latest-read-item">
