@@ -158,12 +158,12 @@ export default function Hero({ sinkStyle, onIntroComplete, skipIntro = false }) 
         {phase === 'hero' && (
           <div
             ref={heroTextRef}
-            className="absolute inset-0 flex flex-col justify-center px-8 pt-24 md:px-16"
+            className="absolute inset-0 flex flex-col justify-center px-5 pt-24 md:px-16"
           >
             <div className="mb-4 overflow-hidden md:mb-6">
               <p
                 ref={leftLabelRef}
-                className="text-left text-[0.9rem] font-light uppercase leading-snug tracking-[0.35em] text-ink/70 md:text-base"
+                className="text-left text-[0.72rem] font-light uppercase leading-snug tracking-[0.2em] text-ink/70 md:text-base md:tracking-[0.35em]"
               >
                 SIDDHARTH DONGARDIVE
               </p>
@@ -172,17 +172,17 @@ export default function Hero({ sinkStyle, onIntroComplete, skipIntro = false }) 
             <div className="overflow-hidden">
               <h1
                 ref={headlineRef}
-                className="text-center font-display text-[12vw] font-bold leading-[0.95] tracking-tight text-ink md:text-[8.5vw] lg:text-[7vw]"
+                className="text-center font-display text-[8.5vw] font-bold leading-[1.02] tracking-tight text-ink md:text-[8.5vw] md:leading-[0.95] lg:text-[7vw]"
               >
-                <span className="block">TURNING DATA</span>
-                <span className="block">INTO INTELLIGENCE</span>
+                <span className="block whitespace-nowrap">TURNING DATA</span>
+                <span className="block whitespace-nowrap">INTO INTELLIGENCE</span>
               </h1>
             </div>
 
             <div className="mt-4 overflow-hidden md:mt-6">
               <p
                 ref={rightLabelRef}
-                className="text-right text-[0.9rem] font-light uppercase leading-snug tracking-[0.35em] text-ink/70 md:text-base"
+                className="text-right text-[0.72rem] font-light uppercase leading-snug tracking-[0.2em] text-ink/70 md:text-base md:tracking-[0.35em]"
               >
                 AI Engineer • Data Scientist
               </p>
