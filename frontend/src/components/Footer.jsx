@@ -40,7 +40,16 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
 
   return (
     <motion.footer
-      style={panelStyle}
+      style={{
+        // Explicit initial clip-path so the FIRST paint is already fully
+        // hidden. panelStyle is a framer-motion useTransform value that isn't
+        // written to the DOM until the first frame after mount / first scroll —
+        // without this fallback, some (slower) phones paint the un-clipped
+        // mustard footer over the page for a frame on load (the "black/yellow
+        // box on load" glitch). The transform overrides this the moment it runs.
+        clipPath: 'inset(0% 7% 100% 7% round 0px 0px 48px 48px)',
+        ...panelStyle,
+      }}
       className="fixed bottom-0 left-0 z-20 flex h-[100dvh] w-full flex-col overflow-hidden bg-mustard will-change-[clip-path] md:h-screen"
     >
       {/* denser dot grid on yellow */}
@@ -50,7 +59,7 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
       />
 
       {/* content rises bottom→top as the footer is revealed */}
-      <motion.div style={riseStyle} className="relative flex min-h-0 flex-1 flex-col">
+      <motion.div style={{ opacity: 0, ...riseStyle }} className="relative flex min-h-0 flex-1 flex-col">
       <div className="relative flex min-h-0 flex-1 flex-col px-8 pt-6 md:px-16">
         {/* top bar: socials + email */}
         <div className="flex flex-col items-start gap-2 text-[11px] font-semibold uppercase tracking-widest text-ink/70 md:flex-row md:items-center md:justify-between md:gap-0 md:text-xs">
