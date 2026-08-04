@@ -12,8 +12,18 @@ gsap.registerPlugin(ScrollTrigger);
 let lenisInstance = null;
 const scrollProgressSubscribers = new Set();
 
+// Cached scrollable height so the native-scroll handler doesn't read layout
+// (scrollHeight/innerHeight force a reflow) on every scroll event — that
+// per-tick layout read is what makes native mobile scroll feel laggy. Refreshed
+// on resize / load and lazily if it's stale (0).
+let cachedScrollable = 0;
+const measureScrollable = () => {
+  cachedScrollable = document.documentElement.scrollHeight - window.innerHeight;
+  return cachedScrollable;
+};
+
 const getNativeProgress = () => {
-  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const scrollable = cachedScrollable || measureScrollable();
   return scrollable > 0 ? Math.min(Math.max(window.scrollY / scrollable, 0), 1) : 0;
 };
 
@@ -90,13 +100,32 @@ export default function SmoothScroll() {
     // against touch gestures, and ScrollTrigger's pin already has a simpler
     // non-pinned fallback on mobile.
     if (prefersReducedMotion || !isFinePointer) {
-      const onNativeScroll = () => publishScrollProgress(getNativeProgress());
+      // Native scroll on touch. The scroll event fires very frequently on
+      // mobile, so coalesce work to one update per animation frame (rAF) and
+      // avoid reading layout inside the handler (see cachedScrollable) — both
+      // together remove the per-tick jank without changing behavior.
+      let rafId = null;
+      const flush = () => {
+        rafId = null;
+        publishScrollProgress(getNativeProgress());
+      };
+      const onNativeScroll = () => {
+        if (rafId === null) rafId = requestAnimationFrame(flush);
+      };
+      const onResize = () => {
+        measureScrollable();
+        publishScrollProgress(getNativeProgress());
+      };
       window.addEventListener('scroll', onNativeScroll, { passive: true });
-      window.addEventListener('resize', onNativeScroll);
-      onNativeScroll();
+      window.addEventListener('resize', onResize);
+      window.addEventListener('load', onResize);
+      measureScrollable();
+      publishScrollProgress(getNativeProgress());
       return () => {
+        if (rafId !== null) cancelAnimationFrame(rafId);
         window.removeEventListener('scroll', onNativeScroll);
-        window.removeEventListener('resize', onNativeScroll);
+        window.removeEventListener('resize', onResize);
+        window.removeEventListener('load', onResize);
       };
     }
 

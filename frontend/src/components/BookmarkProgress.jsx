@@ -22,11 +22,31 @@ export default function BookmarkProgress({ visible }) {
       ease: 'power2.out',
     });
 
-    return subscribeToScrollProgress((progress) => {
+    // Cache viewport height (read on resize, not per scroll tick) so the
+    // subscriber below doesn't force layout on every frame while scrolling.
+    let viewportH = window.innerHeight;
+    const onResize = () => {
+      viewportH = window.innerHeight;
+    };
+    window.addEventListener('resize', onResize);
+
+    let lastPage = -1;
+    const unsubscribe = subscribeToScrollProgress((progress) => {
       fillTo(progress);
-      tabTo(progress * (window.innerHeight - 20));
-      setPage(Math.min(TOTAL_PAGES, Math.floor(progress * TOTAL_PAGES) + 1));
+      tabTo(progress * (viewportH - 20));
+      const nextPage = Math.min(TOTAL_PAGES, Math.floor(progress * TOTAL_PAGES) + 1);
+      // Only touch React state when the page label actually changes — avoids a
+      // re-render on every scroll frame.
+      if (nextPage !== lastPage) {
+        lastPage = nextPage;
+        setPage(nextPage);
+      }
     });
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      unsubscribe();
+    };
   }, [visible]);
 
   return (
