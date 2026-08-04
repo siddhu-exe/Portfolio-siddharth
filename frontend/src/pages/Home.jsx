@@ -112,7 +112,7 @@ export default function Home() {
         {/* The sticky hero is scoped to this wrapper: it stays pinned only
             while the Statement covers it, then releases. */}
         <div className="relative">
-          <div className="dot-grid sticky top-0 z-10 h-screen md:h-[170vh] bg-cream">
+          <div className="dot-grid sticky top-0 z-10 h-[100dvh] md:h-[170vh] bg-cream">
             <Hero sinkStyle={heroSink} skipIntro={skipIntro} onIntroComplete={handleIntroComplete} />
           </div>
           <div ref={statementRef} className="relative z-30">

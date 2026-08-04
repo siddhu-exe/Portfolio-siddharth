@@ -103,7 +103,7 @@ export default function Hero({ sinkStyle, onIntroComplete, skipIntro = false }) 
 
   return (
     <section
-      className="relative h-screen overflow-hidden"
+      className="relative h-[100dvh] overflow-hidden md:h-screen"
       onMouseEnter={() => setCursorOn(true)}
       onMouseLeave={() => setCursorOn(false)}
     >
@@ -158,7 +158,7 @@ export default function Hero({ sinkStyle, onIntroComplete, skipIntro = false }) 
         {phase === 'hero' && (
           <div
             ref={heroTextRef}
-            className="absolute inset-0 flex flex-col justify-center px-5 pt-24 md:px-16"
+            className="absolute inset-0 flex flex-col justify-start pt-[32vh] px-5 md:justify-center md:pt-24 md:px-16"
           >
             <div className="mb-4 overflow-hidden md:mb-6">
               <p

@@ -13,8 +13,8 @@ export default function BookSpine({ project, onOpen, onHover, lean = 0, delay = 
       className="book-spine relative flex shrink-0 items-center justify-center rounded-t-md rounded-b-[3px]"
       style={{
         backgroundColor: project.color,
-        height: `clamp(130px, 22vw, ${h}px)`,
-        width: `clamp(34px, 7vw, ${w}px)`,
+        height: `clamp(150px, 30vw, ${h}px)`,
+        width: `clamp(38px, 8vw, ${w}px)`,
         transformOrigin: 'bottom center',
         boxShadow: '7px 4px 16px rgba(0,0,0,0.28)',
       }}
@@ -40,7 +40,7 @@ export default function BookSpine({ project, onOpen, onHover, lean = 0, delay = 
       {/* publisher mark */}
       <span className="absolute bottom-6 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-ink/40" />
 
-      <span className="book-title relative max-h-[78%] overflow-hidden text-ellipsis whitespace-nowrap text-[10px] font-semibold tracking-wide text-ink/85 md:text-[11px]">
+      <span className="book-title relative max-h-[88%] overflow-hidden text-ellipsis whitespace-nowrap text-[9px] font-semibold tracking-wide text-ink/85 md:text-[11px]">
         {project.title}
       </span>
     </motion.button>
