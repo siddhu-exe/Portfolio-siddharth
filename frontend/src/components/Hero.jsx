@@ -143,7 +143,7 @@ export default function Hero({ sinkStyle, onIntroComplete, skipIntro = false }) 
                 animate={{ scaleX: 1 }}
                 transition={{ duration: 2.1, ease: 'easeInOut' }}
               />
-              <Signature className="w-[min(46vw,460px)] shrink-0" />
+              <Signature className="w-[min(64vw,460px)] shrink-0 md:w-[min(46vw,460px)]" />
               <motion.div
                 className="h-px flex-1 origin-right bg-ink/30"
                 initial={{ scaleX: 0 }}
@@ -188,7 +188,7 @@ export default function Hero({ sinkStyle, onIntroComplete, skipIntro = false }) 
               </p>
             </div>
 
-            <div ref={menuRef} className="mt-14 md:mt-16">
+            <div ref={menuRef} className="mt-8 md:mt-16">
               <MenuPill />
             </div>
 
