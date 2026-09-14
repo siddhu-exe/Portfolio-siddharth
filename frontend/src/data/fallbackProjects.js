@@ -27,7 +27,7 @@ const CATS = [
         emoji: '⚽',
         year: 2026,
         description:
-          'An end-to-end machine learning system that predicts every match of the 48-team FIFA World Cup 2026. Built with dual stage-aware XGBoost models trained on 19,972 historical matches and 37 engineered features across 7 families, distilled through 10,000 Monte Carlo tournament simulations into full championship and advancement odds for all 48 nations.',
+          'Dual stage-aware XGBoost models predicting every match of the 48-team 2026 tournament, distilled through 10,000 Monte Carlo simulations into full championship odds.',
         links: {
           github: 'https://github.com/siddhu-exe/Fifa-predictor',
           demo: 'https://fifa-predictor-kohl.vercel.app',

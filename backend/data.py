@@ -226,14 +226,6 @@ _DETAILS = {
     },
     "FIFA World Cup Predictor": {
         "subtitle": "Forecasting 104 matches through dual stage-aware models and 10,000 tournament simulations.",
-        "description": "An end-to-end machine learning system that predicts every match of the 48-team FIFA World Cup 2026. Built with dual stage-aware XGBoost models trained on 19,972 historical matches and 37 engineered features across 7 families, distilled through 10,000 Monte Carlo tournament simulations into full championship and advancement odds for all 48 nations.",
-        "problem": "Football match prediction is deceptively difficult: knockout matches are high-variance, bookmaker odds compress decades of knowledge into single lines, and the new 48-team format has no direct historical precedent. This project reframes match outcomes into probability distributions and simulates entire tournament paths to quantify true title odds.",
-        "data_text": "Four source datasets (19,972 international fixtures, WC 2022 stats, Understat top-6 league player data, and historical WC tables) cleaned and engineered into 37 pre-match features across 7 families, with leakage-free ELO rating reconstruction.",
-        "data_visual": True,
-        "metric": "91.7%",
-        "metric_label": "knockout accuracy (0.90 ROC-AUC)",
-        "result_visual": True,
-        "reflection": "International football taught me that tournament football is two distinct sports: group play rewards holistic squad quality, but knockout football ruthlessly rewards tournament pedigree.",
         "thumbnail": "/images/fifa-world-cup-predictor/frontpage.png",
         "heroImage": "/images/fifa-world-cup-predictor/03_model_architecture.png",
         "links": {
