@@ -236,6 +236,10 @@ _DETAILS = {
         "reflection": "International football taught me that tournament football is two distinct sports: group play rewards holistic squad quality, but knockout football ruthlessly rewards tournament pedigree.",
         "thumbnail": "/images/fifa-world-cup-predictor/frontpage.png",
         "heroImage": "/images/fifa-world-cup-predictor/03_model_architecture.png",
+        "links": {
+            "github": "https://github.com/siddhu-exe/Fifa-predictor",
+            "demo": "https://fifa-predictor-kohl.vercel.app",
+        },
         "gallery_overrides": {
             "architecture": ["/images/fifa-world-cup-predictor/03_model_architecture.svg"],
             "pipeline": [

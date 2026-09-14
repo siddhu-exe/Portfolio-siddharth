@@ -133,7 +133,7 @@ export default function BookModal({ project, onClose }) {
                     </motion.div>
                   )}
 
-                  <motion.div variants={line}>
+                  <motion.div variants={line} className="mt-4 flex flex-wrap items-center gap-3 md:mt-6">
                     <EyeFollowButton
                       onClick={() =>
                         transitionTo(`/projects/${project.slug}`, {
@@ -142,10 +142,20 @@ export default function BookModal({ project, onClose }) {
                           category: project.category,
                         })
                       }
-                      className="mt-4 self-start md:mt-6"
+                      className="self-start"
                     >
                       View Full Project
                     </EyeFollowButton>
+                    {project.links?.demo && (
+                      <a
+                        href={project.links.demo}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full border border-ink/20 px-3.5 py-2 text-xs font-semibold text-ink/80 transition-colors hover:bg-ink hover:text-cream"
+                      >
+                        Live Demo &#8599;
+                      </a>
+                    )}
                   </motion.div>
                 </motion.div>
               </div>
@@ -311,7 +321,7 @@ function MobileSpread({ project, onClose, transitionTo }) {
             </motion.div>
           )}
 
-          <motion.div variants={line}>
+          <motion.div variants={line} className="mt-4 flex flex-wrap items-center gap-2.5">
             <EyeFollowButton
               onClick={() =>
                 transitionTo(`/projects/${project.slug}`, {
@@ -320,10 +330,20 @@ function MobileSpread({ project, onClose, transitionTo }) {
                   category: project.category,
                 })
               }
-              className="mt-4 self-start"
+              className="self-start"
             >
               View Full Project
             </EyeFollowButton>
+            {project.links?.demo && (
+              <a
+                href={project.links.demo}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 rounded-full border border-ink/20 px-3 py-1.5 text-xs font-semibold text-ink/80 transition-colors hover:bg-ink hover:text-cream"
+              >
+                Live Demo &#8599;
+              </a>
+            )}
           </motion.div>
         </motion.div>
       </div>

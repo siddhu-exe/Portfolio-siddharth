@@ -119,8 +119,12 @@ export default function ProjectDetail() {
     );
   }
 
-  const hasDemo = project.links?.demo;
-  const hasGithub = project.links?.github;
+  const hasDemo = Boolean(project.links?.demo);
+  const hasGithub = Boolean(
+    project.links?.github &&
+      project.links.github !== 'https://github.com/' &&
+      project.links.github !== '#'
+  );
   const gallery = project.gallery || [];
 
   return (
@@ -138,7 +142,7 @@ export default function ProjectDetail() {
           </button>
         </div>
 
-        {/* 2. Header row — title left, category + year right, ONE line */}
+        {/* 2. Header row — title left, links + category + year right */}
         <header className="border-t border-ink/10 py-8 md:py-10">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h1 className="flex items-center gap-3 text-3xl font-bold leading-[1.05] tracking-headline text-ink md:text-5xl">
@@ -146,7 +150,27 @@ export default function ProjectDetail() {
               <span>{project.title}</span>
             </h1>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+              {hasDemo && (
+                <a
+                  href={project.links.demo}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-terracotta px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-cream shadow-sm transition-all duration-200 hover:scale-105 hover:bg-terracotta/90"
+                >
+                  Live Demo &#8599;
+                </a>
+              )}
+              {hasGithub && (
+                <a
+                  href={project.links.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-cream shadow-sm transition-all duration-200 hover:scale-105 hover:bg-ink/85"
+                >
+                  GitHub &#8599;
+                </a>
+              )}
               <span className="inline-block rounded-full border border-ink/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-ink/70">
                 {project.category}
               </span>
@@ -180,23 +204,7 @@ export default function ProjectDetail() {
 
         <Divider />
 
-        {/* 6. Closing row */}
-        <div className="flex flex-wrap items-center gap-3 py-10 md:py-12">
-          {hasGithub && (
-            <a href={project.links.github} target="_blank" rel="noreferrer" className="rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-cream transition-transform hover:scale-105">
-              GitHub &#8599;
-            </a>
-          )}
-          {hasDemo && (
-            <a href={project.links.demo} target="_blank" rel="noreferrer" className="rounded-full border border-ink/25 px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-cream">
-              Live Demo &#8599;
-            </a>
-          )}
-        </div>
-
-        <Divider />
-
-        {/* 7. Chapter nav footer */}
+        {/* 6. Chapter nav footer */}
         <div className="flex items-center justify-between gap-4 py-10 md:py-14">
           {project.prev ? (
             <button

@@ -24,8 +24,21 @@ const CATS = [
         title: 'FIFA World Cup Predictor',
         tech: ['Python', 'XGBoost', 'scikit-learn', 'Pandas', 'NumPy'],
         thumbnail: '/images/fifa-world-cup-predictor/frontpage.png',
+        emoji: '⚽',
+        year: 2026,
         description:
           'An end-to-end machine learning system that predicts every match of the 48-team FIFA World Cup 2026. Built with dual stage-aware XGBoost models trained on 19,972 historical matches and 37 engineered features across 7 families, distilled through 10,000 Monte Carlo tournament simulations into full championship and advancement odds for all 48 nations.',
+        links: {
+          github: 'https://github.com/siddhu-exe/Fifa-predictor',
+          demo: 'https://fifa-predictor-kohl.vercel.app',
+        },
+        gallery: [
+          { key: 'architecture', heading: 'Architecture', subtitle: 'The complete system architecture, from data collection to prediction.', images: ['/images/fifa-world-cup-predictor/03_model_architecture.svg'] },
+          { key: 'pipeline', heading: 'Data Pipeline', subtitle: 'From raw football data to production-ready predictions.', images: ['/images/fifa-world-cup-predictor/01_data_pipeline.svg', '/images/fifa-world-cup-predictor/02_feature_engineering.svg'] },
+          { key: 'ml', heading: 'Machine Learning', subtitle: 'How the model learns, evaluates, and predicts tournament outcomes.', images: ['/images/fifa-world-cup-predictor/04_feature_importance.svg'] },
+          { key: 'platform', heading: 'Platform', subtitle: 'Interactive dashboards and prediction experiences built for users.', images: ['/images/fifa-world-cup-predictor/05_monte_carlo.svg'] },
+          { key: 'results', heading: 'Results', subtitle: 'The final outcome of the project and its key achievements.', images: ['/images/fifa-world-cup-predictor/06_simulation_results.svg'] },
+        ],
       },
     ],
   },
@@ -59,11 +72,18 @@ const projects = CATS.flatMap(({ category, projects: catProjects }) =>
       category,
       color: PALETTE[(id - 1) % PALETTE.length],
       thumbnail: p.thumbnail || null,
+      emoji: p.emoji || '📘',
+      year: p.year || 2026,
+      links: p.links || { github: 'https://github.com/', demo: null },
+      gallery: p.gallery || null,
       description:
         p.description ||
         `${p.title} is a placeholder ${category} project. A real description and imagery will be added in a later pass.`,
       images: [],
-      project_url: '#',
+      project_url: `/projects/${p.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')}`,
       tech_stack: p.tech,
     };
   })
