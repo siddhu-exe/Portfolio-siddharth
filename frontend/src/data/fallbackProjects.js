@@ -20,7 +20,13 @@ const CATS = [
     category: 'Machine Learning',
     projects: [
       { title: 'Loan Approval Predictor', tech: ['scikit-learn', 'XGBoost', 'Pandas'] },
-      { title: 'FIFA World Cup Predictor', tech: ['scikit-learn', 'Pandas', 'NumPy'] },
+      {
+        title: 'FIFA World Cup Predictor',
+        tech: ['Python', 'XGBoost', 'scikit-learn', 'Pandas', 'NumPy'],
+        thumbnail: '/images/fifa-world-cup-predictor/frontpage.png',
+        description:
+          'An end-to-end machine learning system that predicts every match of the 48-team FIFA World Cup 2026. Built with dual stage-aware XGBoost models trained on 19,972 historical matches and 37 engineered features across 7 families, distilled through 10,000 Monte Carlo tournament simulations into full championship and advancement odds for all 48 nations.',
+      },
     ],
   },
   {
@@ -41,22 +47,24 @@ const CATS = [
 
 let counter = 0;
 const projects = CATS.flatMap(({ category, projects: catProjects }) =>
-  catProjects.map(({ title, tech }) => {
+  catProjects.map((p) => {
     const id = ++counter;
     return {
       id,
-      title,
-      slug: title
+      title: p.title,
+      slug: p.title
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, ''),
       category,
       color: PALETTE[(id - 1) % PALETTE.length],
-      thumbnail: null,
-      description: `${title} is a placeholder ${category} project. A real description and imagery will be added in a later pass.`,
+      thumbnail: p.thumbnail || null,
+      description:
+        p.description ||
+        `${p.title} is a placeholder ${category} project. A real description and imagery will be added in a later pass.`,
       images: [],
       project_url: '#',
-      tech_stack: tech,
+      tech_stack: p.tech,
     };
   })
 );

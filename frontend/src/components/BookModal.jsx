@@ -190,14 +190,14 @@ export default function BookModal({ project, onClose }) {
                 >
                   <span className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-black/15 to-transparent" />
                   <div
-                    className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-lg"
-                    style={{ backgroundColor: project.color }}
+                    className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-lg p-2"
+                    style={{ backgroundColor: project.thumbnail ? '#f8fafc' : project.color }}
                   >
                     {project.thumbnail ? (
                       <img
                         src={project.thumbnail}
                         alt={project.title}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-contain"
                         loading="lazy"
                       />
                     ) : (
@@ -249,11 +249,11 @@ function MobileSpread({ project, onClose, transitionTo }) {
       <div className="relative h-[42%] w-full shrink-0" style={{ perspective: 1400 }}>
         {/* revealed image (under the cover) */}
         <div
-          className="absolute inset-0 flex items-center justify-center overflow-hidden"
-          style={{ backgroundColor: project.color }}
+          className="absolute inset-0 flex items-center justify-center overflow-hidden p-2"
+          style={{ backgroundColor: project.thumbnail ? '#f8fafc' : project.color }}
         >
           {project.thumbnail ? (
-            <img src={project.thumbnail} alt={project.title} className="h-full w-full object-cover" loading="lazy" />
+            <img src={project.thumbnail} alt={project.title} className="h-full w-full object-contain" loading="lazy" />
           ) : (
             <span className="px-4 text-center text-xs font-semibold uppercase tracking-widest text-ink/70">
               {project.title}

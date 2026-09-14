@@ -75,10 +75,10 @@ _CATEGORIES = [
             ),
             (
                 "FIFA World Cup Predictor",
-                ["scikit-learn", "Pandas", "NumPy"],
-                "A model trained on historical international fixtures to forecast "
-                "World Cup match outcomes, blending team strength ratings with "
-                "recent form.",
+                ["Python", "XGBoost", "scikit-learn", "Pandas", "NumPy"],
+                "Dual stage-aware XGBoost models predicting every match of the 48-team "
+                "2026 tournament, distilled through 10,000 Monte Carlo simulations into "
+                "full championship odds.",
             ),
         ],
     ),
@@ -225,26 +225,27 @@ _DETAILS = {
         "number. The threshold, not the model, was where the real decisions lived.",
     },
     "FIFA World Cup Predictor": {
-        "subtitle": "Forecasting matches from decades of form.",
-        "description": "An AI-powered platform that predicts FIFA World Cup outcomes using "
-        "machine learning, statistical modeling, and real-world football data. Designed to "
-        "transform complex tournament analysis into interactive predictions and insights.",
-        "problem": "Predicting knockout football is hard: upsets are the point of the sport, "
-        "and history is noisy and unbalanced across teams.",
-        "data_text": "Historical international fixtures with scores, tournament context and "
-        "engineered team-strength and recent-form features.",
-        "data_visual": False,
-        "metric": "68%",
-        "metric_label": "match-outcome accuracy",
-        "result_visual": False,
-        "reflection": "The model was most useful when it was uncertain — its close calls "
-        "mapped almost perfectly onto the games everyone found thrilling.",
-        # Example only — remove/replace once real diagrams are ready. Demonstrates
-        # that gallery_overrides lets one project deviate from the shared
-        # _GALLERY_TEMPLATE image counts (see docs/CHAPTER_PAGE.md).
-        # "gallery_overrides": {
-        #     "architecture": ["/images/fifa-world-cup-predictor/architecture.png"],
-        # },
+        "subtitle": "Forecasting 104 matches through dual stage-aware models and 10,000 tournament simulations.",
+        "description": "An end-to-end machine learning system that predicts every match of the 48-team FIFA World Cup 2026. Built with dual stage-aware XGBoost models trained on 19,972 historical matches and 37 engineered features across 7 families, distilled through 10,000 Monte Carlo tournament simulations into full championship and advancement odds for all 48 nations.",
+        "problem": "Football match prediction is deceptively difficult: knockout matches are high-variance, bookmaker odds compress decades of knowledge into single lines, and the new 48-team format has no direct historical precedent. This project reframes match outcomes into probability distributions and simulates entire tournament paths to quantify true title odds.",
+        "data_text": "Four source datasets (19,972 international fixtures, WC 2022 stats, Understat top-6 league player data, and historical WC tables) cleaned and engineered into 37 pre-match features across 7 families, with leakage-free ELO rating reconstruction.",
+        "data_visual": True,
+        "metric": "91.7%",
+        "metric_label": "knockout accuracy (0.90 ROC-AUC)",
+        "result_visual": True,
+        "reflection": "International football taught me that tournament football is two distinct sports: group play rewards holistic squad quality, but knockout football ruthlessly rewards tournament pedigree.",
+        "thumbnail": "/images/fifa-world-cup-predictor/frontpage.png",
+        "heroImage": "/images/fifa-world-cup-predictor/03_model_architecture.png",
+        "gallery_overrides": {
+            "architecture": ["/images/fifa-world-cup-predictor/03_model_architecture.svg"],
+            "pipeline": [
+                "/images/fifa-world-cup-predictor/01_data_pipeline.svg",
+                "/images/fifa-world-cup-predictor/02_feature_engineering.svg",
+            ],
+            "ml": ["/images/fifa-world-cup-predictor/04_feature_importance.svg"],
+            "platform": ["/images/fifa-world-cup-predictor/05_monte_carlo.svg"],
+            "results": ["/images/fifa-world-cup-predictor/06_simulation_results.svg"],
+        },
     },
     "Alzheimer's MRI Detection": {
         "subtitle": "Reading brain scans stage by stage.",
@@ -349,10 +350,10 @@ def build_projects():
                 "year": meta.get("year", 2026),
                 "subtitle": d.get("subtitle", description.split(".")[0] + "."),
                 "thumbnail": (
-                    f"https://placehold.co/600x400/{bare}/171717"
-                    f"?text={category.replace(' ', '+')}"
+                    d.get("thumbnail")
+                    or f"https://placehold.co/600x400/{bare}/171717?text={category.replace(' ', '+')}"
                 ),
-                "heroImage": _img(title),
+                "heroImage": d.get("heroImage") or _img(title),
                 "description": d.get("description", description),
                 "problem": d.get("problem", description),
                 "data": {
@@ -368,10 +369,10 @@ def build_projects():
                 },
                 "reflection": d.get("reflection", "Every project on the shelf leaves a lesson "
                         "behind — this one sharpened how I think about the problem."),
-                "links": {
+                "links": d.get("links", {
                     "github": "https://github.com/",
                     "demo": None,
-                },
+                }),
                 "gallery": gallery,
                 "images": [],
                 "project_url": f"/projects/{slug}",

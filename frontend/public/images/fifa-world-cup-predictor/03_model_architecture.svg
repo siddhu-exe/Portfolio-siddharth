@@ -1,0 +1,106 @@
+<svg width="1280" height="880" viewBox="0 0 1280 880" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="880" fill="#f8fafc"/>
+
+  <text x="40" y="54" font-size="28" font-weight="700" fill="#0f172a">Two-Model Architecture — Stage-Aware Prediction</text>
+  <text x="40" y="82" font-size="15" fill="#475569">One feature vector, two specialized XGBoost models — because group play and elimination football are different problems</text>
+
+  <!-- Input card -->
+  <g>
+    <rect x="40" y="130" width="280" height="400" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="40" y="130" width="280" height="4" rx="2" fill="#1d4ed8"/>
+    <text x="60" y="166" font-size="15" font-weight="700" fill="#0f172a">Match Feature Vector</text>
+    <text x="60" y="188" font-size="12.5" fill="#64748b">one row per match-up</text>
+    <g font-size="12.5" fill="#334155">
+      <circle cx="64" cy="222" r="4" fill="#1d4ed8"/><text x="80" y="227">ELO Ratings</text>
+      <circle cx="64" cy="252" r="4" fill="#1d4ed8"/><text x="80" y="257">Recent Form</text>
+      <circle cx="64" cy="282" r="4" fill="#b45309"/><text x="80" y="287">Head-to-Head</text>
+      <circle cx="64" cy="312" r="4" fill="#b45309"/><text x="80" y="317">Player Quality</text>
+      <circle cx="64" cy="342" r="4" fill="#166534"/><text x="80" y="347">WC Pedigree</text>
+      <circle cx="64" cy="372" r="4" fill="#166534"/><text x="80" y="377">Manager</text>
+      <circle cx="64" cy="402" r="4" fill="#475569"/><text x="80" y="407">Match Context</text>
+    </g>
+    <g font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="12" font-weight="600" fill="#1d4ed8" text-anchor="end">
+      <text x="304" y="227">3</text>
+      <text x="304" y="257">4</text>
+      <text x="304" y="287">9</text>
+      <text x="304" y="317">8</text>
+      <text x="304" y="347">8</text>
+      <text x="304" y="377">4</text>
+      <text x="304" y="407">1</text>
+    </g>
+    <text x="60" y="452" font-size="11.5" fill="#94a3b8" font-style="italic">every family encoded for both</text>
+    <text x="60" y="470" font-size="11.5" fill="#94a3b8" font-style="italic">sides of the match — 37 features</text>
+    <text x="60" y="505" font-size="13" font-weight="700" fill="#1d4ed8">37 features total</text>
+  </g>
+
+  <!-- Input → router arrow -->
+  <line x1="324" y1="330" x2="381" y2="333" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Router -->
+  <g>
+    <rect x="385" y="305" width="210" height="56" rx="12" fill="#0f172a"/>
+    <text x="490" y="329" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle" font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace">knockout_flag</text>
+    <text x="490" y="348" font-size="10.5" fill="#94a3b8" text-anchor="middle">routes to the stage model</text>
+
+    <path d="M 490 305 V 250 H 632" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="560" y="240" font-size="11.5" fill="#1d4ed8" font-weight="600">0 — group play</text>
+
+    <path d="M 490 361 V 610 H 632" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="560" y="630" font-size="11.5" fill="#b45309" font-weight="600">1 — elimination</text>
+  </g>
+
+  <!-- Group model card -->
+  <g>
+    <rect x="640" y="130" width="600" height="280" rx="12" fill="#0f172a"/>
+    <rect x="654" y="144" width="132" height="22" rx="11" fill="#1d4ed8"/>
+    <text x="720" y="159" font-size="10.5" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="1">GROUP STAGE</text>
+    <text x="654" y="200" font-size="15" font-weight="600" fill="#ffffff">XGBoost — multi:softprob</text>
+    <text x="654" y="224" font-size="12.5" fill="#94a3b8">3 classes · home win / draw / away win</text>
+    <text x="654" y="244" font-size="12.5" fill="#94a3b8">204 boosted trees · trained on 192 group matches</text>
+    <rect x="654" y="262" width="122" height="26" rx="13" fill="#1e293b"/>
+    <text x="715" y="279" font-size="12.5" font-weight="700" fill="#60a5fa" text-anchor="middle">75% accuracy</text>
+    <rect x="790" y="262" width="88" height="26" rx="13" fill="#1e293b"/>
+    <text x="834" y="279" font-size="12.5" font-weight="700" fill="#60a5fa" text-anchor="middle">F1 0.714</text>
+
+    <text x="654" y="318" font-size="11.5" fill="#64748b" letter-spacing="1">TRAINING CLASS BALANCE — 192 MATCHES</text>
+    <g>
+      <text x="654" y="341" font-size="12" fill="#cbd5e1">H — home win</text>
+      <rect x="800" y="328" width="280" height="16" rx="4" fill="#1d4ed8"/>
+      <text x="1090" y="341" font-size="12" fill="#94a3b8">109 · 42.6%</text>
+      <text x="654" y="369" font-size="12" fill="#cbd5e1">A — away win</text>
+      <rect x="800" y="356" width="231" height="16" rx="4" fill="#60a5fa"/>
+      <text x="1041" y="369" font-size="12" fill="#94a3b8">90 · 35.2%</text>
+      <text x="654" y="397" font-size="12" fill="#cbd5e1">D — draw</text>
+      <rect x="800" y="384" width="147" height="16" rx="4" fill="#2563eb"/>
+      <text x="957" y="397" font-size="12" fill="#94a3b8">57 · 22.3%</text>
+    </g>
+  </g>
+
+  <!-- Knockout model card -->
+  <g>
+    <rect x="640" y="470" width="600" height="280" rx="12" fill="#0f172a"/>
+    <rect x="654" y="484" width="112" height="22" rx="11" fill="#b45309"/>
+    <text x="710" y="499" font-size="10.5" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="1">KNOCKOUT</text>
+    <text x="654" y="540" font-size="15" font-weight="600" fill="#ffffff">XGBoost — binary:logistic</text>
+    <text x="654" y="564" font-size="12.5" fill="#94a3b8">2 classes · home win / away win — no draws</text>
+    <text x="654" y="584" font-size="12.5" fill="#94a3b8">145 boosted trees · trained on 64 knockout matches</text>
+    <rect x="654" y="602" width="130" height="26" rx="13" fill="#1e293b"/>
+    <text x="719" y="619" font-size="12.5" font-weight="700" fill="#fbbf24" text-anchor="middle">91.7% accuracy</text>
+    <rect x="798" y="602" width="118" height="26" rx="13" fill="#1e293b"/>
+    <text x="857" y="619" font-size="12.5" font-weight="700" fill="#fbbf24" text-anchor="middle">ROC-AUC 0.90</text>
+    <line x1="654" y1="650" x2="826" y2="650" stroke="#334155" stroke-width="1"/>
+    <text x="654" y="676" font-size="12.5" fill="#cbd5e1">Why no draw class? Knockout matches are always</text>
+    <text x="654" y="696" font-size="12.5" fill="#cbd5e1">decided — extra time and penalties produce a winner.</text>
+    <text x="654" y="716" font-size="12.5" fill="#cbd5e1">The model predicts who advances.</text>
+  </g>
+
+  <!-- Bottom strip -->
+  <rect x="40" y="780" width="1200" height="70" rx="12" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="60" y="808" font-size="13" font-weight="600" fill="#0f172a">Output: P(home win) · P(draw) · P(away win) — sampled by the Monte Carlo engine to play out entire tournaments</text>
+  <text x="60" y="830" font-size="12.5" fill="#475569">ELO ratings update after every simulated match (K = 40) — the tournament evolves inside each simulation run</text>
+</svg>
