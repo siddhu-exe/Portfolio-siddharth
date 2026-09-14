@@ -1,0 +1,150 @@
+<svg width="1280" height="920" viewBox="0 0 1280 920" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <rect width="1280" height="920" fill="#f8fafc"/>
+
+  <text x="40" y="54" font-size="28" font-weight="700" fill="#0f172a">Simulation Output — Championship Odds for WC 2026</text>
+  <text x="40" y="82" font-size="15" fill="#475569">Champion probabilities from 2,000 Monte Carlo tournament runs on the trained models</text>
+
+  <!-- Metric cards row -->
+  <g>
+    <rect x="40" y="110" width="285" height="100" rx="12" fill="#0f172a"/>
+    <text x="58" y="142" font-size="11" font-weight="600" fill="#94a3b8" letter-spacing="1.2">GROUP MODEL</text>
+    <text x="58" y="178" font-size="32" font-weight="700" fill="#60a5fa">75.0%</text>
+    <text x="58" y="198" font-size="12" fill="#cbd5e1">accuracy · F1 0.714</text>
+
+    <rect x="343" y="110" width="285" height="100" rx="12" fill="#0f172a"/>
+    <text x="361" y="142" font-size="11" font-weight="600" fill="#94a3b8" letter-spacing="1.2">KNOCKOUT MODEL</text>
+    <text x="361" y="178" font-size="32" font-weight="700" fill="#fbbf24">91.7%</text>
+    <text x="361" y="198" font-size="12" fill="#cbd5e1">accuracy · ROC-AUC 0.90</text>
+
+    <rect x="646" y="110" width="285" height="100" rx="12" fill="#0f172a"/>
+    <text x="664" y="142" font-size="11" font-weight="600" fill="#94a3b8" letter-spacing="1.2">SIMULATED</text>
+    <text x="664" y="178" font-size="32" font-weight="700" fill="#ffffff">1.04M</text>
+    <text x="664" y="198" font-size="12" fill="#cbd5e1">matches · 2,000 full tournaments</text>
+
+    <rect x="949" y="110" width="291" height="100" rx="12" fill="#0f172a"/>
+    <text x="967" y="142" font-size="11" font-weight="600" fill="#94a3b8" letter-spacing="1.2">FEATURES</text>
+    <text x="967" y="178" font-size="32" font-weight="700" fill="#ffffff">37</text>
+    <text x="967" y="198" font-size="12" fill="#cbd5e1">from 19,972 historical matches</text>
+  </g>
+
+  <!-- Champion probability chart -->
+  <g>
+    <text x="40" y="256" font-size="15" font-weight="700" fill="#0f172a">Championship Probability — Top 10 Teams</text>
+    <text x="40" y="278" font-size="12" fill="#94a3b8">share of 2,000 simulation runs won by each team</text>
+
+    <g font-size="13" fill="#334155" text-anchor="end" font-weight="600">
+      <text x="150" y="316">Argentina</text>
+      <text x="150" y="352">Spain</text>
+      <text x="150" y="388">France</text>
+      <text x="150" y="424">Morocco</text>
+      <text x="150" y="460">Germany</text>
+      <text x="150" y="496">England</text>
+      <text x="150" y="532">Belgium</text>
+      <text x="150" y="568">Switzerland</text>
+      <text x="150" y="604">Brazil</text>
+      <text x="150" y="640">South Korea</text>
+    </g>
+
+    <!-- bars: scale 17.1% → 550px; 1% = 32.16px -->
+    <g>
+      <rect x="160" y="302" width="550" height="20" rx="4" fill="#1d4ed8"/>
+      <rect x="160" y="338" width="427" height="20" rx="4" fill="#1d4ed8"/>
+      <rect x="160" y="374" width="424" height="20" rx="4" fill="#1d4ed8"/>
+      <rect x="160" y="410" width="347" height="20" rx="4" fill="#1d4ed8"/>
+      <rect x="160" y="446" width="328" height="20" rx="4" fill="#1d4ed8"/>
+      <rect x="160" y="482" width="322" height="20" rx="4" fill="#1d4ed8"/>
+      <rect x="160" y="518" width="151" height="20" rx="4" fill="#60a5fa"/>
+      <rect x="160" y="554" width="84" height="20" rx="4" fill="#60a5fa"/>
+      <rect x="160" y="590" width="80" height="20" rx="4" fill="#60a5fa"/>
+      <rect x="160" y="626" width="58" height="20" rx="4" fill="#60a5fa"/>
+    </g>
+    <g font-size="12.5" font-weight="700" fill="#0f172a">
+      <text x="718" y="317">17.1%</text>
+      <text x="595" y="353">13.3%</text>
+      <text x="592" y="389">13.2%</text>
+      <text x="515" y="425">10.8%</text>
+      <text x="496" y="461">10.2%</text>
+      <text x="490" y="497">10.0%</text>
+      <text x="319" y="533">4.7%</text>
+      <text x="252" y="569">2.6%</text>
+      <text x="248" y="605">2.5%</text>
+      <text x="226" y="641">1.8%</text>
+    </g>
+    <line x1="160" y1="660" x2="710" y2="660" stroke="#cbd5e1" stroke-width="1"/>
+    <g font-size="11" fill="#64748b">
+      <text x="160" y="678">0%</text>
+      <text x="435" y="678" text-anchor="middle">8.5%</text>
+      <text x="710" y="678" text-anchor="middle">17%</text>
+    </g>
+  </g>
+
+  <!-- Advancement table -->
+  <g>
+    <rect x="780" y="300" width="460" height="360" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="800" y="334" font-size="15" font-weight="700" fill="#0f172a">Deep-Run Rates — Top 6 Favourites</text>
+    <text x="800" y="356" font-size="12" fill="#94a3b8">share of runs reaching each stage or beyond</text>
+
+    <!-- header -->
+    <g font-size="12" font-weight="700" fill="#64748b">
+      <text x="800" y="388">TEAM</text>
+      <text x="1050" y="388" text-anchor="middle">SEMIS</text>
+      <text x="1130" y="388" text-anchor="middle">FINAL</text>
+      <text x="1205" y="388" text-anchor="middle">WIN</text>
+    </g>
+    <line x1="800" y1="398" x2="1220" y2="398" stroke="#e2e8f0" stroke-width="1"/>
+
+    <g font-size="13" fill="#334155">
+      <text x="800" y="428" font-weight="600">Argentina</text>
+      <text x="1050" y="428" text-anchor="middle">35.5%</text>
+      <text x="1130" y="428" text-anchor="middle">26.3%</text>
+      <text x="1205" y="428" text-anchor="middle" font-weight="700" fill="#1d4ed8">17.1%</text>
+
+      <text x="800" y="462" font-weight="600">Spain</text>
+      <text x="1050" y="462" text-anchor="middle">32.0%</text>
+      <text x="1130" y="462" text-anchor="middle">20.6%</text>
+      <text x="1205" y="462" text-anchor="middle" font-weight="700" fill="#1d4ed8">13.3%</text>
+
+      <text x="800" y="496" font-weight="600">France</text>
+      <text x="1050" y="496" text-anchor="middle">27.5%</text>
+      <text x="1130" y="496" text-anchor="middle">19.9%</text>
+      <text x="1205" y="496" text-anchor="middle" font-weight="700" fill="#1d4ed8">13.2%</text>
+
+      <text x="800" y="530" font-weight="600">Morocco</text>
+      <text x="1050" y="530" text-anchor="middle">32.8%</text>
+      <text x="1130" y="530" text-anchor="middle">19.1%</text>
+      <text x="1205" y="530" text-anchor="middle" font-weight="700" fill="#1d4ed8">10.8%</text>
+
+      <text x="800" y="564" font-weight="600">Germany</text>
+      <text x="1050" y="564" text-anchor="middle">35.9%</text>
+      <text x="1130" y="564" text-anchor="middle">20.3%</text>
+      <text x="1205" y="564" text-anchor="middle" font-weight="700" fill="#1d4ed8">10.2%</text>
+
+      <text x="800" y="598" font-weight="600">England</text>
+      <text x="1050" y="598" text-anchor="middle">24.4%</text>
+      <text x="1130" y="598" text-anchor="middle">16.5%</text>
+      <text x="1205" y="598" text-anchor="middle" font-weight="700" fill="#1d4ed8">10.0%</text>
+    </g>
+    <line x1="800" y1="616" x2="1220" y2="616" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="800" y="642" font-size="11.5" fill="#94a3b8" font-style="italic">Germany reaches semis most often (35.9%) but converts</text>
+    <text x="800" y="660" font-size="11.5" fill="#94a3b8" font-style="italic">finals less often than Argentina — draw luck matters</text>
+  </g>
+
+  <!-- ELO leaders strip -->
+  <g>
+    <rect x="40" y="700" width="1200" height="170" rx="12" fill="#0f172a"/>
+    <text x="60" y="734" font-size="14" font-weight="700" fill="#ffffff">ELO Ratings Entering the Tournament — engine replayed 19,972 matches (2006–2026)</text>
+    <g font-size="12.5" fill="#cbd5e1">
+      <text x="60" y="770" font-weight="600" fill="#ffffff">Spain</text><text x="60" y="790" fill="#60a5fa" font-weight="700">1900</text>
+      <text x="160" y="770" font-weight="600" fill="#ffffff">Argentina</text><text x="160" y="790" fill="#60a5fa" font-weight="700">1900</text>
+      <text x="270" y="770" font-weight="600" fill="#ffffff">France</text><text x="270" y="790" fill="#60a5fa" font-weight="700">1891</text>
+      <text x="370" y="770" font-weight="600" fill="#ffffff">Morocco</text><text x="370" y="790" fill="#60a5fa" font-weight="700">1854</text>
+      <text x="480" y="770" font-weight="600" fill="#ffffff">Japan</text><text x="480" y="790" fill="#60a5fa" font-weight="700">1854</text>
+      <text x="580" y="770" font-weight="600" fill="#ffffff">England</text><text x="580" y="790" fill="#60a5fa" font-weight="700">1850</text>
+      <text x="690" y="770" font-weight="600" fill="#ffffff">Brazil</text><text x="690" y="790" fill="#60a5fa" font-weight="700">1841</text>
+      <text x="790" y="770" font-weight="600" fill="#ffffff">Portugal</text><text x="790" y="790" fill="#60a5fa" font-weight="700">1829</text>
+      <text x="900" y="770" font-weight="600" fill="#ffffff">Germany</text><text x="900" y="790" fill="#60a5fa" font-weight="700">1828</text>
+      <text x="1010" y="770" font-weight="600" fill="#ffffff">Netherlands</text><text x="1010" y="790" fill="#60a5fa" font-weight="700">1821</text>
+    </g>
+    <text x="60" y="830" font-size="12" fill="#94a3b8" font-style="italic">319 rated teams · K = 40 per match · ratings feed elo_diff, the top-ranked feature in both models</text>
+  </g>
+</svg>

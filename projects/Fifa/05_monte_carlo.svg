@@ -1,0 +1,102 @@
+<svg width="1280" height="920" viewBox="0 0 1280 920" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="920" fill="#f8fafc"/>
+
+  <text x="40" y="54" font-size="28" font-weight="700" fill="#0f172a">Monte Carlo Tournament Simulation — 10,000 Runs</text>
+  <text x="40" y="82" font-size="15" fill="#475569">Each run plays the entire 104-match World Cup; frequencies across runs become championship probabilities</text>
+
+  <!-- Step 1: probability cache -->
+  <g>
+    <rect x="40" y="120" width="580" height="150" rx="12" fill="#0f172a"/>
+    <rect x="54" y="134" width="200" height="22" rx="11" fill="#1d4ed8"/>
+    <text x="154" y="149" font-size="10.5" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="1">STEP 1 — PRE-COMPUTE</text>
+    <text x="54" y="186" font-size="14" font-weight="600" fill="#ffffff">Probability Cache</text>
+    <text x="54" y="210" font-size="12.5" fill="#94a3b8">all C(48,2) = 1,128 matchups × 2 models → 2,256 cached</text>
+    <text x="54" y="230" font-size="12.5" fill="#94a3b8">probability vectors, built once at startup</text>
+    <text x="54" y="256" font-size="12.5" font-weight="600" fill="#60a5fa">zero model calls during simulation → fast pure lookup</text>
+  </g>
+
+  <!-- Step 2: sample match -->
+  <g>
+    <rect x="40" y="300" width="580" height="150" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="54" y="314" width="180" height="22" rx="11" fill="#eff6ff"/>
+    <text x="144" y="329" font-size="10.5" font-weight="700" fill="#1d4ed8" text-anchor="middle" letter-spacing="1">STEP 2 — SAMPLE</text>
+    <text x="54" y="366" font-size="14" font-weight="600" fill="#0f172a">Sample Each Match Outcome</text>
+    <text x="54" y="390" font-size="12.5" fill="#475569">draw u ~ Uniform(0,1) → walk H / D / A intervals of the</text>
+    <text x="54" y="410" font-size="12.5" fill="#475569">cached probability vector — one random draw per match</text>
+    <text x="54" y="436" font-size="12.5" font-weight="600" fill="#1d4ed8">representative scores: H→2:1 · D→1:1 · A→1:2</text>
+  </g>
+
+  <!-- Step 3: groups -->
+  <g>
+    <rect x="40" y="480" width="580" height="150" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="54" y="494" width="176" height="22" rx="11" fill="#eff6ff"/>
+    <text x="142" y="509" font-size="10.5" font-weight="700" fill="#1d4ed8" text-anchor="middle" letter-spacing="1">STEP 3 — GROUPS</text>
+    <text x="54" y="546" font-size="14" font-weight="600" fill="#0f172a">Build 12 Group Tables</text>
+    <text x="54" y="570" font-size="12.5" fill="#475569">6 matches per group · rank by points → goal difference →</text>
+    <text x="54" y="590" font-size="12.5" fill="#475569">goals for → 8 best third-placed teams also advance</text>
+    <text x="54" y="616" font-size="12.5" font-weight="600" fill="#1d4ed8">48 teams → 32 survivors (new 2026 format)</text>
+  </g>
+
+  <!-- Step 4: knockout -->
+  <g>
+    <rect x="40" y="660" width="580" height="150" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="54" y="674" width="196" height="22" rx="11" fill="#eff6ff"/>
+    <text x="152" y="689" font-size="10.5" font-weight="700" fill="#1d4ed8" text-anchor="middle" letter-spacing="1">STEP 4 — KNOCKOUTS</text>
+    <text x="54" y="726" font-size="14" font-weight="600" fill="#0f172a">Recursive Elimination Bracket</text>
+    <text x="54" y="750" font-size="12.5" fill="#475569">R32 → R16 → QF → SF → Final · winners re-enter the</text>
+    <text x="54" y="770" font-size="12.5" fill="#475569">knockout model with the next opponent · ELO updated</text>
+    <text x="54" y="790" font-size="12.5" fill="#475569">after every result (K = 40) · no draws — winner advances</text>
+  </g>
+
+  <!-- Down arrows on left column -->
+  <line x1="330" y1="270" x2="330" y2="296" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="330" y1="450" x2="330" y2="476" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="330" y1="630" x2="330" y2="656" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Right: repeat loop -->
+  <g>
+    <rect x="680" y="300" width="560" height="300" rx="12" fill="#eff6ff" stroke="#bfdbfe"/>
+    <rect x="694" y="314" width="170" height="22" rx="11" fill="#1d4ed8"/>
+    <text x="779" y="329" font-size="10.5" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="1">STEP 5 — REPEAT</text>
+    <text x="694" y="372" font-size="26" font-weight="700" fill="#1d4ed8">× 10,000</text>
+    <text x="694" y="404" font-size="13" fill="#334155">tournament simulations</text>
+    <text x="694" y="442" font-size="12.5" fill="#475569">every run: fresh random draws, different group carnage,</text>
+    <text x="694" y="462" font-size="12.5" fill="#475569">different bracket — the full space of "what could happen"</text>
+    <g>
+      <rect x="694" y="486" width="170" height="56" rx="10" fill="#ffffff" stroke="#bfdbfe"/>
+      <text x="779" y="510" font-size="18" font-weight="700" fill="#0f172a" text-anchor="middle">1.04 M</text>
+      <text x="779" y="530" font-size="11" fill="#64748b" text-anchor="middle">matches simulated</text>
+      <rect x="884" y="486" width="170" height="56" rx="10" fill="#ffffff" stroke="#bfdbfe"/>
+      <text x="969" y="510" font-size="18" font-weight="700" fill="#0f172a" text-anchor="middle">12</text>
+      <text x="969" y="530" font-size="11" fill="#64748b" text-anchor="middle">tables per run</text>
+      <rect x="1074" y="486" width="150" height="56" rx="10" fill="#ffffff" stroke="#bfdbfe"/>
+      <text x="1149" y="510" font-size="18" font-weight="700" fill="#0f172a" text-anchor="middle">5</text>
+      <text x="1149" y="530" font-size="11" fill="#64748b" text-anchor="middle">KO rounds</text>
+    </g>
+  </g>
+
+  <!-- Right: aggregation -->
+  <g>
+    <rect x="680" y="640" width="560" height="170" rx="12" fill="#0f172a"/>
+    <rect x="694" y="654" width="210" height="22" rx="11" fill="#166534"/>
+    <text x="799" y="669" font-size="10.5" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="1">STEP 6 — AGGREGATE</text>
+    <text x="694" y="708" font-size="14" font-weight="600" fill="#ffffff">Champion Frequencies → Probabilities</text>
+    <text x="694" y="734" font-size="12.5" fill="#94a3b8">P(team wins) = times champion ÷ 10,000 runs</text>
+    <text x="694" y="754" font-size="12.5" fill="#94a3b8">also tracked: reach R32 / R16 / QF / SF / final for all 48 teams</text>
+    <text x="694" y="782" font-size="12.5" font-weight="600" fill="#60a5fa">advancement curves show more than a single bracket ever could</text>
+  </g>
+
+  <!-- Loop arrow from step 4 to step 5 -->
+  <path d="M 624 735 H 650 V 450 H 674" fill="none" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- Arrow step5 to step6 -->
+  <line x1="960" y1="600" x2="960" y2="636" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Bottom strip -->
+  <rect x="40" y="838" width="1200" height="56" rx="12" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="60" y="872" font-size="13" font-weight="600" fill="#166534">Result: full probability distribution over tournament outcomes — not one prediction, but 10,000 possible futures distilled into odds</text>
+</svg>
