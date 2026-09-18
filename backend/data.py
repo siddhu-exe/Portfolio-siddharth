@@ -67,11 +67,11 @@ _CATEGORIES = [
         "Building predictive models that learn from data.",
         [
             (
-                "Loan Approval Predictor",
-                ["scikit-learn", "XGBoost", "Pandas"],
-                "A classification model that estimates loan-approval likelihood from "
-                "applicant features, with careful handling of class imbalance and "
-                "explainable feature importance.",
+                "Delhi Air Quality Risk Forecasting",
+                ["Python", "PostgreSQL", "LightGBM", "Statsmodels", "Streamlit"],
+                "Operational multi-horizon forecasting (1h, 6h, 24h), cost-sensitive "
+                "CPCB risk alerting, and econometric policy evaluation across 7 continuous "
+                "Delhi monitoring stations.",
             ),
             (
                 "FIFA World Cup Predictor",
@@ -141,8 +141,8 @@ _APPROACH_STEPS = {
 # still get the right layout automatically.
 _GALLERY_TEMPLATE = [
     ("architecture", "Architecture", "The complete system architecture, from data collection to prediction.", 1),
-    ("pipeline", "Data Pipeline", "From raw football data to production-ready predictions.", 2),
-    ("ml", "Machine Learning", "How the model learns, evaluates, and predicts tournament outcomes.", 3),
+    ("pipeline", "Data Pipeline", "From raw data to production-ready predictions and features.", 2),
+    ("ml", "Machine Learning", "How the model learns, evaluates, and predicts outcomes.", 3),
     ("platform", "Platform", "Interactive dashboards and prediction experiences built for users.", 2),
     ("results", "Results", "The final outcome of the project and its key achievements.", 1),
 ]
@@ -150,6 +150,7 @@ _GALLERY_TEMPLATE = [
 # Per-project emoji + year for the Chapter page header, keyed by title.
 _HEADER_META = {
     "FIFA World Cup Predictor": {"emoji": "⚽", "year": 2026},
+    "Delhi Air Quality Risk Forecasting": {"emoji": "🌫️", "year": 2026},
 }
 
 # Per-project case-study copy, keyed by title. Every field is optional; the
@@ -211,18 +212,28 @@ _DETAILS = {
         "reflection": "Charts are an argument. The moment I stopped decorating and started "
         "pointing at one idea per view, the whole thing clicked.",
     },
-    "Loan Approval Predictor": {
-        "subtitle": "A fairer, faster first look at applications.",
-        "problem": "Manual loan screening was slow and inconsistent, and the rare approvals "
-        "in the data made naive models look accurate while being useless.",
-        "data_text": "Applicant records with income, credit history and demographics — "
-        "carefully split to prevent leakage, with class imbalance handled explicitly.",
-        "data_visual": False,
-        "metric": "0.91",
-        "metric_label": "ROC-AUC on held-out applicants",
-        "result_visual": True,
-        "reflection": "Chasing accuracy on an imbalanced set taught me to distrust a single "
-        "number. The threshold, not the model, was where the real decisions lived.",
+    "Delhi Air Quality Risk Forecasting": {
+        "subtitle": "Multi-horizon forecasting, CPCB risk alerting, and causal policy evaluation.",
+        "thumbnail": "/images/delhi-air-quality-risk-forecasting/01_dashboard_hero.png",
+        "heroImage": "/images/delhi-air-quality-risk-forecasting/01_dashboard_hero.png",
+        "description": "An end-to-end operational ML system and econometric audit delivering 1h/6h/24h air quality forecasts, automated CPCB/GRAP emergency risk alerts, and causal evaluation of Delhi's Diwali firecracker ban across 7 continuous monitoring stations.",
+        "links": {
+            "github": "https://github.com/Siddharth23052005/Air-quality-risk-forecasting",
+            "demo": None,
+        },
+        "gallery_overrides": {
+            "architecture": ["/images/delhi-air-quality-risk-forecasting/02_system_architecture.png"],
+            "pipeline": ["/images/delhi-air-quality-risk-forecasting/03_postgres_erd_schema.png"],
+            "ml": [
+                "/images/delhi-air-quality-risk-forecasting/04_forecasting_performance.png",
+                "/images/delhi-air-quality-risk-forecasting/05_severe_episode_tracking.png",
+            ],
+            "platform": ["/images/delhi-air-quality-risk-forecasting/01_dashboard_hero.png"],
+            "results": [
+                "/images/delhi-air-quality-risk-forecasting/06_cost_sensitive_threshold.png",
+                "/images/delhi-air-quality-risk-forecasting/07_diwali_causal_analysis.png",
+            ],
+        },
     },
     "FIFA World Cup Predictor": {
         "subtitle": "Forecasting 104 matches through dual stage-aware models and 10,000 tournament simulations.",
