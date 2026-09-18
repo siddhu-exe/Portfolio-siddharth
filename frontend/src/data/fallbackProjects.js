@@ -19,7 +19,58 @@ const CATS = [
   {
     category: 'Machine Learning',
     projects: [
-      { title: 'Loan Approval Predictor', tech: ['scikit-learn', 'XGBoost', 'Pandas'] },
+      {
+        title: 'Delhi Air Quality Risk Forecasting',
+        tech: ['Python', 'PostgreSQL', 'LightGBM', 'Statsmodels', 'Streamlit'],
+        thumbnail: '/images/delhi-air-quality-risk-forecasting/fig01.png',
+        emoji: '🌫️',
+        year: 2026,
+        description:
+          'An end-to-end operational ML system and econometric audit delivering 1h/6h/24h air quality forecasts, automated CPCB/GRAP emergency risk alerts, and causal evaluation of Delhi\'s Diwali firecracker ban across 7 continuous monitoring stations.',
+        links: {
+          github: 'https://github.com/siddhu-exe/Air-Quality-Risk-Forecasting',
+          demo: 'https://siddhu-exe-air-quality-risk-forecasting-dashboardapp-w5wwow.streamlit.app/',
+          kaggle: 'https://www.kaggle.com/datasets/siddharthdongardive/delhi-air-quality-monitoring-dataset-2023-2026',
+        },
+        gallery: [
+          {
+            key: 'architecture',
+            heading: 'Architecture',
+            subtitle: 'The complete system architecture, from data collection to prediction.',
+            images: ['/images/delhi-air-quality-risk-forecasting/02_system_architecture.png'],
+          },
+          {
+            key: 'pipeline',
+            heading: 'Data Pipeline',
+            subtitle: 'From raw data to production-ready predictions and features.',
+            images: ['/images/delhi-air-quality-risk-forecasting/03_postgres_erd_schema.png'],
+          },
+          {
+            key: 'ml',
+            heading: 'Machine Learning',
+            subtitle: 'How the model learns, evaluates, and predicts outcomes.',
+            images: [
+              '/images/delhi-air-quality-risk-forecasting/04_forecasting_performance.png',
+              '/images/delhi-air-quality-risk-forecasting/05_severe_episode_tracking.png',
+            ],
+          },
+          {
+            key: 'platform',
+            heading: 'Platform',
+            subtitle: 'Interactive dashboards and prediction experiences built for users.',
+            images: ['/images/delhi-air-quality-risk-forecasting/01_dashboard_hero.png'],
+          },
+          {
+            key: 'results',
+            heading: 'Results',
+            subtitle: 'The final outcome of the project and its key achievements.',
+            images: [
+              '/images/delhi-air-quality-risk-forecasting/06_cost_sensitive_threshold.png',
+              '/images/delhi-air-quality-risk-forecasting/07_diwali_causal_analysis.png',
+            ],
+          },
+        ],
+      },
       {
         title: 'FIFA World Cup Predictor',
         tech: ['Python', 'XGBoost', 'scikit-learn', 'Pandas', 'NumPy'],

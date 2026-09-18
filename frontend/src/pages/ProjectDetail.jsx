@@ -120,6 +120,7 @@ export default function ProjectDetail() {
   }
 
   const hasDemo = Boolean(project.links?.demo);
+  const hasKaggle = Boolean(project.links?.kaggle);
   const hasGithub = Boolean(
     project.links?.github &&
       project.links.github !== 'https://github.com/' &&
@@ -159,6 +160,16 @@ export default function ProjectDetail() {
                   className="inline-flex items-center gap-1.5 rounded-full bg-terracotta px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-cream shadow-sm transition-all duration-200 hover:scale-105 hover:bg-terracotta/90"
                 >
                   Live Demo &#8599;
+                </a>
+              )}
+              {hasKaggle && (
+                <a
+                  href={project.links.kaggle}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-[#20BEFF] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-ink shadow-sm transition-all duration-200 hover:scale-105 hover:bg-[#20BEFF]/90 font-bold"
+                >
+                  Kaggle &#8599;
                 </a>
               )}
               {hasGithub && (

@@ -156,6 +156,28 @@ export default function BookModal({ project, onClose }) {
                         Live Demo &#8599;
                       </a>
                     )}
+                    {project.links?.kaggle && (
+                      <a
+                        href={project.links.kaggle}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full border border-ink/20 px-3.5 py-2 text-xs font-semibold text-ink/80 transition-colors hover:bg-[#20BEFF] hover:text-ink hover:border-[#20BEFF]"
+                      >
+                        Kaggle &#8599;
+                      </a>
+                    )}
+                    {project.links?.github &&
+                      project.links.github !== 'https://github.com/' &&
+                      project.links.github !== '#' && (
+                        <a
+                          href={project.links.github}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 rounded-full border border-ink/20 px-3.5 py-2 text-xs font-semibold text-ink/80 transition-colors hover:bg-ink hover:text-cream"
+                        >
+                          GitHub &#8599;
+                        </a>
+                      )}
                   </motion.div>
                 </motion.div>
               </div>
@@ -344,6 +366,28 @@ function MobileSpread({ project, onClose, transitionTo }) {
                 Live Demo &#8599;
               </a>
             )}
+            {project.links?.kaggle && (
+              <a
+                href={project.links.kaggle}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 rounded-full border border-ink/20 px-3 py-1.5 text-xs font-semibold text-ink/80 transition-colors hover:bg-[#20BEFF] hover:text-ink hover:border-[#20BEFF]"
+              >
+                Kaggle &#8599;
+              </a>
+            )}
+            {project.links?.github &&
+              project.links.github !== 'https://github.com/' &&
+              project.links.github !== '#' && (
+                <a
+                  href={project.links.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 rounded-full border border-ink/20 px-3 py-1.5 text-xs font-semibold text-ink/80 transition-colors hover:bg-ink hover:text-cream"
+                >
+                  GitHub &#8599;
+                </a>
+              )}
           </motion.div>
         </motion.div>
       </div>

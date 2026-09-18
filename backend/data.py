@@ -214,12 +214,13 @@ _DETAILS = {
     },
     "Delhi Air Quality Risk Forecasting": {
         "subtitle": "Multi-horizon forecasting, CPCB risk alerting, and causal policy evaluation.",
-        "thumbnail": "/images/delhi-air-quality-risk-forecasting/01_dashboard_hero.png",
-        "heroImage": "/images/delhi-air-quality-risk-forecasting/01_dashboard_hero.png",
+        "thumbnail": "/images/delhi-air-quality-risk-forecasting/fig01.png",
+        "heroImage": "/images/delhi-air-quality-risk-forecasting/fig01.png",
         "description": "An end-to-end operational ML system and econometric audit delivering 1h/6h/24h air quality forecasts, automated CPCB/GRAP emergency risk alerts, and causal evaluation of Delhi's Diwali firecracker ban across 7 continuous monitoring stations.",
         "links": {
-            "github": "https://github.com/Siddharth23052005/Air-quality-risk-forecasting",
-            "demo": None,
+            "github": "https://github.com/siddhu-exe/Air-Quality-Risk-Forecasting",
+            "demo": "https://siddhu-exe-air-quality-risk-forecasting-dashboardapp-w5wwow.streamlit.app/",
+            "kaggle": "https://www.kaggle.com/datasets/siddharthdongardive/delhi-air-quality-monitoring-dataset-2023-2026",
         },
         "gallery_overrides": {
             "architecture": ["/images/delhi-air-quality-risk-forecasting/02_system_architecture.png"],
