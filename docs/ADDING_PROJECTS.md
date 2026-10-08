@@ -1,17 +1,18 @@
-# Adding Books (Projects) and Shelves (Categories)
+# Adding Books (Projects) to the Project Shelf
 
-This guide explains how to add a new **book** (project) to an existing shelf, and
-how to add a whole new **shelf** (category), to the Project Shelf section. It is
-written so any developer or AI agent can follow it without reading the whole
-codebase.
+This guide explains how to add a new **book** (project) to the Project Shelf, set
+its position, and publish it. It is written so any developer or AI agent can
+follow it without reading the whole codebase.
 
 ## Mental model
 
 The site is a library.
 
-- A **shelf** = a project **category** (e.g. `Machine Learning`). Each shelf has
-  a number label ("Shelf 3"), a title, and a one-line subtitle.
-- A **book** = a single **project**, shown as a colored spine on its shelf.
+- The **Project Shelf** is one flat stack of horizontal book spines — one row per
+  **published** project, ordered by `sort_order` (VOL.01, VOL.02, …). Categories
+  still exist in the data (`_CATEGORIES`) but are not shown as separate shelves;
+  each row carries a short `tag` stamp instead (ML, SQL, VIZ, …).
+- A **book** = a single **project**, shown as a colored spine row.
 - Clicking a book opens the **book preview** — a modal that flips open like a
   real book and shows the project's image, description, tech stack, and a
   **View Full Project** button.
@@ -28,10 +29,10 @@ when the backend is unreachable, so the shelf never renders empty.
 |------|---------|
 | `backend/data.py` | **Primary.** Categories, per-project content, approach steps, colors. |
 | `frontend/src/data/fallbackProjects.js` | Offline fallback list (keep roughly in sync). |
-| `frontend/src/components/ProjectShelf.jsx` | The `SHELVES` array (shelf order + subtitles) — only edit when adding/removing a shelf. |
+| `frontend/src/data/shelfBooks.js` | Shelf selection/presentation helpers (published filter, sort, tag stamp, spine contrast). Only touch to change shelf rules. |
 
-You do **not** need to touch the book spine, modal, or Chapter page components —
-they are data-driven and render whatever the backend returns.
+You do **not** need to touch `ProjectShelf.jsx`, the modal, or the Chapter page
+components — they are data-driven and render whatever the backend returns.
 
 > For the Chapter page's gallery sections specifically (images, layout rules,
 > `emoji`/`year`, chapter nav), see [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md).
@@ -47,18 +48,23 @@ Every project the API returns looks like this (built in `backend/data.py`):
   "id": 3,
   "title": "FIFA World Cup Predictor",
   "slug": "fifa-world-cup-predictor",      // auto-generated from title
-  "category": "Machine Learning",           // MUST match a shelf name exactly
-  "color": "#7FA98F",                        // spine + cover + gallery-placeholder color
+  "category": "Machine Learning",           // grouping in the data; the shelf shows `tag` instead
+  "color": "#7FA98F",                        // book-modal cover + gallery-placeholder color (pastel, by order)
   "emoji": "⚽",                             // shown next to the title on the Chapter page header
   "year": 2026,                              // shown top-right on the Chapter page header
   "subtitle": "Forecasting matches from decades of form.",
-  "thumbnail": "https://.../...",            // small shelf/preview image
+  "thumbnail": "https://.../...",            // small preview image (book modal)
   "heroImage": "https://.../...",            // (legacy) large image, no longer shown on the Chapter page
   "description": "…",                         // shown in the book-preview modal AND the Chapter page intro
   "problem": "…",                             // (legacy, kept for the book-preview modal / API consumers)
   "data": { "text": "…", "visual": null },    // (legacy, same as above)
   "approach": { "steps": [{ "label": "Train" }, …] }, // (legacy, same as above)
-  "result": { "metric": "0.91", "label": "ROC-AUC", "visual": null }, // (legacy)
+  "result": "91.7% knockout accuracy · ROC-AUC 0.90", // one line on the Project Shelf row; "" hides the metric line
+  "resultDetail": { "metric": "0.91", "label": "ROC-AUC", "visual": null }, // (legacy; was "result")
+  "published": true,                         // Project Shelf shows only published projects
+  "sort_order": 4,                           // shelf order (VOL.01, VOL.02…); sorted by this, not creation order
+  "tag": "ML",                               // stamp on the row; SUBJECTS counts distinct tags
+  "spineColor": "#7A2E2A",                   // spine binding colour on the shelf (text/foil contrast is automatic)
   "reflection": "…",                          // (legacy)
   "links": { "github": "https://…", "demo": null }, // Chapter page closing row
   "gallery": [                                // Chapter page gallery sections, IN ORDER
@@ -94,15 +100,16 @@ Every project the API returns looks like this (built in `backend/data.py`):
 
 ---
 
-## How to add a NEW BOOK to an existing shelf
+## How to add a NEW BOOK
 
-Everything happens in **`backend/data.py`**.
+Everything happens in **`backend/data.py`** (plus an optional fallback mirror).
 
 ### 1. Add the project to its category
 
 Find the `_CATEGORIES` list. Each entry is
 `(category_name, subtitle, [ (title, [tech...], description), ... ])`.
-Add a new `(title, tech, description)` tuple to the right category's list:
+Add a new `(title, tech, description)` tuple to the right category's list. The
+position inside the tuple list does **not** decide shelf order — `sort_order` does:
 
 ```python
 _CATEGORIES = [
@@ -118,8 +125,10 @@ _CATEGORIES = [
 ]
 ```
 
-That alone is enough to make the book appear on the shelf. The `id`, `slug`,
-`color`, and placeholder images are generated for you.
+The `slug` and placeholder images are generated for you. `id` and the pastel
+`color` follow `sort_order`, so inserting a book earlier renumbers the ones after
+it (routes use slugs, so links keep working). The book only appears on the shelf
+once it is **published** (next step).
 
 ### 2. (Recommended) Add the full case-study copy
 
@@ -138,15 +147,24 @@ _DETAILS = {
         "metric_label": "precision on held-out mail",
         "result_visual": False,      # True -> show a placeholder result image
         "reflection": "A short, personal takeaway.",
+        # Project Shelf row (all optional except `published` to appear):
+        "published": True,           # False/omitted -> hidden from the shelf (page still works)
+        "sort_order": 11,            # position on the shelf (1 = VOL.01); unlisted books sort last
+        "tag": "ML",                 # SQL / VIZ / ML / DL / NLP / AGENTS / APP
+        "spineColor": "#263A52",
+        "result": "98.4% precision",  # omit/"" -> the row simply has no metric line
     },
 }
 ```
 
-### 3. Keep the shelf balanced (optional)
+### 3. What the shelf computes for you
 
-The shelf centers its category label and splits books evenly to the left and
-right. It handles any number of books, but **2 or an even number per shelf**
-looks most balanced.
+Nothing is hard-coded to ten books. The VOLUMES counter is the published count,
+SUBJECTS is the number of distinct `tag` values, and the mono caption under the
+plank lists those tags in order of first appearance. A row with an empty `result`
+simply has no metric line. Text/foil colours on a spine are picked automatically
+for contrast against `spineColor`. Chapter prev/next links stay within the
+published set (and unpublished books chain among themselves).
 
 ### 4. Mirror it in the fallback (optional but nice)
 
@@ -163,57 +181,27 @@ The shelf fetches `/api/projects` on load; the new book appears.
 
 ---
 
-## How to add a NEW SHELF (category)
+## Motion
 
-This takes two files, because the frontend owns the **shelf order + subtitle**
-used for the on-screen label, and the backend owns the **projects**.
+Shelf animation (header split-title and counters, batch reveal on scroll, the
+"reading head" `is-active` row, hover neighbour nudge, click pull-out) lives in
+`ProjectShelf.jsx` and `index.css` and needs no per-book data. GSAP owns each
+row's outer `li.bk-wrap`; hover, `is-active` and press are CSS on the inner
+`button`. `PIN_SHELF` (top of `ProjectShelf.jsx`) enables an experimental pinned
+build on desktop; it is **off** because the extra pin height breaks the
+Shelf → Toolbox → Reading Corner curtain pins. All of it is skipped under
+`prefers-reduced-motion`.
 
-### 1. Backend — add the category
+---
 
-In `backend/data.py`, add a new entry to `_CATEGORIES` (name, subtitle, and at
-least one project). Put it in the position you want it to appear:
+## Adding a new category
 
-```python
-("Computer Vision", "Teaching machines to see.", [
-    ("Object Counter", ["PyTorch", "OpenCV"], "…"),
-    ("Pose Estimator", ["MediaPipe", "OpenCV"], "…"),
-]),
-```
-
-If this category needs its own **approach-step flow** (the horizontal steps on
-the Chapter page), add it to `_APPROACH_STEPS`, keyed by the exact category name:
-
-```python
-_APPROACH_STEPS = {
-    # …
-    "Computer Vision": ["Collect", "Label", "Train", "Evaluate", "Deploy"],
-}
-```
-
-If you skip this, a generic 3-step flow is used.
-
-### 2. Frontend — register the shelf label
-
-Open `frontend/src/components/ProjectShelf.jsx` and add the category to the
-`SHELVES` array **in the same order** as the backend, with its subtitle:
-
-```js
-const SHELVES = [
-  { key: 'Data Analytics',     subtitle: '…' },
-  // …
-  { key: 'Computer Vision',    subtitle: 'Teaching machines to see.' }, // 👈 NEW
-];
-```
-
-> ⚠️ The `key` here **must exactly match** the category name in `backend/data.py`
-> (same spelling, spacing, capitalization). This string is how books are matched
-> to their shelf. The shelf number ("Shelf N") is derived from array position.
-
-### 3. Frontend fallback (optional)
-
-Add the category to `CATS` in `frontend/src/data/fallbackProjects.js` too.
-
-### 4. Restart the backend and reload.
+Categories are only a grouping in the data now. To add one, add an entry to
+`_CATEGORIES` (name, subtitle, projects) in `backend/data.py`; if it needs its own
+approach-step flow on the Chapter page, add `_APPROACH_STEPS[category]`, else a
+generic 3-step flow is used. Give its projects a `tag` (or add the category to
+`_DEFAULT_TAGS`, mirrored as `DEFAULT_TAGS` in `fallbackProjects.js`). No frontend
+component change is needed.
 
 ---
 
@@ -242,10 +230,12 @@ the full breakdown, summarized here:
 
 ## Colors
 
-Spine/cover colors come from `PALETTE` in `backend/data.py`, assigned by order.
-They deliberately avoid pure black/white so spines read on any background. To
-force a specific color for a project, set `color` explicitly on that project in
-`build_projects()`.
+Two separate colours per project:
+- `spineColor` (in `_DETAILS`) — the Project Shelf row. Without it, rows cycle
+  through `SPINE_COLORS`. Light or dark text and gold or dark-brown foil are chosen
+  automatically (`spineTheme` in `shelfBooks.js`).
+- `color` — from `PALETTE` by order; used by the book modal and gallery
+  placeholders. It deliberately avoids pure black/white.
 
 ## Real images later
 
@@ -258,14 +248,6 @@ gallery's image count controls its layout.
 ## Quick checklist for a new book
 
 - [ ] Added `(title, tech, description)` to the right category in `_CATEGORIES`
-- [ ] Added a `_DETAILS[title]` entry with the case-study copy
-- [ ] (optional) Mirrored it in `fallbackProjects.js`
+- [ ] Added a `_DETAILS[title]` entry with `published`, `sort_order`, `tag`, `spineColor` (and `result` if there is a one-line metric) plus the case-study copy
+- [ ] Mirrored it in `fallbackProjects.js` (`sortOrder`, `tag`, `published`, `spineColor`, `result`)
 - [ ] Restarted the backend and confirmed the book appears + opens
-
-## Quick checklist for a new shelf
-
-- [ ] Added the category (+ projects) to `_CATEGORIES`
-- [ ] (optional) Added `_APPROACH_STEPS[category]`
-- [ ] Added `{ key, subtitle }` to `SHELVES` in `ProjectShelf.jsx` (exact name match)
-- [ ] (optional) Mirrored in `fallbackProjects.js`
-- [ ] Restarted the backend and confirmed the shelf appears in the right order

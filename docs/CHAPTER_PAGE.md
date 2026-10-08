@@ -5,7 +5,7 @@ clicking a book on the shelf, then **View Full Project** in the book-preview
 modal. It's written so any developer or AI agent can edit or extend a project's
 case study without reading the component code first.
 
-If you're looking for how to add a whole new **book/project** or **shelf/category**
+If you're looking for how to add a whole new **book/project**
 to the site, see [`ADDING_PROJECTS.md`](ADDING_PROJECTS.md) first — this file only
 covers the full case-study page for a project that already exists.
 
@@ -38,7 +38,7 @@ on the page is driven by the project object from `GET /api/projects/{slug}`.
    built from that section's `images[]`.
 6. **Closing row** — GitHub / Live Demo buttons (either can be omitted)
 7. **Chapter nav** — "← Previous Chapter" / "Next Chapter →", auto-linking to
-   the adjacent projects in shelf order
+   the adjacent published projects in shelf order
 
 The whole page is cream/black, using the same fonts, dividers, and button
 styles as the rest of the site, and enters via the existing book-cover page
@@ -144,12 +144,12 @@ multi-part sequence).
 
 ## Chapter nav (Previous / Next)
 
-`prev`/`next` are **computed automatically** — they're the adjacent projects in
-the same flat, cross-shelf order the shelf itself renders in (Data Analytics →
-Data Visualization → Machine Learning → Deep Learning → AI Applications, in
-each category's project order). You don't set these directly; adding, removing,
-or reordering projects in `_CATEGORIES` updates the chain automatically. The
-first project has `prev: null`; the last has `next: null`.
+`prev`/`next` are **computed automatically** — they are the adjacent projects in
+the Project Shelf's order (`sort_order`), within the **published** set; unpublished
+projects chain only among themselves, so a chapter never links into a hidden one.
+You don't set these directly: changing `sort_order` or `published` in
+`_DETAILS` updates the chain. The first project has `prev: null`; the last has
+`next: null`.
 
 ## Description, stack, and links
 

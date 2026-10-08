@@ -6,7 +6,7 @@ source file first**. Read this top-to-bottom once, then jump to the section for
 whatever you're changing.
 
 > Companion docs (more detail on specific tasks):
-> - [`ADDING_PROJECTS.md`](ADDING_PROJECTS.md) — add a book (project) or a shelf (category).
+> - [`ADDING_PROJECTS.md`](ADDING_PROJECTS.md) — add a book (project) to the shelf.
 > - [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md) — the per-project detail page & its image galleries.
 
 ---
@@ -133,7 +133,7 @@ Key structural facts (do not break these):
 |------|------|
 | `Hero.jsx` | Landing: animated signature, typed greeting, big name, Menu pill. |
 | `Statement.jsx` | Black interlude; scroll-pinned word-by-word text reveal + drawn line. |
-| `ProjectShelf.jsx` | The bookshelf. Fetched projects → `BookSpine`s grouped by shelf. Owns `BookModal`. |
+| `ProjectShelf.jsx` | The Project Shelf: published projects as one flat stack of spine rows in `sort_order` (helpers in `data/shelfBooks.js`), with its own scroll/hover motion. Owns `BookModal`. |
 | `Toolbox.jsx` | "Tools Behind Every Chapter" — tech icons hanging on nails. |
 | `ReadingCorner.jsx` | "Reading Corner" — articles rendered as little 3D books. |
 | `Footer.jsx` | Fixed mustard footer: ghost name, CTA, social links, live clock. |
@@ -150,7 +150,6 @@ Key structural facts (do not break these):
 **Reusable pieces / effects:**
 | File | Role |
 |------|------|
-| `BookSpine.jsx` | One book on the shelf (colored spine, vertical title). |
 | `BookModal.jsx` | Opens on book click; "View Full Project" → `usePageTransition` to `/projects/:slug`. |
 | `ImageGallery.jsx` | Chapter-page gallery: 1 img=full, 2=side-by-side, 3+=horizontal scroll. |
 | `ContactModal.jsx` | The contact form; POSTs via `sendContact`. |
