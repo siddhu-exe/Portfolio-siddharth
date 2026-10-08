@@ -1,4 +1,4 @@
-"""Seed project data — 2 placeholder projects per category (10 total).
+"""Project data: the shelf projects plus a few unpublished seed placeholders.
 
 Colors are drawn from a fixed palette that avoids pure black/white so book
 spines read against the shelf. The color here is the source of truth; the
@@ -18,6 +18,18 @@ PALETTE = [
     "#D4A24E",  # mustard-gold
     "#8A7FB5",  # violet
     "#A9884E",  # bronze
+]
+
+# Library-binding colours for the Project Shelf's flat-list "spines" (distinct
+# from PALETTE, which tints the pastel book modal / chapter placeholders).
+# Projects without an explicit _DETAILS["spineColor"] cycle through these by index.
+SPINE_COLORS = [
+    "#7A2E2A",  # oxblood
+    "#2F4A3A",  # forest
+    "#C9963C",  # mustard
+    "#263A52",  # navy
+    "#B5533C",  # brick
+    "#2B2724",  # charcoal
 ]
 
 # (name, subtitle, [(title, [tech...], description)])
@@ -87,6 +99,11 @@ _CATEGORIES = [
         "Solving complex problems using neural networks and computer vision.",
         [
             (
+                "BitcoinGraphGuard",
+                ["Graph ML"],
+                "A graph model scored on 822k Bitcoin wallets, reaching a PR-AUC of 0.801.",
+            ),
+            (
                 "Alzheimer's MRI Detection",
                 ["TensorFlow", "CNN", "OpenCV"],
                 "A convolutional neural network that classifies brain-MRI scans "
@@ -106,6 +123,22 @@ _CATEGORIES = [
         "AI Applications",
         "Creating intelligent systems powered by modern AI.",
         [
+            (
+                "LegalRAG",
+                ["RAG"],
+                "Retrieval-augmented question answering over 100k judgments, evaluated "
+                "on a 497-question benchmark.",
+            ),
+            (
+                "TruthMates",
+                ["CrewAI"],
+                "A 10-agent CrewAI pipeline.",
+            ),
+            (
+                "KalaChain",
+                [],
+                "First-place project at HackX SFIT 2026.",
+            ),
             (
                 "RAG Chatbot",
                 ["LangChain", "FastAPI", "OpenAI"],
@@ -156,7 +189,39 @@ _HEADER_META = {
 # Per-project case-study copy, keyed by title. Every field is optional; the
 # builder fills sensible defaults so the page always renders.
 _DETAILS = {
+    "LegalRAG": {
+        "sort_order": 1,
+        "tag": "NLP",
+        "published": True,
+        "spineColor": "#263A52",
+        "result": "100k judgments · 497-question eval benchmark",
+    },
+    "BitcoinGraphGuard": {
+        "sort_order": 3,
+        "tag": "DL",
+        "published": True,
+        "spineColor": "#2B2724",
+        "result": "PR-AUC 0.801 · 822k wallets",
+    },
+    "TruthMates": {
+        "sort_order": 5,
+        "tag": "AGENTS",
+        "published": True,
+        "spineColor": "#B5533C",
+        "result": "10-agent CrewAI pipeline",
+    },
+    "KalaChain": {
+        "sort_order": 6,
+        "tag": "APP",
+        "published": True,
+        "spineColor": "#C9963C",
+        "result": "1st place · HackX SFIT 2026",
+    },
     "Customer Churn Analysis": {
+        "sort_order": 7,
+        "tag": "SQL",
+        "published": True,
+        "spineColor": "#5C4A3A",
         "subtitle": "Finding why customers leave — before they do.",
         "problem": "A subscription business was shedding customers without knowing why. "
         "Retention calls were made on gut feel, and no one could name the behaviours that "
@@ -173,6 +238,10 @@ _DETAILS = {
         "statistics ever could.",
     },
     "Retail Sales Analysis": {
+        "sort_order": 8,
+        "tag": "SQL",
+        "published": True,
+        "spineColor": "#3F5B54",
         "subtitle": "Turning a year of receipts into a plan.",
         "problem": "A multi-store retailer had rich sales history but no shared read on what "
         "was actually driving revenue — seasonality, region and category effects were all "
@@ -187,6 +256,10 @@ _DETAILS = {
         "honest, the insights almost wrote themselves.",
     },
     "Sales Dashboard (Tableau)": {
+        "sort_order": 9,
+        "tag": "VIZ",
+        "published": True,
+        "spineColor": "#8C3B2E",
         "subtitle": "One source of truth stakeholders actually open.",
         "problem": "Leadership was drowning in spreadsheets that never agreed with each "
         "other. Every meeting started by arguing about whose numbers were right.",
@@ -200,6 +273,10 @@ _DETAILS = {
         "asking for numbers because they already trust the ones on screen.",
     },
     "IPL Data Visualization": {
+        "sort_order": 10,
+        "tag": "VIZ",
+        "published": True,
+        "spineColor": "#D9C3A0",
         "subtitle": "A decade of cricket, told visually.",
         "problem": "Ten seasons of match data held great stories, but they were buried in "
         "rows and columns no fan would ever scroll through.",
@@ -214,6 +291,12 @@ _DETAILS = {
     },
     "Delhi Air Quality Risk Forecasting": {
         "subtitle": "Multi-horizon forecasting, CPCB risk alerting, and causal policy evaluation.",
+        # Project Shelf fields. Figures come from projects/Air quality risk forecasting/.
+        "sort_order": 2,
+        "tag": "ML",
+        "published": True,
+        "result": "0.000% critical misses · 95.71% 24h severe recall",
+        "spineColor": "#2F4A3A",
         "thumbnail": "/images/delhi-air-quality-risk-forecasting/fig01.png",
         "heroImage": "/images/delhi-air-quality-risk-forecasting/fig01.png",
         "description": "An end-to-end operational ML system and econometric audit delivering 1h/6h/24h air quality forecasts, automated CPCB/GRAP emergency risk alerts, and causal evaluation of Delhi's Diwali firecracker ban across 7 continuous monitoring stations.",
@@ -238,6 +321,12 @@ _DETAILS = {
     },
     "FIFA World Cup Predictor": {
         "subtitle": "Forecasting 104 matches through dual stage-aware models and 10,000 tournament simulations.",
+        # Figures come from projects/Fifa/CASE_STUDY.md ("Core result").
+        "sort_order": 4,
+        "tag": "ML",
+        "published": True,
+        "result": "91.7% knockout accuracy · ROC-AUC 0.90",
+        "spineColor": "#7A2E2A",
         "thumbnail": "/images/fifa-world-cup-predictor/frontpage.png",
         "heroImage": "/images/fifa-world-cup-predictor/03_model_architecture.png",
         "links": {
@@ -317,83 +406,113 @@ def _slugify(title: str) -> str:
     return slug.strip("-")
 
 
+# Fallback stamp for the Project Shelf when a project has no explicit "tag".
+_DEFAULT_TAGS = {
+    "Data Analytics": "SQL",
+    "Data Visualization": "VIZ",
+    "Machine Learning": "ML",
+    "Deep Learning": "DL",
+    "AI Applications": "NLP",
+}
+
+
 def build_projects():
+    # Flatten, then order by _DETAILS["sort_order"] (stable: unlisted projects
+    # keep their tuple order, after every numbered one). ids, colours and the
+    # prev/next chapter links all follow this order, not the tuple order.
+    flat = [
+        (category, title, tech, description)
+        for category, _subtitle, items in _CATEGORIES
+        for title, tech, description in items
+    ]
+    flat.sort(key=lambda row: _DETAILS.get(row[1], {}).get("sort_order", 1000))
+
     projects = []
-    idx = 0
-    for category, _subtitle, items in _CATEGORIES:
-        for title, tech, description in items:
-            idx += 1
-            color = PALETTE[(idx - 1) % len(PALETTE)]
-            slug = _slugify(title)
-            bare = color.lstrip("#")
-            d = _DETAILS.get(title, {})
+    for idx, (category, title, tech, description) in enumerate(flat, start=1):
+        color = PALETTE[(idx - 1) % len(PALETTE)]
+        slug = _slugify(title)
+        bare = color.lstrip("#")
+        d = _DETAILS.get(title, {})
 
-            def _img(label, w=1200, h=675):
-                text = label.replace(" ", "+")
-                return f"https://placehold.co/{w}x{h}/{bare}/F7F1ED?text={text}"
+        def _img(label, w=1200, h=675):
+            text = label.replace(" ", "+")
+            return f"https://placehold.co/{w}x{h}/{bare}/F7F1ED?text={text}"
 
-            steps = _APPROACH_STEPS.get(category, ["Explore", "Build", "Ship"])
-            meta = _HEADER_META.get(title, {})
-            gallery_overrides = d.get("gallery_overrides", {})
+        steps = _APPROACH_STEPS.get(category, ["Explore", "Build", "Ship"])
+        meta = _HEADER_META.get(title, {})
+        gallery_overrides = d.get("gallery_overrides", {})
 
-            gallery = [
-                {
-                    "key": key,
-                    "heading": heading,
-                    "subtitle": subtitle,
-                    "images": gallery_overrides.get(key) or [
-                        _img(f"{title} — {heading} {n + 1}", 900, 600) for n in range(count)
-                    ],
-                }
-                for key, heading, subtitle, count in _GALLERY_TEMPLATE
-            ]
+        gallery = [
+            {
+                "key": key,
+                "heading": heading,
+                "subtitle": subtitle,
+                "images": gallery_overrides.get(key) or [
+                    _img(f"{title} — {heading} {n + 1}", 900, 600) for n in range(count)
+                ],
+            }
+            for key, heading, subtitle, count in _GALLERY_TEMPLATE
+        ]
 
-            projects.append({
-                "id": idx,
-                "title": title,
-                "slug": slug,
-                "category": category,
-                "color": color,
-                "emoji": meta.get("emoji", "📘"),
-                "year": meta.get("year", 2026),
-                "subtitle": d.get("subtitle", description.split(".")[0] + "."),
-                "thumbnail": (
-                    d.get("thumbnail")
-                    or f"https://placehold.co/600x400/{bare}/171717?text={category.replace(' ', '+')}"
-                ),
-                "heroImage": d.get("heroImage") or _img(title),
-                "description": d.get("description", description),
-                "problem": d.get("problem", description),
-                "data": {
-                    "text": d.get("data_text", "A curated dataset assembled and cleaned for "
-                            "this project, shaped into an analysis-ready form."),
-                    "visual": _img(f"{category} — Data", 900, 640) if d.get("data_visual") else None,
-                },
-                "approach": {"steps": [{"label": s} for s in steps]},
-                "result": {
-                    "metric": d.get("metric", "—"),
-                    "label": d.get("metric_label", "headline outcome"),
-                    "visual": _img(f"{title} — Result", 1000, 620) if d.get("result_visual") else None,
-                },
-                "reflection": d.get("reflection", "Every project on the shelf leaves a lesson "
-                        "behind — this one sharpened how I think about the problem."),
-                "links": d.get("links", {
-                    "github": "https://github.com/",
-                    "demo": None,
-                }),
-                "gallery": gallery,
-                "images": [],
-                "project_url": f"/projects/{slug}",
-                "tech_stack": tech,
-            })
+        thumbnail = (
+            d.get("thumbnail")
+            or f"https://placehold.co/600x400/{bare}/171717?text={category.replace(' ', '+')}"
+        )
 
-    # Chapter nav: adjacent projects in the same flat, cross-shelf order the
-    # shelf itself renders in (previous/next "chapter").
-    for i, p in enumerate(projects):
-        prev_p = projects[i - 1] if i > 0 else None
-        next_p = projects[i + 1] if i < len(projects) - 1 else None
-        p["prev"] = {"slug": prev_p["slug"], "title": prev_p["title"]} if prev_p else None
-        p["next"] = {"slug": next_p["slug"], "title": next_p["title"]} if next_p else None
+        projects.append({
+            "id": idx,
+            "title": title,
+            "slug": slug,
+            "category": category,
+            "color": color,
+            "emoji": meta.get("emoji", "📘"),
+            "year": meta.get("year", 2026),
+            "subtitle": d.get("subtitle", description.split(".")[0] + "."),
+            "thumbnail": thumbnail,
+            # Project Shelf: shown only when published. An empty "result" just
+            # hides the metric line; it never blocks publishing.
+            "published": bool(d.get("published")),
+            "sort_order": d.get("sort_order", 1000 + idx),
+            "tag": d.get("tag", _DEFAULT_TAGS.get(category, "")),
+            "spineColor": d.get("spineColor", SPINE_COLORS[(idx - 1) % len(SPINE_COLORS)]),
+            "heroImage": d.get("heroImage") or _img(title),
+            "description": d.get("description", description),
+            "problem": d.get("problem", description),
+            "data": {
+                "text": d.get("data_text", "A curated dataset assembled and cleaned for "
+                        "this project, shaped into an analysis-ready form."),
+                "visual": _img(f"{category} — Data", 900, 640) if d.get("data_visual") else None,
+            },
+            "approach": {"steps": [{"label": s} for s in steps]},
+            # One-line metric shown on the Project Shelf ("" = no metric line).
+            "result": d.get("result", ""),
+            # Legacy {metric,label,visual} block (formerly "result").
+            "resultDetail": {
+                "metric": d.get("metric", "—"),
+                "label": d.get("metric_label", "headline outcome"),
+                "visual": _img(f"{title} — Result", 1000, 620) if d.get("result_visual") else None,
+            },
+            "reflection": d.get("reflection", "Every project on the shelf leaves a lesson "
+                    "behind — this one sharpened how I think about the problem."),
+            "links": d.get("links", {
+                "github": "https://github.com/",
+                "demo": None,
+            }),
+            "gallery": gallery,
+            "images": [],
+            "project_url": f"/projects/{slug}",
+            "tech_stack": tech,
+        })
+
+    # Chapter nav: previous/next within the shelf's own order. Published books
+    # link only to other published books, so a reader never pages into a hidden one.
+    shelf = [p for p in projects if p["published"]]
+    for chain in (shelf, [p for p in projects if not p["published"]]):
+        for i, p in enumerate(chain):
+            prev_p = chain[i - 1] if i > 0 else None
+            next_p = chain[i + 1] if i < len(chain) - 1 else None
+            p["prev"] = {"slug": prev_p["slug"], "title": prev_p["title"]} if prev_p else None
+            p["next"] = {"slug": next_p["slug"], "title": next_p["title"]} if next_p else None
 
     return projects
 

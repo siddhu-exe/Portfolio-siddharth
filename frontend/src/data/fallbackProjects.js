@@ -1,19 +1,22 @@
 // Used only if the backend is unreachable, so the shelf never renders empty.
 const PALETTE = ['#D9834A', '#E4A356', '#7FA98F', '#6C8EBF', '#B5729B', '#C9695A', '#5C9EAD', '#D4A24E'];
 
+// Library-binding spine colours for the Project Shelf (mirrors SPINE_COLORS in backend/data.py).
+const SPINE_COLORS = ['#7A2E2A', '#2F4A3A', '#C9963C', '#263A52', '#B5533C', '#2B2724'];
+
 const CATS = [
   {
     category: 'Data Analytics',
     projects: [
-      { title: 'Customer Churn Analysis', tech: ['Pandas', 'SQL', 'Matplotlib'] },
-      { title: 'Retail Sales Analysis', tech: ['Pandas', 'NumPy', 'Seaborn'] },
+      { title: 'Customer Churn Analysis', tech: ['Pandas', 'SQL', 'Matplotlib'], sortOrder: 7, tag: 'SQL', published: true, spineColor: '#5C4A3A' },
+      { title: 'Retail Sales Analysis', tech: ['Pandas', 'NumPy', 'Seaborn'], sortOrder: 8, tag: 'SQL', published: true, spineColor: '#3F5B54' },
     ],
   },
   {
     category: 'Data Visualization',
     projects: [
-      { title: 'Sales Dashboard (Tableau)', tech: ['Tableau', 'SQL', 'Excel'] },
-      { title: 'IPL Data Visualization', tech: ['Python', 'Plotly', 'Pandas'] },
+      { title: 'Sales Dashboard (Tableau)', tech: ['Tableau', 'SQL', 'Excel'], sortOrder: 9, tag: 'VIZ', published: true, spineColor: '#8C3B2E' },
+      { title: 'IPL Data Visualization', tech: ['Python', 'Plotly', 'Pandas'], sortOrder: 10, tag: 'VIZ', published: true, spineColor: '#D9C3A0' },
     ],
   },
   {
@@ -23,6 +26,11 @@ const CATS = [
         title: 'Delhi Air Quality Risk Forecasting',
         tech: ['Python', 'PostgreSQL', 'LightGBM', 'Statsmodels', 'Streamlit'],
         thumbnail: '/images/delhi-air-quality-risk-forecasting/fig01.png',
+        sortOrder: 2,
+        tag: 'ML',
+        published: true,
+        result: '0.000% critical misses · 95.71% 24h severe recall',
+        spineColor: '#2F4A3A',
         emoji: '🌫️',
         year: 2026,
         description:
@@ -75,6 +83,11 @@ const CATS = [
         title: 'FIFA World Cup Predictor',
         tech: ['Python', 'XGBoost', 'scikit-learn', 'Pandas', 'NumPy'],
         thumbnail: '/images/fifa-world-cup-predictor/frontpage.png',
+        sortOrder: 4,
+        tag: 'ML',
+        published: true,
+        result: '91.7% knockout accuracy · ROC-AUC 0.90',
+        spineColor: '#7A2E2A',
         emoji: '⚽',
         year: 2026,
         description:
@@ -96,6 +109,16 @@ const CATS = [
   {
     category: 'Deep Learning',
     projects: [
+      {
+        title: 'BitcoinGraphGuard',
+        tech: ['Graph ML'],
+        sortOrder: 3,
+        tag: 'DL',
+        published: true,
+        result: 'PR-AUC 0.801 · 822k wallets',
+        spineColor: '#2B2724',
+        description: 'A graph model scored on 822k Bitcoin wallets, reaching a PR-AUC of 0.801.',
+      },
       { title: "Alzheimer's MRI Detection", tech: ['TensorFlow', 'CNN', 'OpenCV'] },
       { title: 'Plant Disease Detection', tech: ['PyTorch', 'CNN', 'OpenCV'] },
     ],
@@ -103,49 +126,99 @@ const CATS = [
   {
     category: 'AI Applications',
     projects: [
+      {
+        title: 'LegalRAG',
+        tech: ['RAG'],
+        sortOrder: 1,
+        tag: 'NLP',
+        published: true,
+        result: '100k judgments · 497-question eval benchmark',
+        spineColor: '#263A52',
+        description: 'Retrieval-augmented question answering over 100k judgments, evaluated on a 497-question benchmark.',
+      },
+      {
+        title: 'TruthMates',
+        tech: ['CrewAI'],
+        sortOrder: 5,
+        tag: 'AGENTS',
+        published: true,
+        result: '10-agent CrewAI pipeline',
+        spineColor: '#B5533C',
+        description: 'A 10-agent CrewAI pipeline.',
+      },
+      {
+        title: 'KalaChain',
+        tech: [],
+        sortOrder: 6,
+        tag: 'APP',
+        published: true,
+        result: '1st place · HackX SFIT 2026',
+        spineColor: '#C9963C',
+        description: 'First-place project at HackX SFIT 2026.',
+      },
       { title: 'RAG Chatbot', tech: ['LangChain', 'FastAPI', 'OpenAI'] },
       { title: 'AI Research Assistant', tech: ['LangGraph', 'RAG', 'Chroma'] },
     ],
   },
 ];
 
-let counter = 0;
-const projects = CATS.flatMap(({ category, projects: catProjects }) =>
-  catProjects.map((p) => {
-    const id = ++counter;
-    return {
-      id,
-      title: p.title,
-      slug: p.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, ''),
-      category,
-      color: PALETTE[(id - 1) % PALETTE.length],
-      thumbnail: p.thumbnail || null,
-      emoji: p.emoji || '📘',
-      year: p.year || 2026,
-      links: p.links || { github: 'https://github.com/', demo: null },
-      gallery: p.gallery || null,
-      description:
-        p.description ||
-        `${p.title} is a placeholder ${category} project. A real description and imagery will be added in a later pass.`,
-      images: [],
-      project_url: `/projects/${p.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, '')}`,
-      tech_stack: p.tech,
-    };
+const DEFAULT_TAGS = {
+  'Data Analytics': 'SQL',
+  'Data Visualization': 'VIZ',
+  'Machine Learning': 'ML',
+  'Deep Learning': 'DL',
+  'AI Applications': 'NLP',
+};
+
+const slugify = (title) =>
+  title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+// Same ordering rule as backend/data.py: by sortOrder, unlisted projects last
+// in their original order (Array#sort is stable).
+const flat = CATS.flatMap(({ category, projects: catProjects }) =>
+  catProjects.map((p) => ({ ...p, category }))
+).sort((a, b) => (a.sortOrder ?? 1000) - (b.sortOrder ?? 1000));
+
+const projects = flat.map((p, i) => {
+  const id = i + 1;
+  const { category } = p;
+  return {
+    id,
+    title: p.title,
+    slug: slugify(p.title),
+    category,
+    color: PALETTE[(id - 1) % PALETTE.length],
+    thumbnail: p.thumbnail || null,
+    // Project Shelf fields: shown when published; empty result hides the metric line.
+    published: p.published === true,
+    sort_order: p.sortOrder ?? 1000 + id,
+    tag: p.tag || DEFAULT_TAGS[category] || '',
+    result: p.result || '',
+    spineColor: p.spineColor || SPINE_COLORS[(id - 1) % SPINE_COLORS.length],
+    emoji: p.emoji || '📘',
+    year: p.year || 2026,
+    links: p.links || { github: 'https://github.com/', demo: null },
+    gallery: p.gallery || null,
+    description:
+      p.description ||
+      `${p.title} is a placeholder ${category} project. A real description and imagery will be added in a later pass.`,
+    images: [],
+    project_url: `/projects/${slugify(p.title)}`,
+    tech_stack: p.tech,
+  };
+});
+
+// Chapter nav: published books page only through other published books (same as the backend).
+[projects.filter((p) => p.published), projects.filter((p) => !p.published)].forEach((chain) =>
+  chain.forEach((p, i) => {
+    const prevP = chain[i - 1];
+    const nextP = chain[i + 1];
+    p.prev = prevP ? { slug: prevP.slug, title: prevP.title } : null;
+    p.next = nextP ? { slug: nextP.slug, title: nextP.title } : null;
   })
 );
-
-// Chapter nav: adjacent projects in flat order, same convention as the backend.
-projects.forEach((p, i) => {
-  const prevP = projects[i - 1];
-  const nextP = projects[i + 1];
-  p.prev = prevP ? { slug: prevP.slug, title: prevP.title } : null;
-  p.next = nextP ? { slug: nextP.slug, title: nextP.title } : null;
-});
 
 export const fallbackProjects = projects;
