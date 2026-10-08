@@ -8,6 +8,9 @@ export default {
         ink: '#171717',
         terracotta: '#D9834A',
         mustard: '#FFE862',
+        // Project Shelf: warmer paper tone + brick accent
+        paper: '#F3EEE6',
+        brick: '#B5533C',
         // Toolbox browns — deep matte espresso + walnut panel
         bark: '#1B1109',
         barklight: '#2B1A0E',
@@ -17,6 +20,8 @@ export default {
       fontFamily: {
         sans: ['"General Sans"', 'Inter', 'system-ui', 'sans-serif'],
         display: ['"Playfair Display"', 'Georgia', 'serif'],
+        grotesk: ['"Schibsted Grotesk"', '"General Sans"', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       letterSpacing: {
         headline: '-0.03em',
