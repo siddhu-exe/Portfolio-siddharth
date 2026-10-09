@@ -125,9 +125,10 @@ _CATEGORIES = [
         [
             (
                 "LegalRAG",
-                ["RAG"],
-                "Retrieval-augmented question answering over 100k judgments, evaluated "
-                "on a 497-question benchmark.",
+                ["Python", "FastAPI", "FAISS", "BM25", "BGE Embeddings", "Cross-Encoder", "Groq", "React", "Docker", "AWS EC2"],
+                "A hybrid-retrieval RAG system over 100,000 Indian High Court judgments "
+                "that answers legal questions with citations to the exact retrieved "
+                "passages, evaluated on a 497-question gold benchmark.",
             ),
             (
                 "TruthMates",
@@ -184,6 +185,7 @@ _GALLERY_TEMPLATE = [
 _HEADER_META = {
     "FIFA World Cup Predictor": {"emoji": "⚽", "year": 2026},
     "Delhi Air Quality Risk Forecasting": {"emoji": "🌫️", "year": 2026},
+    "LegalRAG": {"emoji": "⚖️", "year": 2026},
 }
 
 # Per-project case-study copy, keyed by title. Every field is optional; the
@@ -194,7 +196,48 @@ _DETAILS = {
         "tag": "NLP",
         "published": True,
         "spineColor": "#263A52",
-        "result": "100k judgments · 497-question eval benchmark",
+        "result": "65.8% Recall@50 · 497-question benchmark",
+        # Figures and wording come from projects/LegalRAG/PORTFOLIO_SITE_GUIDE.md.
+        "subtitle": "Legal answers you can trace back to the judgment.",
+        "description": "LegalRAG answers legal questions over 100,000 Indian High Court judgments "
+        "(538,079 searchable chunks). A BM25 + dense (BGE) hybrid retriever feeds Reciprocal Rank "
+        "Fusion and a cross-encoder reranker, and a Groq-hosted LLM writes an answer that cites the "
+        "passages it used. The project's focus is measurement: a 497-question evidence-grounded "
+        "benchmark scores retrieval Recall@k, answer faithfulness, citation correctness, and where "
+        "failures come from. Served through a fail-closed FastAPI backend with per-stage latency "
+        "reporting and a React interface. The live demo's backend runs on AWS EC2 and is stopped when "
+        "idle, so queries only work while it is up.",
+        "problem": "Generic RAG struggles with legal text: exact statute numbers, long judgments, "
+        "and the cost of an invented citation.",
+        "data_text": "100,000 High Court judgments across 24 courts, cleaned and split into "
+        "538,079 overlapping chunks.",
+        "metric": "65.8%",
+        "metric_label": "Recall@50 of the correct judgment (hybrid RRF)",
+        "reflection": "Retrieval, not the LLM, caused about 84% of the bad answers — so improving "
+        "search mattered more than swapping models.",
+        "thumbnail": "/images/legalrag/09_ui_query_console.png",
+        "heroImage": "/images/legalrag/01_end_to_end_rag_architecture.png",
+        "links": {
+            "github": "https://github.com/siddhu-exe/LegalRag",
+            "demo": "https://legalrag-six.vercel.app",
+        },
+        "gallery_overrides": {
+            "architecture": ["/images/legalrag/01_end_to_end_rag_architecture.png"],
+            "pipeline": [
+                "/images/legalrag/02_data_ingestion_indexing_pipeline.png",
+                "/images/legalrag/06_latency_waterfall_breakdown.png",
+            ],
+            "ml": [
+                "/images/legalrag/03_retrieval_benchmark_comparison.png",
+                "/images/legalrag/04_generation_eval_llm_judge.png",
+                "/images/legalrag/07_question_type_performance.png",
+            ],
+            "platform": [
+                "/images/legalrag/09_ui_query_console.png",
+                "/images/legalrag/10_ui_grounded_answer_citations.png",
+            ],
+            "results": ["/images/legalrag/05_failure_taxonomy_distribution.png"],
+        },
     },
     "BitcoinGraphGuard": {
         "sort_order": 3,

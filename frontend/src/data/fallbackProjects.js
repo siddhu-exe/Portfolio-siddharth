@@ -128,13 +128,28 @@ const CATS = [
     projects: [
       {
         title: 'LegalRAG',
-        tech: ['RAG'],
+        tech: ['Python', 'FastAPI', 'FAISS', 'BM25', 'BGE Embeddings', 'Cross-Encoder', 'Groq', 'React', 'Docker', 'AWS EC2'],
+        thumbnail: '/images/legalrag/09_ui_query_console.png',
         sortOrder: 1,
         tag: 'NLP',
         published: true,
-        result: '100k judgments · 497-question eval benchmark',
+        result: '65.8% Recall@50 · 497-question benchmark',
         spineColor: '#263A52',
-        description: 'Retrieval-augmented question answering over 100k judgments, evaluated on a 497-question benchmark.',
+        emoji: '⚖️',
+        year: 2026,
+        description:
+          "LegalRAG answers legal questions over 100,000 Indian High Court judgments (538,079 searchable chunks). A BM25 + dense (BGE) hybrid retriever feeds Reciprocal Rank Fusion and a cross-encoder reranker, and a Groq-hosted LLM writes an answer that cites the passages it used. The project's focus is measurement: a 497-question evidence-grounded benchmark scores retrieval Recall@k, answer faithfulness, citation correctness, and where failures come from. Served through a fail-closed FastAPI backend with per-stage latency reporting and a React interface. The live demo's backend runs on AWS EC2 and is stopped when idle, so queries only work while it is up.",
+        links: {
+          github: 'https://github.com/siddhu-exe/LegalRag',
+          demo: 'https://legalrag-six.vercel.app',
+        },
+        gallery: [
+          { key: 'architecture', heading: 'Architecture', subtitle: 'The complete system architecture, from data collection to prediction.', images: ['/images/legalrag/01_end_to_end_rag_architecture.png'] },
+          { key: 'pipeline', heading: 'Data Pipeline', subtitle: 'From raw data to production-ready predictions and features.', images: ['/images/legalrag/02_data_ingestion_indexing_pipeline.png', '/images/legalrag/06_latency_waterfall_breakdown.png'] },
+          { key: 'ml', heading: 'Machine Learning', subtitle: 'How the model learns, evaluates, and predicts outcomes.', images: ['/images/legalrag/03_retrieval_benchmark_comparison.png', '/images/legalrag/04_generation_eval_llm_judge.png', '/images/legalrag/07_question_type_performance.png'] },
+          { key: 'platform', heading: 'Platform', subtitle: 'Interactive dashboards and prediction experiences built for users.', images: ['/images/legalrag/09_ui_query_console.png', '/images/legalrag/10_ui_grounded_answer_citations.png'] },
+          { key: 'results', heading: 'Results', subtitle: 'The final outcome of the project and its key achievements.', images: ['/images/legalrag/05_failure_taxonomy_distribution.png'] },
+        ],
       },
       {
         title: 'TruthMates',
