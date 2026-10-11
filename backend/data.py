@@ -263,7 +263,7 @@ _DETAILS = {
     "Customer Churn Analysis": {
         "sort_order": 7,
         "tag": "SQL",
-        "published": True,
+        "published": False,
         "spineColor": "#5C4A3A",
         "subtitle": "Finding why customers leave — before they do.",
         "problem": "A subscription business was shedding customers without knowing why. "
@@ -283,7 +283,7 @@ _DETAILS = {
     "Retail Sales Analysis": {
         "sort_order": 8,
         "tag": "SQL",
-        "published": True,
+        "published": False,
         "spineColor": "#3F5B54",
         "subtitle": "Turning a year of receipts into a plan.",
         "problem": "A multi-store retailer had rich sales history but no shared read on what "
@@ -301,7 +301,7 @@ _DETAILS = {
     "Sales Dashboard (Tableau)": {
         "sort_order": 9,
         "tag": "VIZ",
-        "published": True,
+        "published": False,
         "spineColor": "#8C3B2E",
         "subtitle": "One source of truth stakeholders actually open.",
         "problem": "Leadership was drowning in spreadsheets that never agreed with each "
@@ -318,7 +318,7 @@ _DETAILS = {
     "IPL Data Visualization": {
         "sort_order": 10,
         "tag": "VIZ",
-        "published": True,
+        "published": False,
         "spineColor": "#D9C3A0",
         "subtitle": "A decade of cricket, told visually.",
         "problem": "Ten seasons of match data held great stories, but they were buried in "

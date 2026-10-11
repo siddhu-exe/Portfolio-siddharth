@@ -8,15 +8,15 @@ const CATS = [
   {
     category: 'Data Analytics',
     projects: [
-      { title: 'Customer Churn Analysis', tech: ['Pandas', 'SQL', 'Matplotlib'], sortOrder: 7, tag: 'SQL', published: true, spineColor: '#5C4A3A' },
-      { title: 'Retail Sales Analysis', tech: ['Pandas', 'NumPy', 'Seaborn'], sortOrder: 8, tag: 'SQL', published: true, spineColor: '#3F5B54' },
+      { title: 'Customer Churn Analysis', tech: ['Pandas', 'SQL', 'Matplotlib'], sortOrder: 7, tag: 'SQL', published: false, spineColor: '#5C4A3A' },
+      { title: 'Retail Sales Analysis', tech: ['Pandas', 'NumPy', 'Seaborn'], sortOrder: 8, tag: 'SQL', published: false, spineColor: '#3F5B54' },
     ],
   },
   {
     category: 'Data Visualization',
     projects: [
-      { title: 'Sales Dashboard (Tableau)', tech: ['Tableau', 'SQL', 'Excel'], sortOrder: 9, tag: 'VIZ', published: true, spineColor: '#8C3B2E' },
-      { title: 'IPL Data Visualization', tech: ['Python', 'Plotly', 'Pandas'], sortOrder: 10, tag: 'VIZ', published: true, spineColor: '#D9C3A0' },
+      { title: 'Sales Dashboard (Tableau)', tech: ['Tableau', 'SQL', 'Excel'], sortOrder: 9, tag: 'VIZ', published: false, spineColor: '#8C3B2E' },
+      { title: 'IPL Data Visualization', tech: ['Python', 'Plotly', 'Pandas'], sortOrder: 10, tag: 'VIZ', published: false, spineColor: '#D9C3A0' },
     ],
   },
   {
