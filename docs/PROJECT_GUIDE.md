@@ -7,7 +7,7 @@ whatever you're changing.
 
 > Companion docs (more detail on specific tasks):
 > - [`ADDING_PROJECTS.md`](ADDING_PROJECTS.md) — add a book (project) to the shelf.
-> - [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md) — the per-project detail page & its image galleries.
+> - [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md) — the project page: one template, one data file per project.
 
 ---
 
@@ -21,8 +21,10 @@ scroll transitions, and clicking a "book" opens a project case-study page.
   for animation, Lenis for smooth scroll, React Router for the 2 routes.
 - **Backend:** FastAPI (Python). Serves project data and accepts the contact form.
   It is **data-only** — all visuals live in the frontend.
-- **Source of truth for content:** the backend (`backend/data.py`). The frontend
-  fetches it; a bundled fallback keeps the UI working if the API is down.
+- **Source of truth for content:** the shelf (title, tag, order, spine colour,
+  result) is the backend (`backend/data.py`); the frontend fetches it and a bundled
+  fallback keeps the UI working if the API is down. The case-study **project page**
+  content lives in the frontend, one file per project (`src/data/projects/`).
 
 ## 2. Run it
 
@@ -50,7 +52,7 @@ Portfolio/
 ├── docs/
 │   ├── PROJECT_GUIDE.md      ← you are here (architecture overview)
 │   ├── ADDING_PROJECTS.md    ← add/edit books & shelves
-│   └── CHAPTER_PAGE.md       ← the /projects/:slug page & galleries
+│   └── CHAPTER_PAGE.md       ← the /projects/:slug project page (template + schema)
 ├── backend/
 │   ├── main.py               ← FastAPI app: 3 GET + 1 POST endpoint, CORS
 │   ├── data.py               ← THE content source of truth (projects, shelves, galleries)
@@ -64,11 +66,17 @@ Portfolio/
         ├── App.jsx           ← providers + the 2 routes
         ├── index.css         ← Tailwind layers + a few global utility classes
         ├── api.js            ← fetchProjects / fetchProject / sendContact
-        ├── data/fallbackProjects.js ← offline mirror of backend project data
+        ├── data/
+        │   ├── fallbackProjects.js ← offline mirror of the backend shelf data
+        │   ├── shelfBooks.js       ← shelf helpers (published filter, sort, spine contrast)
+        │   ├── projectPage.js      ← builds the project-page view-model (hides empty blocks)
+        │   └── projects/           ← one content file per project + schema.js + index.js
+        ├── hooks/            ← useMediaQuery, useShelfBooks
         ├── pages/
         │   ├── Home.jsx      ← the scroll-through single page (composition root)
-        │   └── ProjectDetail.jsx ← /projects/:slug case-study page
+        │   └── ProjectDetail.jsx ← /projects/:slug, renders <ProjectPage>
         └── components/       ← one component per section / effect (see §6)
+            └── project/      ← the project-page template (laptop + mobile layouts)
 ```
 
 ## 4. Design tokens (Tailwind) — use these, don't hardcode hex
@@ -151,7 +159,8 @@ Key structural facts (do not break these):
 | File | Role |
 |------|------|
 | `BookModal.jsx` | Opens on book click; "View Full Project" → `usePageTransition` to `/projects/:slug`. |
-| `ImageGallery.jsx` | Chapter-page gallery: 1 img=full, 2=side-by-side, 3+=horizontal scroll. |
+| `project/ProjectPage.jsx` | The project-page template; mounts `LaptopLayout` (>= 1024px) or `MobileLayout` (one at a time). Styles in `project/project.css`, motion in `project/useProjectMotion.js`. See `CHAPTER_PAGE.md`. |
+| `ImageGallery.jsx` | Legacy: the old chapter-page image gallery. No longer used by the project page. |
 | `ContactModal.jsx` | The contact form; POSTs via `sendContact`. |
 | `MenuPill.jsx` | The hero's expandable nav pill. |
 | `Signature.jsx` | SVG signature with a draw-on animation (`play` prop). |
@@ -161,7 +170,7 @@ Key structural facts (do not break these):
 | `EyeFollowButton.jsx` | Button whose "eyes" track the cursor. |
 | `FrameLines.jsx` | The two fixed vertical border lines framing the whole site. |
 
-**Pages:** `Home.jsx` (§5), `ProjectDetail.jsx` (see `CHAPTER_PAGE.md`).
+**Pages:** `Home.jsx` (§5), `ProjectDetail.jsx` (loads shelf + content, renders `ProjectPage`; see `CHAPTER_PAGE.md`).
 
 ## 7. The vertical frame lines (why content must respect `px-8 md:px-16`)
 
@@ -215,17 +224,21 @@ inherits this automatically — don't create a second Lenis instance.
 | `POST /api/contact` | validates `{name, email, message}`, appends to `contact_messages.jsonl`, returns `{ok, message}` |
 | `GET /api/health` | `{status: "ok"}` |
 
-All project content is built in `backend/data.py` (see `ADDING_PROJECTS.md` for
-the exact shape and how to add entries). `frontend/src/data/fallbackProjects.js`
-mirrors it for offline use — keep them roughly in sync.
+The shelf data is built in `backend/data.py` (see `ADDING_PROJECTS.md` for the
+exact shape and how to add entries). `frontend/src/data/fallbackProjects.js`
+mirrors it for offline use — keep them roughly in sync. The project page does not
+fetch case-study content from the API; it reads `src/data/projects/<slug>.js` and
+takes only volume/tag/spine colour/key result from the shelf list.
 
 ## 10. How to make common changes (playbook)
 
 - **Add / edit a project or category** → `backend/data.py` (+ mirror in
-  `fallbackProjects.js`). Full steps in `ADDING_PROJECTS.md`. You rarely touch
-  React for this — the shelf and chapter page are data-driven.
-- **Edit the project detail page layout / galleries** → `ProjectDetail.jsx` +
-  `ImageGallery.jsx`; see `CHAPTER_PAGE.md`.
+  `fallbackProjects.js`) for the shelf, and `src/data/projects/<slug>.js` for the
+  page. Full steps in `ADDING_PROJECTS.md`. You rarely touch React for this — the
+  shelf and project page are data-driven.
+- **Edit the project page** → content: `src/data/projects/<slug>.js`; design for all
+  projects: `components/project/` (`LaptopLayout.jsx`, `MobileLayout.jsx`,
+  `project.css`); see `CHAPTER_PAGE.md`.
 - **Change a section's look** → edit that section's component in §6. It won't
   affect the transitions (those live in `PinnedCurtainChain` / Home).
 - **Change / add a scroll transition** → `Home.jsx` (composition) and/or
@@ -300,7 +313,7 @@ full-width writeup below. The desktop spread JSX is unchanged — it's just wrap
 ### 12.4 Return-from-project: skip intro, land on the shelf
 Returning from a project page skips the Hero intro and opens directly on the
 bookshelf (both mobile and desktop). Flow:
-- `ProjectDetail.jsx` `goBack()` calls `transitionTo('/', { …, landAt: 'shelf' })`.
+- `useProjectNav.js` (`goBack`) calls `transitionTo('/', { …, landAt: 'shelf' })`.
 - `PageTransition.jsx` forwards `landAt` into React Router location state
   (`navigate(path, { state:{ landAt } })`) and **skips its usual
   `window.scrollTo(0,0)`** when `landAt` is set (Home places the scroll instead).
@@ -331,13 +344,22 @@ md:block` — desktop untouched. Articles gained an optional `readTime` field
 (rendered only when present); the section stays data-driven off the `ARTICLES`
 array, so both layouts pick up new entries automatically.
 
-### 12.6 Mobile verification checklist
+### 12.6 The project page's mobile layout
+Unlike the rest of the site, the project page does **not** layer mobile onto one
+desktop tree: below 1024px (`lg`, not `md`) `ProjectPage` mounts a separate
+`MobileLayout` instead of `LaptopLayout` (switched with `matchMedia`; only one is
+ever mounted, so animations never run twice). Between 768 and 1023px it stays a
+single 640px-max column so content clears the 40px frame lines. Details in
+`CHAPTER_PAGE.md`.
+
+### 12.7 Mobile verification checklist
 Run the app (`npm run dev`) and check at a narrow width (DevTools device mode or
 a real phone) AND at desktop width:
 - Footer: scroll to bottom — full cream strip + stacked GitHub/LinkedIn/email are
   visible, nothing clipped by the browser bar.
-- Book: tap a spine — cover flips up, image banner + readable full-width writeup;
-  "View Full Project" works.
+- Book: tap a spine — cover flips up (in the spine's own colour), image banner +
+  readable full-width writeup; "View Full Project" works and the project page
+  opens at the top.
 - Back from a project → lands on the shelf, no intro; a fresh reload of `/` still
   plays the intro from the top.
 - Reading Corner: timeline with first item open; tap rows to expand, "Read ↗"

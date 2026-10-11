@@ -16,12 +16,15 @@ The site is a library.
 - Clicking a book opens the **book preview** — a modal that flips open like a
   real book and shows the project's image, description, tech stack, and a
   **View Full Project** button.
-- **View Full Project** navigates (with a full-page book-cover transition) to the
-  **Chapter page** at `/projects/:slug` — the full case study.
+- **View Full Project** navigates (with a full-page book-cover transition, in the
+  book's own spine colour) to the **project page** at `/projects/:slug` — the full
+  five-chapter case study.
 
-**The backend is the single source of truth for project content.** The frontend
-fetches it and renders it. There is also a small **frontend fallback** used only
-when the backend is unreachable, so the shelf never renders empty.
+**The backend is the source of truth for the shelf** (title, tag, order, spine
+colour, one-line result). The frontend fetches it, with a small **frontend
+fallback** used only when the backend is unreachable, so the shelf never renders
+empty. The **case-study page content** lives in the frontend, one file per project
+in `frontend/src/data/projects/` (see [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md)).
 
 ## Files you will touch
 
@@ -30,12 +33,13 @@ when the backend is unreachable, so the shelf never renders empty.
 | `backend/data.py` | **Primary.** Categories, per-project content, approach steps, colors. |
 | `frontend/src/data/fallbackProjects.js` | Offline fallback list (keep roughly in sync). |
 | `frontend/src/data/shelfBooks.js` | Shelf selection/presentation helpers (published filter, sort, tag stamp, spine contrast). Only touch to change shelf rules. |
+| `frontend/src/data/projects/<slug>.js` + `index.js` | The project's **case-study page content** (stats, chapters, figures…). One file per project, registered in `index.js`. |
 
-You do **not** need to touch `ProjectShelf.jsx`, the modal, or the Chapter page
-components — they are data-driven and render whatever the backend returns.
+You do **not** need to touch `ProjectShelf.jsx`, the modal, or the project-page
+components — they are data-driven.
 
-> For the Chapter page's gallery sections specifically (images, layout rules,
-> `emoji`/`year`, chapter nav), see [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md).
+> For the project page (schema, hidden-when-empty rules, layouts, motion), see
+> [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md).
 
 ---
 
@@ -50,12 +54,12 @@ Every project the API returns looks like this (built in `backend/data.py`):
   "slug": "fifa-world-cup-predictor",      // auto-generated from title
   "category": "Machine Learning",           // grouping in the data; the shelf shows `tag` instead
   "color": "#7FA98F",                        // book-modal cover + gallery-placeholder color (pastel, by order)
-  "emoji": "⚽",                             // shown next to the title on the Chapter page header
-  "year": 2026,                              // shown top-right on the Chapter page header
+  "emoji": "⚽",                             // (legacy) the old chapter-page header; the new project page doesn't use it
+  "year": 2026,                              // (legacy) the project page takes its year from its own content file
   "subtitle": "Forecasting matches from decades of form.",
   "thumbnail": "https://.../...",            // small preview image (book modal)
   "heroImage": "https://.../...",            // (legacy) large image, no longer shown on the Chapter page
-  "description": "…",                         // shown in the book-preview modal AND the Chapter page intro
+  "description": "…",                         // shown in the book-preview modal
   "problem": "…",                             // (legacy, kept for the book-preview modal / API consumers)
   "data": { "text": "…", "visual": null },    // (legacy, same as above)
   "approach": { "steps": [{ "label": "Train" }, …] }, // (legacy, same as above)
@@ -66,8 +70,8 @@ Every project the API returns looks like this (built in `backend/data.py`):
   "tag": "ML",                               // stamp on the row; SUBJECTS counts distinct tags
   "spineColor": "#7A2E2A",                   // spine binding colour on the shelf (text/foil contrast is automatic)
   "reflection": "…",                          // (legacy)
-  "links": { "github": "https://…", "demo": null }, // Chapter page closing row
-  "gallery": [                                // Chapter page gallery sections, IN ORDER
+  "links": { "github": "https://…", "demo": null }, // book-preview modal buttons (the project page has its own links in its content file)
+  "gallery": [                                // (legacy) the old image-gallery page; the project page no longer reads it
     { "key": "architecture", "heading": "Architecture", "subtitle": "…", "images": ["https://…"] },
     { "key": "pipeline",     "heading": "Data Pipeline", "subtitle": "…", "images": ["https://…", "https://…"] },
     { "key": "ml",           "heading": "Machine Learning", "subtitle": "…", "images": ["…", "…", "…"] },
@@ -87,16 +91,16 @@ Every project the API returns looks like this (built in `backend/data.py`):
 - `slug`, `thumbnail`, `heroImage`, `gallery[].images` placeholders, and
   `prev`/`next` are **all generated automatically**. You normally only write
   the text fields (title, tech, description, and the optional `_DETAILS` copy).
-- `problem`, `data`, `approach`, `result`, `reflection` are **legacy fields**
-  kept in the API response for any older consumer, but the current Chapter
-  page (see below) does **not** render them — it renders `gallery` instead.
-  You can still fill `_DETAILS` for them (harmless), but they're not required.
+- `problem`, `data`, `approach`, `reflection`, `gallery`, `emoji` are **legacy
+  fields** kept in the API response for any older consumer. The current project
+  page does **not** read them — it renders the project's content file in
+  `frontend/src/data/projects/`. You can still fill `_DETAILS` for them
+  (harmless), but they're not required.
 
-> 📖 **For a full walkthrough of the Chapter page's exact layout, the gallery
-> image-count rules, and how to customize per-project galleries**, see
-> [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md) in this folder. This file (`ADDING_PROJECTS.md`)
-> covers the shelf/book side; that one covers the full case-study page you land
-> on after clicking **View Full Project**.
+> 📖 **For the project page** (schema, layouts, hidden-when-empty rules, motion),
+> see [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md) in this folder. This file covers the
+> shelf/book side; that one covers the full case-study page you land on after
+> clicking **View Full Project**.
 
 ---
 
@@ -166,12 +170,20 @@ simply has no metric line. Text/foil colours on a spine are picked automatically
 for contrast against `spineColor`. Chapter prev/next links stay within the
 published set (and unpublished books chain among themselves).
 
-### 4. Mirror it in the fallback (optional but nice)
+### 4. Add the project page content
+
+Create `frontend/src/data/projects/<slug>.js` (copy an existing one, e.g.
+`legalrag.js`; the slug is the title lower-cased with dashes) and register it in
+`frontend/src/data/projects/index.js`. Anything you don't have yet stays `TODO` and is
+hidden on the page. Volume number, tag, spine colour and key result come from the
+shelf, so don't repeat them. Details in [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md).
+
+### 5. Mirror it in the fallback (optional but nice)
 
 Edit `frontend/src/data/fallbackProjects.js` and add the same title/tech to the
 matching category in the `CATS` array, so the offline view matches.
 
-### 5. Restart the backend
+### 6. Restart the backend
 
 ```bash
 cd backend && .venv/bin/uvicorn main:app --reload --port 8000
@@ -211,43 +223,40 @@ You don't edit these, but here's what each field maps to so you know what to
 write:
 
 **Book preview modal** (opens on book click):
-- cover: `title`, `category`, `color`
+- cover: `title`, `category`, `spineColor` (same colour as the shelf spine; text colour picked automatically for contrast)
 - inside: `thumbnail`/`heroImage`, `description`, `tech_stack`
 - button: **View Full Project** → `/projects/{slug}`
 
-**Chapter page** (`/projects/:slug`) — see [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md) for
+**Project page** (`/projects/:slug`) — see [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md) for
 the full breakdown, summarized here:
-| Section | Field |
-|---------|-------|
-| Header | `emoji`, `title`, `category`, `year` |
-| Description | `description` |
-| Stack row | `tech_stack[]` |
-| Gallery sections (×5, in order) | `gallery[]` — each `{ heading, subtitle, images[] }` |
-| Closing row | `links.github`, `links.demo` (optional) |
-| Chapter nav | `prev` / `next` (auto-computed) |
+| Section | Source |
+|---------|--------|
+| Cover, `VOL.NN`, tag pill, key result, next/prev volume | the shelf (`sort_order`, `tag`, `spineColor`, `result`) |
+| Title, tagline, links, meta, stats, overview, stack | `frontend/src/data/projects/<slug>.js` |
+| Chapters 01–05 (architecture, data pipeline, ML, platform, results) | the same content file, `chapters.*` |
 
 ---
 
 ## Colors
 
-Two separate colours per project:
-- `spineColor` (in `_DETAILS`) — the Project Shelf row. Without it, rows cycle
-  through `SPINE_COLORS`. Light or dark text and gold or dark-brown foil are chosen
-  automatically (`spineTheme` in `shelfBooks.js`).
-- `color` — from `PALETTE` by order; used by the book modal and gallery
-  placeholders. It deliberately avoids pure black/white.
+`spineColor` (in `_DETAILS`) is the book's colour **everywhere**: the shelf row, the
+opening book cover in the modal, the page-transition cover, the project page's hero
+cover, and the next-volume card. Without it, rows cycle through `SPINE_COLORS`.
+Light or dark text and gold or dark-brown foil are chosen automatically
+(`spineTheme` in `shelfBooks.js`). `color` (from `PALETTE` by order) is now only a
+fallback for books with no `spineColor`.
 
 ## Real images later
 
-`thumbnail`, `heroImage`, and every `gallery[].images` entry currently use
-`placehold.co` placeholders tinted to the project color. Replace them with real
-image URLs (or local `/public` paths) when available — the layout already
-supports them; see [`CHAPTER_PAGE.md`](CHAPTER_PAGE.md) for exactly how the
-gallery's image count controls its layout.
+`thumbnail` (the book-preview image) uses a `placehold.co` placeholder until you set
+`thumbnail` in `_DETAILS`. Project-page images go in the project's content file as
+`/images/<slug>/…` paths (a figure with no `src` is simply hidden); see
+[`CHAPTER_PAGE.md`](CHAPTER_PAGE.md).
 
 ## Quick checklist for a new book
 
 - [ ] Added `(title, tech, description)` to the right category in `_CATEGORIES`
 - [ ] Added a `_DETAILS[title]` entry with `published`, `sort_order`, `tag`, `spineColor` (and `result` if there is a one-line metric) plus the case-study copy
+- [ ] Added `frontend/src/data/projects/<slug>.js` and registered it in `projects/index.js`
 - [ ] Mirrored it in `fallbackProjects.js` (`sortOrder`, `tag`, `published`, `spineColor`, `result`)
 - [ ] Restarted the backend and confirmed the book appears + opens
