@@ -3,6 +3,14 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePageTransition } from './PageTransition.jsx';
 import EyeFollowButton from './EyeFollowButton.jsx';
+import { spineTheme } from '../data/shelfBooks.js';
+
+// The book keeps the colour of its shelf spine (and a readable text colour on it) all the way
+// through the open animation and the page transition.
+const coverOf = (p) => {
+  const color = p.spineColor || p.color;
+  return { color, ...spineTheme(color) };
+};
 
 const EASE = [0.22, 1, 0.36, 1];
 // Cover flip + spread re-centering share this so the book stays physical.
@@ -137,7 +145,7 @@ export default function BookModal({ project, onClose }) {
                     <EyeFollowButton
                       onClick={() =>
                         transitionTo(`/projects/${project.slug}`, {
-                          color: project.color,
+                          color: coverOf(project).color,
                           title: project.title,
                           category: project.category,
                         })
@@ -193,23 +201,23 @@ export default function BookModal({ project, onClose }) {
                 {/* front face: the book cover */}
                 <div
                   className="absolute inset-0 flex flex-col items-center justify-between rounded-r-xl p-6 shadow-2xl md:p-8"
-                  style={{ backfaceVisibility: 'hidden', backgroundColor: project.color }}
+                  style={{ backfaceVisibility: 'hidden', backgroundColor: coverOf(project).color, color: coverOf(project).text }}
                 >
                   {/* spine curvature */}
                   <span className="pointer-events-none absolute inset-y-0 left-0 w-5 rounded-l-sm bg-gradient-to-r from-black/35 to-transparent" />
                   {/* embossed frame */}
-                  <span className="pointer-events-none absolute inset-3 rounded-lg border border-black/25" />
-                  <span className="pointer-events-none absolute inset-4 rounded-md border border-black/10" />
+                  <span className="pointer-events-none absolute inset-3 rounded-lg border border-current opacity-30" />
+                  <span className="pointer-events-none absolute inset-4 rounded-md border border-current opacity-15" />
 
-                  <span className="relative mt-4 text-[10px] font-semibold uppercase tracking-[0.3em] text-ink/60 md:text-xs">
+                  <span className="relative mt-4 text-[10px] font-semibold uppercase tracking-[0.3em] opacity-60 md:text-xs">
                     {project.category}
                   </span>
-                  <span className="relative px-2 text-center text-xl font-bold leading-tight tracking-tight text-ink/90 md:text-3xl">
+                  <span className="relative px-2 text-center text-xl font-bold leading-tight tracking-tight opacity-90 md:text-3xl">
                     {project.title}
                   </span>
                   <span className="relative mb-4 flex flex-col items-center gap-2">
-                    <span className="h-px w-10 bg-ink/40" />
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-ink/60 md:text-xs">
+                    <span className="h-px w-10 bg-current opacity-40" />
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.25em] opacity-60 md:text-xs">
                       S. Dongardive
                     </span>
                   </span>
@@ -223,7 +231,7 @@ export default function BookModal({ project, onClose }) {
                   <span className="pointer-events-none absolute inset-y-0 right-0 w-6 bg-gradient-to-l from-black/15 to-transparent" />
                   <div
                     className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-lg p-2"
-                    style={{ backgroundColor: project.thumbnail ? '#f8fafc' : project.color }}
+                    style={{ backgroundColor: project.thumbnail ? '#f8fafc' : coverOf(project).color }}
                   >
                     {project.thumbnail ? (
                       <img
@@ -282,7 +290,7 @@ function MobileSpread({ project, onClose, transitionTo }) {
         {/* revealed image (under the cover) */}
         <div
           className="absolute inset-0 flex items-center justify-center overflow-hidden p-2"
-          style={{ backgroundColor: project.thumbnail ? '#f8fafc' : project.color }}
+          style={{ backgroundColor: project.thumbnail ? '#f8fafc' : coverOf(project).color }}
         >
           {project.thumbnail ? (
             <img src={project.thumbnail} alt={project.title} className="h-full w-full object-contain" loading="lazy" />
@@ -303,17 +311,17 @@ function MobileSpread({ project, onClose, transitionTo }) {
         >
           <div
             className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-6"
-            style={{ backfaceVisibility: 'hidden', backgroundColor: project.color }}
+            style={{ backfaceVisibility: 'hidden', backgroundColor: coverOf(project).color, color: coverOf(project).text }}
           >
             <span className="pointer-events-none absolute inset-x-0 top-0 h-5 bg-gradient-to-b from-black/35 to-transparent" />
-            <span className="pointer-events-none absolute inset-3 rounded-lg border border-black/25" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-ink/60">{project.category}</span>
-            <span className="px-2 text-center text-xl font-bold leading-tight tracking-tight text-ink/90">
+            <span className="pointer-events-none absolute inset-3 rounded-lg border border-current opacity-30" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.3em] opacity-60">{project.category}</span>
+            <span className="px-2 text-center text-xl font-bold leading-tight tracking-tight opacity-90">
               {project.title}
             </span>
             <span className="mt-1 flex flex-col items-center gap-1.5">
-              <span className="h-px w-10 bg-ink/40" />
-              <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-ink/60">S. Dongardive</span>
+              <span className="h-px w-10 bg-current opacity-40" />
+              <span className="text-[10px] font-semibold uppercase tracking-[0.25em] opacity-60">S. Dongardive</span>
             </span>
           </div>
         </motion.div>
@@ -347,7 +355,7 @@ function MobileSpread({ project, onClose, transitionTo }) {
             <EyeFollowButton
               onClick={() =>
                 transitionTo(`/projects/${project.slug}`, {
-                  color: project.color,
+                  color: coverOf(project).color,
                   title: project.title,
                   category: project.category,
                 })
