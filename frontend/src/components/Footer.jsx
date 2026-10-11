@@ -70,8 +70,8 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
                 </a>
               ))}
             </div>
-            <a href="mailto:dongardivedeepak17@gmail.com" className="transition-colors hover:text-ink">
-              dongardivedeepak17@gmail.com
+            <a href="mailto:siddhartdongardive23@gmail.com" className="transition-colors hover:text-ink">
+              siddhartdongardive23@gmail.com
             </a>
           </div>
 
@@ -108,7 +108,7 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
 
           {/* big CTA — the footer's primary call to action, centered */}
           <a
-            href="mailto:dongardivedeepak17@gmail.com"
+            href="mailto:siddhartdongardive23@gmail.com"
             className="group inline-flex flex-wrap items-baseline gap-x-3 md:justify-center"
           >
             <span className="font-display text-4xl font-bold leading-[0.95] tracking-headline text-ink md:text-5xl">
