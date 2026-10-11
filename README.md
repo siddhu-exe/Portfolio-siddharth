@@ -1,214 +1,96 @@
-# Portfolio Website
+# Portfolio — a digital library of data & AI work
 
-[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![GSAP](https://img.shields.io/badge/GSAP-ScrollTrigger-88CE02?logo=greensock&logoColor=white)](https://gsap.com/)
 [![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 
-An interactive portfolio for Siddharth Dongardive, presented as a digital library of data, machine learning, deep learning, and AI application work. The experience combines a React/Vite frontend with a small FastAPI service that supplies project and contact data.
+The personal portfolio of **Siddharth Dongardive** (data, ML and AI applications). Every project is a **book on a shelf**: pick one, it opens, and you read it as a five-chapter case study.
 
----
+<!-- TODO: add the live site link and 2–3 screenshots/GIF here (e.g. docs/screenshots/*.png) — a visual in the first screen is the single biggest README win. -->
 
-## The Story
+## Why it exists
 
-This portfolio is built around one idea: every domain of expertise is a bookshelf, and every project is a book.
+A grid of project cards says what was built but not how it was thought about. This site gives every project the same structure, so a reader can compare them and find the answers they care about quickly:
 
-Instead of arranging work as a grid of traditional project cards, the site groups projects into shelves such as Data Analytics, Data Visualization, Machine Learning, Deep Learning, and AI Applications. Selecting a book opens it as a physical object, then leads into a project “chapter” with its description, stack, gallery sections, links, and previous/next navigation.
+**Architecture → Data Pipeline → Machine Learning → Platform → Results.**
 
-The result is an engineering journey rather than a catalogue. The interaction, pacing, and page transitions give each project context: a challenge solved, a lesson learned, and a chapter in a growing body of work.
+## What's inside
 
----
+- **The Shelf:** a flat stack of book spines (one volume per project) with hover, a "reading head" and a book-opening modal. A spine keeps its colour from shelf to modal to the page-transition cover.
+- **The project page (`/projects/:slug`):** one template for every project, with separate laptop and mobile layouts. It has a sticky chapter strip with reading progress, a dark architecture spread, step timelines, metric tables, and a next-volume card. Blocks with no data are hidden, never shown as placeholders.
+- **Motion:** Lenis smooth scroll synced with GSAP ScrollTrigger, SplitText headlines, pinned section transitions, and a fixed-footer reveal. It respects `prefers-reduced-motion` and falls back to native scroll on touch.
+- **Backend:** a small FastAPI service for project data and a contact form, with bundled fallback data so the site still works if the API is down.
 
-## Features
+## Tech stack
 
-- [x] Animated hero introduction with a self-drawing signature
-- [x] Staggered hero typography and cycling typewriter copy
-- [x] Cursor-following interaction badges and proximity text
-- [x] Morphing menu pill with Home, Works, and Contact navigation
-- [x] Data-driven bookshelf navigation across five expertise domains
-- [x] Interactive book spines with hover states and custom cursor treatment
-- [x] Animated book-opening modal with responsive mobile layout
-- [x] Project chapter routes at `/projects/:slug`
-- [x] Chapter galleries with architecture, pipeline, model, platform, and results sections
-- [x] Previous/next chapter navigation
-- [x] Scroll-linked statement reveal and staged pinned section transitions
-- [x] Smooth scrolling with Lenis and GSAP ScrollTrigger synchronisation
-- [x] Toolbox section and reading-corner article section
-- [x] Animated footer reveal with social links, India clock, and contact modal
-- [x] FastAPI project API with bundled frontend fallback data
-- [x] Reduced-motion and touch-device fallbacks
+| Layer | Tools |
+| --- | --- |
+| Frontend | React 18, React Router 6, Vite 5, Tailwind CSS 3 |
+| Motion | GSAP (ScrollTrigger, SplitText), Lenis, Framer Motion |
+| Backend | FastAPI, Uvicorn, Pydantic |
 
----
+## Quick start
 
-## Design Philosophy
-
-The interface stays deliberately spare: cream, ink, terracotta, mustard, and wood tones establish a quiet editorial canvas while the content does the explaining.
-
-The bookshelf metaphor gives the work an information architecture that is easy to scan. A recruiter can move from domain to project to implementation detail without losing the larger narrative. Motion is used as wayfinding: the hero introduces the author, the statement frames the point of view, shelves organise the work, and book-like transitions carry the reader into a chapter.
-
-The presentation is engineering-first. Project data, shelf grouping, chapter navigation, gallery structure, and API responses are all data-driven, so the visual story can grow without duplicating page markup.
-
----
-
-## Tech Stack
-
-### Frontend
-
-- React 18
-- React Router 6
-- Vite 5
-
-### Animation
-
-- Framer Motion
-- GSAP and `@gsap/react`
-- GSAP SplitText and ScrollTrigger
-- Lenis smooth scrolling
-
-### Styling
-
-- Tailwind CSS 3
-- PostCSS
-- Custom CSS tokens, dot-grid backgrounds, grain textures, and responsive layouts
-
-### Backend
-
-- FastAPI
-- Uvicorn
-- Pydantic with email validation
-
-### Other Libraries
-
-- `react-dom`
-- `autoprefixer`
-
-### Responsive / mobile
-
-The experience is desktop-first, with mobile support layered on **without
-changing desktop rendering** (everything is gated behind the `md` breakpoint).
-On phones: the scroll pins are skipped and sections fade-stack; the fixed footer
-uses `100dvh` and stacks its top links; the book modal switches to a single-page
-flip layout; returning from a project skips the intro and lands on the shelf; and
-the Reading Corner becomes a tap-to-expand vertical timeline. See
-[`docs/PROJECT_GUIDE.md` §12](docs/PROJECT_GUIDE.md) for the full breakdown.
-
-### Deployment
-
-No deployment configuration is committed. The frontend is a standard Vite build, and the backend runs as a FastAPI application under Uvicorn.
-
----
-
-## Folder Structure
-
-```text
-Portfolio/
-├── frontend/
-│   ├── src/
-│   │   ├── components/       # Hero, shelves, books, transitions, footer, and UI primitives
-│   │   ├── pages/            # Home experience and project chapter route
-│   │   ├── data/             # Offline fallback project data
-│   │   ├── api.js            # Frontend API helpers
-│   │   ├── App.jsx           # Router and global providers
-│   │   └── index.css         # Tailwind entry point and custom visual behaviour
-│   ├── scripts/              # Repository verification and section helpers
-│   ├── package.json          # Frontend scripts and dependencies
-│   ├── vite.config.js        # Dev server and `/api` proxy
-│   └── tailwind.config.js    # Theme tokens and typography
-├── backend/
-│   ├── main.py               # FastAPI routes, CORS, contact logging
-│   ├── data.py               # Shelves, projects, chapter metadata, and gallery templates
-│   └── requirements.txt      # Python dependencies
-├── docs/
-│   ├── PROJECT_GUIDE.md      # Architecture and contribution guide
-│   ├── ADDING_PROJECTS.md    # How to add books and shelves
-│   └── CHAPTER_PAGE.md       # Project chapter content and gallery guide
-└── README.md
-```
-
----
-
-## Getting Started
-
-The frontend expects the FastAPI service on port `8000` during development. Run both processes in separate terminals.
-
-### 1. Start the backend
+Run the backend and frontend in two terminals.
 
 ```bash
-git clone https://github.com/siddhu-exe/Porfolio.git
-cd Porfolio/backend
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-.venv/bin/uvicorn main:app --reload --port 8000
-```
-
-If the repository is already cloned, start from the repository root:
-
-```bash
+# 1. API (http://localhost:8000)
 cd backend
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/uvicorn main:app --reload --port 8000
-```
 
-### 2. Start the frontend
-
-```bash
+# 2. Site (http://localhost:5173, proxies /api to :8000)
 cd frontend
 npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+Production build: `npm run build && npm run preview` (in `frontend/`). If the API is hosted elsewhere, set `VITE_API_BASE` and add the origin to the CORS list in `backend/main.py`.
 
-The Vite server proxies `/api/*` to `http://localhost:8000`. Set `VITE_API_BASE` when the API is hosted elsewhere. If the API is unavailable, the frontend uses `src/data/fallbackProjects.js` so the shelf remains usable.
+## How projects are added
 
-### Production build
+Content is data, not markup, so adding a project never means writing page code.
 
-```bash
-cd frontend
-npm run build
-npm run preview
+1. **Shelf entry** (title, tag, spine colour, order, one-line result): `backend/data.py`, mirrored in `frontend/src/data/fallbackProjects.js`. Set `published` to show or hide a book.
+2. **Case-study page:** one file per project in `frontend/src/data/projects/<slug>.js`, following the shared schema in `schema.js`, then register it in `index.js`.
+3. Put images in `frontend/public/images/<slug>/`.
+
+Anything not written yet is marked `TODO` in the data file and simply doesn't render. Volume number, tag, spine colour and key result always come from the shelf, so a page can't drift from its book.
+
+## Project structure
+
+```text
+backend/            FastAPI app: main.py (routes), data.py (shelf data)
+frontend/src/
+  pages/            Home and ProjectDetail
+  components/       Hero, Shelf, BookModal, Footer, transitions
+  components/project/   the project-page template (laptop + mobile layouts, motion hooks)
+  data/projects/    one content file per project + the shared schema
+  data/             shelf helpers and offline fallback data
+docs/               longer guides
 ```
 
-### API routes
+## Design decisions worth knowing
 
-- `GET /api/health` — health check
-- `GET /api/projects` — flat and grouped project data
-- `GET /api/projects/{slug}` — one project chapter
-- `POST /api/contact` — validates and appends contact messages to `backend/contact_messages.jsonl`
+- **One template, data-driven:** all projects share the same sections and spacing, and only the content changes. Empty data hides its block instead of leaving a hole.
+- **Two layouts, never both mounted:** the mobile page is a separate, minimal component tree (not the laptop one squeezed), switched with `matchMedia`.
+- **GSAP owns outer wrappers, CSS owns hover:** transforms never fight each other, and every animation is reverted on unmount.
+- **Offline-safe:** the frontend ships a mirror of the shelf data, so a cold or failed API doesn't leave an empty site.
 
----
+## Roadmap
 
-## Screenshots
+- Live link and screenshots in this README
+- Real content for the remaining project chapters (see `TODO`s in `frontend/src/data/projects/`)
+- Automated tests for routing, fallback loading and contact validation
+- Deployment config for the Vite app and the API; store contact messages in a real datastore or email workflow
+- Accessibility pass on keyboard navigation of the book modal
 
-No screenshot files are currently committed. Suggested captures for future documentation:
+## Contact
 
-| View | What to capture |
-| --- | --- |
-| Hero | Signature intro, headline, cursor badge, and menu pill |
-| Bookshelf | The five domain shelves with interactive book spines |
-| Project details | Open book modal and `/projects/:slug` chapter page |
-| Articles | Reading Corner article books |
-| Footer | Animated reach-out panel and contact entry point |
+Email [siddhartdongardive23@gmail.com](mailto:siddhartdongardive23@gmail.com) · GitHub [@siddhu-exe](https://github.com/siddhu-exe)
 
----
+## Credits & license
 
-## Future Improvements
-
-- Replace placeholder project imagery with final case-study assets.
-- Complete and deepen the project chapter content, metrics, and external links.
-- Add automated frontend and API tests for routing, fallback loading, and contact validation.
-- Add a production deployment configuration for the Vite app and FastAPI service.
-- Persist contact submissions in a managed datastore or email workflow instead of local JSONL logging.
-- Add accessibility review coverage for keyboard book interaction, focus management, and animated transitions.
-
----
-
-## Credits
-
-The visual direction acknowledges the inspiration of [Nithin M Warrier’s portfolio](https://www.nithinmwarrier.com/). The implementation, engineering-focused storytelling, bookshelf concept, and project architecture in this repository are original work.
-
----
-
-## License
-
-No license file is currently included in the repository. Add an MIT `LICENSE` file if you intend to distribute this project under the MIT License.
+Visual direction was inspired by [Nithin M Warrier's portfolio](https://www.nithinmwarrier.com/); the bookshelf concept and implementation are original. No license file is included yet; add one (for example MIT) if you want others to reuse the code.
