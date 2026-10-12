@@ -14,6 +14,7 @@ import BookmarkProgress from '../components/BookmarkProgress.jsx';
 import { jumpToSection } from '../components/SmoothScroll.jsx';
 import { fetchProjects } from '../api.js';
 import { fallbackProjects } from '../data/fallbackProjects.js';
+import { isShelfReady } from '../data/shelfBooks.js';
 
 export default function Home() {
   // When returning from a project we land directly on the shelf and skip the
@@ -28,6 +29,8 @@ export default function Home() {
   const statementRef = useRef(null);
   const contactRef = useRef(null);
   const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
+  // Menu's "N volumes" = what the shelf actually shows (published only).
+  const volumes = (projects.length ? projects : fallbackProjects).filter(isShelfReady).length;
 
   useEffect(() => {
     fetchProjects()
@@ -113,7 +116,12 @@ export default function Home() {
             while the Statement covers it, then releases. */}
         <div className="relative">
           <div className="dot-grid sticky top-0 z-10 h-[100dvh] md:h-[170vh] bg-cream">
-            <Hero sinkStyle={heroSink} skipIntro={skipIntro} onIntroComplete={handleIntroComplete} />
+            <Hero
+              sinkStyle={heroSink}
+              skipIntro={skipIntro}
+              onIntroComplete={handleIntroComplete}
+              volumes={volumes}
+            />
           </div>
           <div ref={statementRef} className="relative z-30">
             <Statement />
