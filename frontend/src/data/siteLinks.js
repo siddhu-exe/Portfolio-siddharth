@@ -4,4 +4,4 @@ export const LINKEDIN_URL = 'https://www.linkedin.com/in/siddharth-dongardive-90
 
 // Served from frontend/public (source copy lives in docs/). Swap the file, or set
 // this to null to make the "Download résumé" links render but do nothing.
-export const RESUME_HREF = '/Siddharth-Dongardive-Resume.docx';
+export const RESUME_HREF = '/Siddharth-Dongardive-Resume.pdf';

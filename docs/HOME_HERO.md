@@ -69,8 +69,8 @@ everything immediately.
 
 - Copy lives in `Hero.jsx`; GitHub / LinkedIn / résumé URLs in `data/siteLinks.js`
   (the footer keeps its own copies).
-- **Résumé:** `RESUME_HREF` points at `frontend/public/Siddharth-Dongardive-Resume.docx`
-  (copied from `docs/sid resume - Data Scientist.docx`). To update it, replace that
+- **Résumé:** `RESUME_HREF` points at `frontend/public/Siddharth-Dongardive-Resume.pdf`
+  (copied from `docs/sid resume - Data Scientist.pdf`). To update it, replace that
   file; to hide the behaviour, set `RESUME_HREF` to `null`.
 - Colours use tokens: `sun` (menu yellow), `umber` / `umber-mid` / `umber-soft` (warm
   greys), `moss` (status dot), `sand` (menu numbers), `brick` ("Intelligence").
