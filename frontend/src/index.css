@@ -258,3 +258,358 @@ body {
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
+/* ---- The Workshop (Toolbox) ------------------------------------------------
+   Phone-first; everything laptop-only sits under (min-width: 1024px). GSAP
+   animates the outer wrappers (header pieces, .tb-dhead, .tb-rule, the <li>
+   of each tool); hover / focus lives on the inner .tb-tool and .tb-tile here,
+   so the two never share an element's transform. Vertical sizes on laptop are
+   vh-based clamps, so the design (1440x900) holds on shorter screens too. */
+.tb {
+  --tb-ink: #f3eadb;
+  --tb-body: #ede4d6;
+  background-color: #1a1410;
+  background-image: radial-gradient(rgba(237, 228, 214, 0.045) 1px, transparent 1px);
+  background-size: 18px 18px;
+  color: var(--tb-body);
+}
+.tb-main {
+  /* 72px top / 64px bottom on phones, less the torn edge drawn above */
+  padding: 48px 24px 64px;
+}
+.tb-eyebrow {
+  margin: 0;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+}
+.tb-title {
+  margin: 16px 0 0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 800;
+  font-size: 46px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--tb-ink);
+}
+.tb-title em {
+  font-style: italic;
+  font-weight: 700;
+  color: var(--terracotta);
+}
+/* SplitText mask (the line wrappers are the title's direct children): padding +
+   equal negative margin keeps the clip box from cutting descenders and italic
+   overhang without moving the layout. */
+.tb-title > div {
+  padding: 0.08em 0.12em 0.2em;
+  margin: -0.08em -0.12em -0.2em;
+}
+/* adjacent negative margins collapse to the larger one; restore the full sum */
+.tb-title > div + div {
+  margin-top: -0.28em;
+}
+.tb-sub {
+  margin: 16px 0 0;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: rgba(237, 228, 214, 0.72);
+}
+.tb-stats {
+  display: none;
+}
+.tb-stats b {
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--tb-ink);
+}
+
+.tb-drawers {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-top: 44px;
+}
+.tb-dhead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+}
+.tb-dlabelrow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.tb-dlabel {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 1.8px;
+  color: var(--tb-label);
+}
+.tb-dcount {
+  display: none;
+}
+.tb-ddesc {
+  margin: 0;
+  font-size: 12.5px;
+  color: rgba(237, 228, 214, 0.55);
+}
+.tb-rule {
+  height: 2px;
+  background: var(--tb-label);
+  opacity: 0.7;
+  transform-origin: left center;
+}
+.tb-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* a tool: small card on phones, plain row on laptop */
+.tb-tool {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 6px 10px;
+  border: 1px solid rgba(237, 228, 214, 0.1);
+  border-radius: 12px;
+  background: rgba(237, 228, 214, 0.03);
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+.tb-tile {
+  flex: 0 0 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: var(--tb-tile);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-weight: 600;
+  font-size: 11.5px;
+  color: #fff4e4;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.tb-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--tb-ink);
+}
+.tb-go {
+  display: none;
+}
+
+.tb-foot {
+  margin-top: 44px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(237, 228, 214, 0.12);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.4px;
+  color: rgba(237, 228, 214, 0.5);
+}
+.tb-foot--solo {
+  display: none;
+}
+.tb-foot-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+.tb-foot-link:focus-visible {
+  color: var(--tb-ink);
+  outline: 1px solid rgba(237, 228, 214, 0.35);
+  outline-offset: 6px;
+}
+
+.tb-foot-link:hover {
+  color: var(--tb-ink);
+}
+
+@media (min-width: 1024px) {
+  .tb {
+    --tb-row: clamp(50px, 6.67vh, 62px);
+    background-size: 22px 22px;
+  }
+  /* centre the content group; the group's own gaps are the design's spacing */
+  .tb-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* both vertical clamps are 63px / 99px at 900px tall and shrink faster below it */
+    padding: clamp(20px, calc(20.5vh - 121px), 72px) clamp(56px, calc(20.8vw - 157px), 120px);
+  }
+  .tb-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+  }
+  .tb-eyebrow {
+    font-size: 12px;
+    letter-spacing: 3px;
+  }
+  .tb-title {
+    margin-top: 20px;
+    font-size: clamp(44px, min(5.28vw, 8.45vh), 84px);
+    line-height: 0.98;
+  }
+  .tb-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 18px;
+    padding-bottom: 10px;
+  }
+  .tb-sub {
+    margin: 0;
+    max-width: 30ch;
+    text-align: right;
+    font-size: 17px;
+  }
+  .tb-stats {
+    display: flex;
+    gap: 28px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11.5px;
+    letter-spacing: 1.6px;
+    color: rgba(237, 228, 214, 0.6);
+  }
+
+  .tb-drawers {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(24px, 2.78vw, 40px);
+    margin-top: clamp(32px, 8vh, 80px);
+  }
+  .tb-dhead {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding-bottom: 0;
+  }
+  .tb-dlabel {
+    font-size: 11.5px;
+    letter-spacing: 2px;
+  }
+  .tb-dcount {
+    display: inline;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    color: rgba(237, 228, 214, 0.45);
+  }
+  .tb-ddesc {
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(237, 228, 214, 0.6);
+  }
+  .tb-rule {
+    margin-top: 18px;
+  }
+  .tb-tools {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 12px;
+  }
+
+  .tb-tool {
+    gap: 16px;
+    height: var(--tb-row);
+    min-height: 0;
+    padding: 0 12px;
+    margin: 0 -12px;
+    border: 0;
+    background: transparent;
+    transition: background 0.25s ease;
+  }
+  .tb-tile {
+    flex-basis: 42px;
+    height: 42px;
+    border-radius: 11px;
+    font-size: 13px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 6px 12px -8px rgba(0, 0, 0, 0.7);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .tb-name {
+    font-size: 17px;
+  }
+  .tb-go {
+    display: block;
+    flex: none;
+    margin-left: auto;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    color: var(--terracotta);
+  }
+  /* keyboard focus gets exactly the hover state */
+  .tb-tool:focus-visible {
+    background: rgba(237, 228, 214, 0.05);
+  }
+  .tb-tool:focus-visible .tb-tile {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 18px -8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(237, 228, 214, 0.35);
+  }
+  .tb-tool:focus-visible .tb-go {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .tb-tool:hover {
+    background: rgba(237, 228, 214, 0.05);
+  }
+  .tb-tool:hover .tb-tile {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 18px -8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(237, 228, 214, 0.35);
+  }
+  .tb-tool:hover .tb-go {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .tb-foot,
+  .tb-foot--solo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: clamp(24px, calc(44.7vh - 306px), 110px);
+    padding-top: 20px;
+    font-size: 11.5px;
+    letter-spacing: 1.6px;
+  }
+}
+
+/* reduced motion: hover / focus keep the background and ring, but nothing moves */
+@media (prefers-reduced-motion: reduce) {
+  .tb-tool,
+  .tb-tile,
+  .tb-go,
+  .tb-foot-link {
+    transition: none;
+  }
+  .tb-tool:hover .tb-tile,
+  .tb-tool:focus-visible .tb-tile,
+  .tb-tool:hover .tb-go,
+  .tb-tool:focus-visible .tb-go {
+    transform: none;
+  }
+}
