@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useMotionValueEvent } from 'framer-motion';
 import Signature from './Signature.jsx';
 import MaskedRevealText from './MaskedRevealText.jsx';
+import { SITE_EMAIL, SITE_MAILTO } from '../data/site.js';
+import { GITHUB_URL, LINKEDIN_URL } from '../data/siteLinks.js';
 
 const SOCIALS = [
-  { label: 'GitHub', href: 'https://github.com/siddhu-exe' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/siddharth-dongardive-906a79251' },
+  { label: 'GitHub', href: GITHUB_URL },
+  { label: 'LinkedIn', href: LINKEDIN_URL },
 ];
 
 /**
@@ -24,17 +26,24 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
   const creamRef = useRef(null);
   const creamInView = useInView(creamRef, { once: true, margin: '-10%' });
 
+  // Fade the fixed Menu pill out while the footer's top bar is on screen (the
+  // rise opacity passes 0.5 once the revealed panel covers that corner). CSS
+  // in index.css does the fade via a data attribute on <html>.
+  useMotionValueEvent(riseStyle.opacity, 'change', (v) => {
+    document.documentElement.dataset.footerBar = v > 0.5 ? 'in' : 'out';
+  });
+  useEffect(() => () => document.documentElement.removeAttribute('data-footer-bar'), []);
+
   useEffect(() => {
     const formatter = new Intl.DateTimeFormat('en-IN', {
       hour: 'numeric',
       minute: '2-digit',
-      second: '2-digit',
       hour12: true,
       timeZone: 'Asia/Kolkata',
     });
-    const update = () => setTime(formatter.format(new Date()));
+    const update = () => setTime(formatter.format(new Date()).toUpperCase());
     update();
-    const id = window.setInterval(update, 1000);
+    const id = window.setInterval(update, 60000);
     return () => window.clearInterval(id);
   }, []);
 
@@ -63,15 +72,15 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
       <div className="relative flex min-h-0 flex-1 flex-col px-8 pt-6 md:px-16">
         {/* top bar: socials + email */}
         <div className="flex flex-col items-start gap-2 text-[11px] font-semibold uppercase tracking-widest text-ink/70 md:flex-row md:items-center md:justify-between md:gap-0 md:text-xs">
-            <div className="flex flex-col gap-2 md:flex-row md:gap-6">
+            <div className="flex flex-row gap-4 md:gap-6">
               {SOCIALS.map((s) => (
                 <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="transition-colors hover:text-ink">
                   {s.label}
                 </a>
               ))}
             </div>
-            <a href="mailto:siddhartdongardive23@gmail.com" className="transition-colors hover:text-ink">
-              siddhartdongardive23@gmail.com
+            <a href={SITE_MAILTO} className="transition-colors hover:text-ink">
+              {SITE_EMAIL}
             </a>
           </div>
 
@@ -108,14 +117,14 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
 
           {/* big CTA — the footer's primary call to action, centered */}
           <a
-            href="mailto:siddhartdongardive23@gmail.com"
-            className="group inline-flex flex-wrap items-baseline gap-x-3 md:justify-center"
+            href={SITE_MAILTO}
+            className="footer-cta group inline-flex flex-wrap items-baseline gap-x-3 md:justify-center"
           >
-            <span className="font-display text-4xl font-bold leading-[0.95] tracking-headline text-ink md:text-5xl">
+            <span className="footer-cta-line font-display text-4xl font-bold leading-[0.95] tracking-headline text-ink md:text-5xl">
               Let&rsquo;s build
             </span>
-            <span className="font-display text-4xl font-bold italic leading-[0.95] tracking-headline text-ink/40 transition-colors duration-300 group-hover:text-ink md:text-5xl">
-              something&nbsp;&rarr;
+            <span className="font-display text-4xl font-bold italic leading-[0.95] tracking-headline text-[#B5533C] md:text-5xl">
+              something<span className="footer-cta-arrow ml-[0.25em] inline-block">&rarr;</span>
             </span>
           </a>
 
@@ -123,20 +132,18 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
             <span className="text-sm text-ink/60">Reach out</span>
             <div className="flex gap-3">
               <a
-                href="https://www.instagram.com/siddharth_20_d/"
+                href={GITHUB_URL}
                 target="_blank"
                 rel="noreferrer"
-                aria-label="Instagram"
+                aria-label="GitHub"
                 className="flex h-11 w-11 items-center justify-center rounded-xl border border-ink/30 text-ink transition-colors hover:bg-ink hover:text-cream"
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5">
-                  <rect x="3" y="3" width="18" height="18" rx="5" />
-                  <circle cx="12" cy="12" r="4" />
-                  <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+                  <path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z" />
                 </svg>
               </a>
               <a
-                href="https://www.linkedin.com/in/siddharth-dongardive-906a79251"
+                href={LINKEDIN_URL}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="LinkedIn"
@@ -167,7 +174,7 @@ export default function Footer({ onReachOut, panelStyle, riseStyle }) {
             Inspired by <span className="font-bold text-ink/80">Nithin M Warrier</span>
           </a>
           <span>© {new Date().getFullYear()} Siddharth Dongardive</span>
-          <span>India {time}</span>
+          <span>Mumbai, IN &middot; {time}</span>
           <span>
             Created with <span className="font-bold text-ink/80">Claude Code</span>
           </span>

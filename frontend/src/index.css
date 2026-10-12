@@ -717,3 +717,49 @@ body {
     transform: none;
   }
 }
+
+/* ---- Footer ---------------------------------------------------------------
+   Menu pill fades out while the footer's top bar is showing (Footer.jsx sets
+   data-footer-bar on <html>); !important beats the intro's inline opacity. */
+.menu-pill-wrap {
+  pointer-events: auto;
+}
+html[data-footer-bar] .menu-pill-wrap {
+  transition: opacity 0.3s ease;
+}
+html[data-footer-bar='in'] .menu-pill-wrap {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* "Let's build something →": arrow slides, thin underline draws under "Let's build" */
+.footer-cta-line {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0% 2px no-repeat;
+  transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.footer-cta-arrow {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.footer-cta:hover .footer-cta-line,
+.footer-cta:focus-visible .footer-cta-line {
+  background-size: 100% 2px;
+}
+.footer-cta:hover .footer-cta-arrow,
+.footer-cta:focus-visible .footer-cta-arrow {
+  transform: translateX(8px);
+}
+.footer-cta:focus-visible {
+  outline: 2px solid #171717;
+  outline-offset: 6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-cta:hover .footer-cta-arrow,
+  .footer-cta:focus-visible .footer-cta-arrow {
+    transform: none;
+  }
+  .footer-cta-line,
+  .footer-cta-arrow,
+  html[data-footer-bar] .menu-pill-wrap {
+    transition: none;
+  }
+}

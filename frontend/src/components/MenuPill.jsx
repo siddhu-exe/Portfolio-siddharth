@@ -98,7 +98,7 @@ export default function MenuPill({ wrapperRef, volumes }) {
     <MotionConfig reducedMotion="user">
       <div
         ref={wrapperRef}
-        className="fixed right-7 top-6 z-[65] md:right-16 lg:right-[88px] lg:top-9"
+        className="menu-pill-wrap fixed right-7 top-6 z-[65] md:right-16 lg:right-[88px] lg:top-9"
       >
         <button
           ref={triggerRef}
