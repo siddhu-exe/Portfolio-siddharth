@@ -42,7 +42,7 @@ export function Cover({ p, variant = 'figure' }) {
   );
 }
 
-/** Screenshot frame (object-fit: cover, no letterbox). Falls back to the book cover. */
+/** Screenshot frame (object-fit: contain, whole image shown). Falls back to the book cover. */
 export function Figure({ p, className = '', style }) {
   const src = p.image?.src;
   const [failed, setFailed] = useState(false);
