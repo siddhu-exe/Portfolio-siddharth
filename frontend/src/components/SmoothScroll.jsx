@@ -38,6 +38,20 @@ export function subscribeToScrollProgress(subscriber) {
 }
 
 /**
+ * Freeze / resume page scroll (open overlays). Lenis owns scrolling when it is
+ * active; on touch / reduced-motion (native scroll) fall back to an overflow lock.
+ */
+export function stopScroll() {
+  if (lenisInstance) lenisInstance.stop();
+  else document.documentElement.style.overflow = 'hidden';
+}
+
+export function startScroll() {
+  if (lenisInstance) lenisInstance.start();
+  else document.documentElement.style.removeProperty('overflow');
+}
+
+/**
  * Smoothly scroll to a section id (or 'top'). Uses Lenis when active — with a
  * long eased glide so pinned sections scrub through premium-slow — and falls
  * back to native smooth scroll otherwise.
