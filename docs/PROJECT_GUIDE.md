@@ -89,7 +89,7 @@ Defined in `frontend/tailwind.config.js`:
 | `ink` | `#171717` | primary text / dark sections |
 | `terracotta` | `#D9834A` | accent (signature, small marks) |
 | `mustard` | `#FFE862` | footer / yellow sections |
-| `bark` / `barklight` / `wood` / `tan` | browns | Toolbox section only |
+| `bark` / `barklight` / `wood` / `tan` | browns | legacy (the old Toolbox); the Workshop uses `#1A1410` and `.tb-*` CSS variables |
 | font `sans` | General Sans / Inter | body & UI (default) |
 | font `display` | Playfair Display / Georgia | big display headings (`font-display`) |
 | tracking `headline` | `-0.03em` | tight tracking for large headings (`tracking-headline`) |
@@ -111,8 +111,8 @@ Statement (black)            ← "Every book on this shelf…" pinned word-by-wo
   │  transition #2+#3: PinnedCurtainChain
 ProjectShelf (cream)         ← the bookshelf; click a book → modal → project page
   │  (curtain)
-Toolbox (dark brown)         ← tools hanging on nails, swing on hover
-  │  (curtain, mode:'scale', dwell)
+Toolbox (dark brown)         ← "The Workshop": four drawers of tools, see WORKSHOP.md
+  │  (curtain, mode:'scale', short hold)
 ReadingCorner (black)        ← articles as little books
   │  final transition: #contact reveal window; footer rises + fades in
 Footer (mustard, FIXED)      ← ghost name, LIBRARY CLOSED, links, live IST clock
@@ -142,7 +142,7 @@ Key structural facts (do not break these):
 | `Hero.jsx` | Landing: signature draws, glides into the header, then the headline/intro/CTAs reveal (see `HOME_HERO.md`). |
 | `Statement.jsx` | Black interlude; scroll-pinned word-by-word text reveal + drawn line. |
 | `ProjectShelf.jsx` | The Project Shelf: published projects as one flat stack of spine rows in `sort_order` (helpers in `data/shelfBooks.js`), with its own scroll/hover motion. Owns `BookModal`. |
-| `Toolbox.jsx` | "Tools Behind Every Chapter" — tech icons hanging on nails. |
+| `Toolbox.jsx` | "02 — The Workshop": four drawers of tools from `data/tools.js` (see `WORKSHOP.md`). |
 | `ReadingCorner.jsx` | "Reading Corner" — articles rendered as little 3D books. |
 | `Footer.jsx` | Fixed mustard footer: ghost name, CTA, social links, live clock. |
 
@@ -191,6 +191,9 @@ viewport bottom; section *i+1* slides up (`yPercent: 100 → 0`) over ~1 viewpor
 of scrubbed scroll, like a curtain rising over the pinned section.
 
 Per-section options (on the object, applies to the transition that reveals it):
+- `revealVh` (number, default 100): scroll length of the curtain itself. Pin length =
+  `startOffsetVh + revealVh + dwellVh`. Home uses 30 for the Workshop and
+  20 + 30 for Reading Corner (it used to be 100 and 100 + 70).
 - `dwellVh` (number): extra pinned scroll AFTER the reveal completes, holding the
   section fully covering the screen (so a fast scroller actually sees it).
 - `startOffsetVh` (number): pinned hold BEFORE the curtain starts rising.
@@ -208,6 +211,13 @@ Hard-won invariants (breaking these caused real bugs — don't regress them):
 - Animate inner content nodes for `scale` mode, never the pinned stage element
   (ScrollTrigger owns its transform). Avoid animating `filter: blur()` on
   image-heavy sections — it re-rasterizes every frame (caused the Toolbox lag).
+
+Known quirk: the curtain stage sits one viewport *below* the pinned section (the pin
+spacer pushes it down), so it does not visibly overlap during the pin; the pin acts as a
+hold, which is why pins are kept short. Fixing that would change the look of both
+transitions. Because pin spacers and the curtain transform also skew ScrollTrigger start
+positions for anything inside a later stage, trigger entrances there with an
+`IntersectionObserver` (as `Toolbox.jsx` does).
 
 Lenis + GSAP are already synced in `SmoothScroll.jsx` (Lenis drives the GSAP
 ticker; ScrollTrigger updates on Lenis scroll). Any new ScrollTrigger you add

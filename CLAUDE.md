@@ -60,6 +60,7 @@ Portfolio/
 - Real project images live in `frontend/public/images/<slug>/` and are referenced as `/images/<slug>/...` from `thumbnail` (shelf modal) and from the project's content file (project page).
 - `ProjectShelf.jsx` is a flat stacked-books list: it renders only `published` projects, in `sort_order`, using `src/data/shelfBooks.js` (tag stamp, spine contrast, per-row pile sizes). An empty `result` hides the row's metric line; `tag` values give the SUBJECTS count. `sort_order`, `tag`, `published`, `result` (one-line string) and `spineColor` live in `_DETAILS`; the legacy result object is `resultDetail`. Shelf motion lives in one `gsap.context` + `gsap.matchMedia` in `ProjectShelf.jsx` (GSAP owns the outer `li.bk-wrap`; hover/`is-active`/press are CSS on the inner `button`); `PIN_SHELF` at the top toggles the pinned desktop build.
 - `docs/ADDING_PROJECTS.md` (shelf side) and `docs/CHAPTER_PAGE.md` (project page schema, layouts, motion) — read them before changing project content.
+- `docs/WORKSHOP.md` — the Toolbox section ("02 — The Workshop"): content lives in `src/data/tools.js` (four tools per drawer, `NEXT_TOOL` constant), laptop/phone layout, motion, and why its entrance uses an `IntersectionObserver` and its pins are short. Read before touching `Toolbox.jsx`, `tools.js` or the `.tb-*` CSS.
 - `docs/HOME_HERO.md` — the home hero: signature handoff into the header, reveal sequence, fixed Menu pill/panel. Read before touching `Hero.jsx`, `MenuPill.jsx` or `Signature.jsx`. Résumé link: `RESUME_HREF` in `src/data/siteLinks.js` (file in `frontend/public/`).
 
 ### Routes
@@ -69,7 +70,7 @@ Portfolio/
 
 ### Motion & Scroll Engine
 - **Lenis + GSAP**: `SmoothScroll.jsx` synchronizes Lenis smooth scroll with GSAP ticker and `ScrollTrigger`.
-- **PinnedCurtainChain (`PinnedCurtainChain.jsx`)**: Coordinates pinned scroll transitions between Home sections on desktop (`min-width: 768px`). Skips pinning on mobile (`max-width: 767px`) where sections stack in normal document flow.
+- **PinnedCurtainChain (`PinnedCurtainChain.jsx`)**: Coordinates pinned scroll transitions between Home sections on desktop (`min-width: 768px`). Skips pinning on mobile (`max-width: 767px`) where sections stack in normal document flow. Per-section `revealVh` / `startOffsetVh` / `dwellVh` set the pin length (`docs/PROJECT_GUIDE.md` §8).
 - **Fixed Footer Architecture**: `<Footer>` is `position: fixed` at `z-0` behind `<main>` (`z-10`). The terminal `#contact` spacer in `<main>` unmasks the footer as the user scrolls to the bottom. Any new section added to `Home.jsx` must reside inside `<main>` *before* `#contact`.
 - **Page Transitions**: `PageTransitionProvider` manages the book-cover wipe transition between the shelf modal and `/projects/:slug` (the cover uses the book's `spineColor`). `ProjectDetail` resets scroll to the top through Lenis on every volume change.
 - **Project-page motion**: `components/project/useProjectMotion.js` (data-attribute driven: `data-hero-title`, `data-reveal`, `data-flow`, `data-countup`); GSAP only touches outer wrappers, uses the existing Lenis/ScrollTrigger sync, and skips everything under `prefers-reduced-motion`.
