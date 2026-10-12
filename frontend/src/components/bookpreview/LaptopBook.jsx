@@ -250,8 +250,21 @@ export default function LaptopBook({
       live.current.slots.pull(btn); // 0 - .25: the spine slides out (CSS .is-pulling, translateX 40px)
 
       setClosedState();
-      const tl = gsap.timeline({ onComplete: () => phase.current === 'opening' && settle() });
+      // SmoothScroll turns GSAP lag smoothing off globally, so a long first frame (mounting the
+      // book, decoding the screenshot) would make the timeline skip straight past the start.
+      // Smooth lag for the length of the open, and only start once the mount has painted.
+      gsap.ticker.lagSmoothing(200, 33);
+      const restoreLag = () => gsap.ticker.lagSmoothing(0);
+      const tl = gsap.timeline({
+        paused: true,
+        onComplete: () => {
+          restoreLag();
+          if (phase.current === 'opening') settle();
+        },
+        onInterrupt: restoreLag,
+      });
       tlRef.current = tl;
+      requestAnimationFrame(() => requestAnimationFrame(() => tlRef.current === tl && tl.play(0)));
 
       tl.to(overlayRef.current, { opacity: 1, duration: 0.25, ease: 'power1.out' }, 0);
 
@@ -330,6 +343,7 @@ export default function LaptopBook({
       const openProgress = tlRef.current?.time() ?? 0;
       if (phase.current === 'turning') tlRef.current?.progress(1); // finish the page turn first
       else tlRef.current?.kill();
+      gsap.ticker.lagSmoothing(0);
       phase.current = 'closing';
 
       const L = live.current;
@@ -431,6 +445,7 @@ export default function LaptopBook({
 
     return () => {
       tlRef.current?.kill();
+      gsap.ticker.lagSmoothing(0);
       gsap.killTweensOf(
         [overlayRef.current, fitRef.current, flyRef.current, flyInRef.current, escRef.current, hintRef.current, baseRef.current, coverRef.current, shadeRef.current, gutterRef.current, leafRef.current]
       );
