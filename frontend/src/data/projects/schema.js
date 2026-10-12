@@ -15,6 +15,8 @@
 //   slug, title, tagline, year,
 //   links:    { demo, github, kaggle? },          // placeholders ('#', bare github.com) count as missing
 //   demoNote,                                     // e.g. 'Demo runs on demand'
+//   preview?: { summary, image: { src, alt }, caption, stats: [{ value, label, short? }], stack: [] },
+//                                                 // shelf popup only; every field optional (see data/bookPreview.js)
 //   meta:     { role, timeline, deployedOn },     // a missing value hides its label
 //   stats:    [{ value, label }],                 // 4 on laptop, shown 2x2 on mobile
 //   overview: { lead, leadAccent?, approach, evaluation, serving },

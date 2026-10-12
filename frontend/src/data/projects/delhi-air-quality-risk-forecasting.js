@@ -16,6 +16,14 @@ export default {
     kaggle: 'https://www.kaggle.com/datasets/siddharthdongardive/delhi-air-quality-monitoring-dataset-2023-2026',
   },
   demoNote: TODO, // TODO: e.g. 'Demo runs on demand' (only if it applies)
+  // Shelf popup only (data/bookPreview.js); the project page ignores this block.
+  preview: {
+    summary:
+      "Operational ML for 1h/6h/24h air quality forecasts, automated CPCB/GRAP alerts and an econometric look at Delhi's Diwali firecracker ban.",
+    image: TODO, // TODO: dedicated screenshot (falls back to the shelf thumbnail)
+    caption: 'Project overview: forecasts, risk alerts and policy analysis',
+    stats: TODO, // TODO: 3 × { value, label } (falls back to the numbers in the shelf result line)
+  },
   meta: {
     role: TODO, // TODO: your role on this project
     timeline: TODO, // TODO: start – end

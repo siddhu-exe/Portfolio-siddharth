@@ -12,6 +12,13 @@ export default {
     github: TODO, // TODO: repository URL
   },
   demoNote: TODO, // TODO: e.g. 'Demo runs on demand' (only if it applies)
+  // Shelf popup only (data/bookPreview.js); the project page ignores this block.
+  preview: {
+    summary: TODO, // TODO: 1-2 sentences, max ~220 chars (falls back to overview.lead, then the shelf description)
+    image: TODO, // TODO: { src, alt } screenshot (falls back to the shelf thumbnail, then the book-cover block)
+    caption: TODO, // TODO: figure caption under the screenshot
+    stats: TODO, // TODO: 3 × { value, label, short? } (falls back to the numbers in the shelf result line)
+  },
   meta: {
     role: TODO, // TODO: your role on this project
     timeline: TODO, // TODO: start – end

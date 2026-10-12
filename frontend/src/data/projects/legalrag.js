@@ -14,6 +14,22 @@ export default {
     github: 'https://github.com/siddhu-exe/LegalRag',
   },
   demoNote: 'Demo runs on demand',
+  // Shelf popup only (data/bookPreview.js); the project page ignores this block.
+  preview: {
+    summary:
+      'A BM25 + BGE hybrid retriever, RRF fusion and a cross-encoder reranker feed a Groq-hosted LLM. A 497-question benchmark measures recall, faithfulness and citation correctness.',
+    image: {
+      src: '/images/legalrag/10_ui_grounded_answer_citations.png',
+      alt: 'LegalRAG interface showing a synthesized answer with citation badges.',
+    },
+    caption: 'LegalRAG answering a case-law question with citations',
+    stats: [
+      { value: '100,000', label: 'High Court judgments', short: 'Judgments' },
+      { value: '538,079', label: 'Searchable chunks', short: 'Chunks' },
+      { value: '497', label: 'Benchmark questions', short: 'Eval questions' },
+    ],
+    stack: ['Python', 'FastAPI', 'FAISS', 'BM25', 'Groq', 'React', 'BGE', 'Cross-Encoder', 'Docker', 'AWS EC2'],
+  },
   meta: {
     role: TODO, // TODO: your role on this project
     timeline: TODO, // TODO: start – end

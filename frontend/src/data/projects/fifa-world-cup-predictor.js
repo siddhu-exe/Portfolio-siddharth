@@ -15,6 +15,14 @@ export default {
     github: 'https://github.com/siddhu-exe/Fifa-predictor',
   },
   demoNote: TODO, // TODO: e.g. 'Demo runs on demand' (only if it applies)
+  // Shelf popup only (data/bookPreview.js); the project page ignores this block.
+  preview: {
+    summary:
+      'Dual stage-aware XGBoost models predict every match of the 48-team 2026 tournament; 10,000 Monte Carlo simulations turn those predictions into full championship odds.',
+    image: TODO, // TODO: dedicated screenshot (falls back to the shelf thumbnail)
+    caption: 'Project cover: FIFA World Cup 2026 predictions',
+    stats: TODO, // TODO: 3 × { value, label }
+  },
   meta: {
     role: TODO, // TODO: your role on this project
     timeline: TODO, // TODO: start – end
