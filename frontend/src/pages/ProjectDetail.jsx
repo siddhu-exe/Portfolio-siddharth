@@ -15,9 +15,27 @@ export default function ProjectDetail() {
 
   // Every volume opens at the top. Goes through Lenis (it keeps its own scroll target, so a
   // bare window.scrollTo gets pulled back) and is instant (the html element smooth-scrolls).
+  // Re-asserted a few times because late layout work (pin spacers of the page we just left being
+  // reverted, ScrollTrigger refreshes, the browser restoring a saved position on reload / back)
+  // can move the scroll after the first jump, and the page would then open part-way down.
   useLayoutEffect(() => {
-    jumpToSection('top');
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
+    const toTop = () => {
+      jumpToSection('top');
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    };
+    toTop();
+    let raf2;
+    const raf1 = requestAnimationFrame(() => {
+      toTop();
+      raf2 = requestAnimationFrame(toTop);
+    });
+    const late = window.setTimeout(toTop, 450); // as the route cover starts to open
+    return () => {
+      cancelAnimationFrame(raf1);
+      if (raf2) cancelAnimationFrame(raf2);
+      window.clearTimeout(late);
+    };
   }, [slug]);
 
   useEffect(() => {

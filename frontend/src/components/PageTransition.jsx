@@ -28,7 +28,9 @@ export default function PageTransitionProvider({ children }) {
       // When landing on a specific section (e.g. returning to the shelf), Home
       // places the scroll itself while the cover is still closed — don't force
       // the top here.
-      if (!state.landAt) window.scrollTo(0, 0);
+      // instant: html has scroll-behavior: smooth, so a bare scrollTo would glide under the cover
+      // and could still be moving when the cover opens
+      if (!state.landAt) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       // brief hold while the new page mounts behind the closed cover
       setTimeout(() => setState((s) => (s ? { ...s, phase: 'out' } : s)), 420);
     } else {
