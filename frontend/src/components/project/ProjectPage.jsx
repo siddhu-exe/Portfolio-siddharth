@@ -1,6 +1,7 @@
 import useMediaQuery from '../../hooks/useMediaQuery.js';
 import LaptopLayout from './LaptopLayout.jsx';
 import MobileLayout from './MobileLayout.jsx';
+import BookmarkProgress from '../BookmarkProgress.jsx';
 import './project.css';
 
 /**
@@ -11,5 +12,11 @@ import './project.css';
  */
 export default function ProjectPage({ page }) {
   const isLaptop = useMediaQuery('(min-width: 1024px)');
-  return isLaptop ? <LaptopLayout key="laptop" page={page} /> : <MobileLayout key="mobile" page={page} />;
+  return (
+    <>
+      {isLaptop ? <LaptopLayout key="laptop" page={page} /> : <MobileLayout key="mobile" page={page} />}
+      {/* same bookmark scroll bar as the home page, in this book's colour */}
+      <BookmarkProgress visible color={page.spineColor} pages={5} />
+    </>
+  );
 }

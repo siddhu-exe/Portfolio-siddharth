@@ -2,9 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { subscribeToScrollProgress } from './SmoothScroll.jsx';
 
-const TOTAL_PAGES = 6;
+const DEFAULT_PAGES = 6;
 
-export default function BookmarkProgress({ visible }) {
+/**
+ * Fixed right-edge reading progress with a bookmark tab. On the home page it is
+ * the mustard→terracotta gradient; the project page passes `color` (the book's
+ * spine colour) and `pages` (its chapter count) so it matches the open book.
+ */
+export default function BookmarkProgress({ visible, color, pages = DEFAULT_PAGES }) {
+  const TOTAL_PAGES = pages;
   const fillRef = useRef(null);
   const tabRef = useRef(null);
   const [page, setPage] = useState(1);
@@ -47,7 +53,7 @@ export default function BookmarkProgress({ visible }) {
       window.removeEventListener('resize', onResize);
       unsubscribe();
     };
-  }, [visible]);
+  }, [visible, TOTAL_PAGES]);
 
   return (
     <aside
@@ -59,7 +65,10 @@ export default function BookmarkProgress({ visible }) {
       <div className="absolute bottom-0 right-0 top-0 w-[3px] overflow-hidden rounded-full bg-ink/10 shadow-[inset_0_0_1px_rgba(0,0,0,0.15)] backdrop-blur-sm">
         <div
           ref={fillRef}
-          className="absolute inset-x-0 top-0 h-full origin-top scale-y-0 rounded-full bg-gradient-to-b from-mustard via-mustard to-terracotta shadow-[0_0_10px_1px_rgba(255,232,98,0.55)] will-change-transform"
+          className={`absolute inset-x-0 top-0 h-full origin-top scale-y-0 rounded-full will-change-transform ${
+            color ? '' : 'bg-gradient-to-b from-mustard via-mustard to-terracotta shadow-[0_0_10px_1px_rgba(255,232,98,0.55)]'
+          }`}
+          style={color ? { backgroundColor: color } : undefined}
         />
       </div>
 
@@ -67,9 +76,14 @@ export default function BookmarkProgress({ visible }) {
         ref={tabRef}
         className="pointer-events-auto absolute right-[-6px] top-0 h-6 w-4 -translate-y-1 will-change-transform"
       >
-        <span className="absolute inset-0 bg-gradient-to-b from-mustard to-terracotta shadow-[0_2px_8px_rgba(217,131,74,0.4)] ring-1 ring-cream/40 [clip-path:polygon(0_0,100%_0,100%_100%,50%_68%,0_100%)]" />
+        <span
+          className={`absolute inset-0 ring-1 ring-cream/40 [clip-path:polygon(0_0,100%_0,100%_100%,50%_68%,0_100%)] ${
+            color ? '' : 'bg-gradient-to-b from-mustard to-terracotta shadow-[0_2px_8px_rgba(217,131,74,0.4)]'
+          }`}
+          style={color ? { backgroundColor: color } : undefined}
+        />
         <span className="absolute right-6 top-1/2 hidden -translate-y-1/2 items-center gap-1 whitespace-nowrap rounded-md bg-ink/90 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-cream opacity-0 shadow-lg ring-1 ring-cream/10 backdrop-blur-md transition-all duration-200 group-hover:opacity-100 md:flex">
-          <span className="text-mustard">{page}</span>
+          <span className="text-mustard" style={color ? { color } : undefined}>{page}</span>
           <span className="text-cream/50">/ {TOTAL_PAGES}</span>
         </span>
       </div>
