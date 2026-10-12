@@ -11,6 +11,11 @@ export default {
         // Project Shelf: warmer paper tone + brick accent
         paper: '#F3EEE6',
         brick: '#B5533C',
+        // Home hero: menu-pill yellow, warm text greys, status green, panel accent
+        sun: '#FFE14D',
+        umber: { DEFAULT: '#4A433C', mid: '#5A524B', soft: '#6F665E' },
+        moss: '#3F8A5A',
+        sand: '#E8B48C',
         // Toolbox browns — deep matte espresso + walnut panel
         bark: '#1B1109',
         barklight: '#2B1A0E',

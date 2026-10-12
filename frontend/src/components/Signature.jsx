@@ -1,18 +1,22 @@
 import { motion } from 'framer-motion';
 
-const draw = (duration, delay, play) => ({
-  initial: { pathLength: 0 },
-  animate: play ? { pathLength: 1 } : { pathLength: 0 },
-  transition: { duration, delay, ease: 'easeInOut' },
-});
+const draw = (duration, delay, play, instant) =>
+  instant
+    ? { initial: { pathLength: 1 }, animate: { pathLength: 1 }, transition: { duration: 0 } }
+    : {
+        initial: { pathLength: 0 },
+        animate: play ? { pathLength: 1 } : { pathLength: 0 },
+        transition: { duration, delay, ease: 'easeInOut' },
+      };
 
 /**
  * Hand-drawn cursive "Siddharth" signature. The strokes draw themselves in via
  * pathLength (stroke-dasharray/offset under the hood in Framer Motion) — but
  * only once `play` is true, so the draw-on plays as the footer is revealed
- * rather than firing invisibly on page load.
+ * rather than firing invisibly on page load. `instant` renders it fully drawn
+ * (returning visitors / reduced motion).
  */
-export default function Signature({ className, play = true }) {
+export default function Signature({ className, play = true, instant = false }) {
   return (
     <svg
       viewBox="0 0 560 220"
@@ -60,7 +64,7 @@ export default function Signature({ className, play = true }) {
         strokeWidth="5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        {...draw(1.9, 0.1, play)}
+        {...draw(1.9, 0.1, play, instant)}
       />
       {/* t crossbar */}
       <motion.path
@@ -68,7 +72,7 @@ export default function Signature({ className, play = true }) {
         stroke="var(--terracotta)"
         strokeWidth="5"
         strokeLinecap="round"
-        {...draw(0.25, 2.0, play)}
+        {...draw(0.25, 2.0, play, instant)}
       />
       {/* i dot */}
       <motion.path
@@ -76,7 +80,7 @@ export default function Signature({ className, play = true }) {
         stroke="var(--terracotta)"
         strokeWidth="6"
         strokeLinecap="round"
-        {...draw(0.12, 2.25, play)}
+        {...draw(0.12, 2.25, play, instant)}
       />
     </svg>
   );
