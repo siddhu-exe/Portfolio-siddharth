@@ -98,7 +98,7 @@ List a project's open TODOs with `collectTodos(project)` from `schema.js`.
 
 **Laptop (>= 1024px)**: top bar, hero (big title left, book cover right in the
 project's `spineColor`), meta row, stat cards, then a **sticky chapter strip**
-(Overview + 01–05 + "n min read" + reading progress in the site's mustard). Then:
+(Overview + 01–05 + "n min read" + reading progress in the site's mustard). A fixed right-edge bookmark scroll bar (`BookmarkProgress`, the same one as the home page) runs down the whole page in the book's `spineColor`. Then:
 overview (lead, A/B/C, stack spec-sheet), **01** as a full-width dark spread that
 bleeds to the frame lines (horizontal flow diagram + decisions), **02** step
 timeline + figure + footprint bars, **03** big highlight number + judge list + the

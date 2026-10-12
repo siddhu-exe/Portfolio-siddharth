@@ -141,10 +141,10 @@ Key structural facts (do not break these):
 |------|------|
 | `Hero.jsx` | Landing: signature draws, glides into the header, then the headline/intro/CTAs reveal (see `HOME_HERO.md`). |
 | `Statement.jsx` | Black interlude; scroll-pinned word-by-word text reveal + drawn line. |
-| `ProjectShelf.jsx` | The Project Shelf: published projects as one flat stack of spine rows in `sort_order` (helpers in `data/shelfBooks.js`), with its own scroll/hover motion. Owns `BookModal`. |
+| `ProjectShelf.jsx` | The Project Shelf: published projects as one flat stack of spine rows in `sort_order` (helpers in `data/shelfBooks.js`), with its own scroll/hover motion. Mounts the book preview popup (`bookpreview/`). |
 | `Toolbox.jsx` | "02 — The Workshop": four drawers of tools from `data/tools.js` (see `WORKSHOP.md`). |
-| `ReadingCorner.jsx` | "Reading Corner" — articles rendered as little 3D books. |
-| `Footer.jsx` | Fixed mustard footer: ghost name, CTA, social links, live clock. |
+| `ReadingCorner.jsx` | "03 — The Reading Corner": articles as 3D books on a shelf (desktop) / accordion (phone). Content in `data/articles.js` (§12.5). |
+| `Footer.jsx` | Fixed mustard footer: ghost name, mailto CTA, GitHub / LinkedIn / contact icons, Mumbai clock. Email lives in `data/site.js`. |
 
 **Transition / motion infrastructure:**
 | File | Role |
@@ -158,7 +158,8 @@ Key structural facts (do not break these):
 **Reusable pieces / effects:**
 | File | Role |
 |------|------|
-| `BookModal.jsx` | Opens on book click; "View Full Project" → `usePageTransition` to `/projects/:slug`. |
+| `bookpreview/` | The book preview popup that opens on a shelf click (`BookPreview.jsx` controller, `LaptopBook.jsx` two-page spread, `MobileSheet.jsx` bottom sheet, `shelfSlots.js`, `bookpreview.css`); "Read the full chapter" → `usePageTransition` to `/projects/:slug`. See §12.3. |
+| `BookmarkProgress.jsx` | Fixed right-edge scroll bar with a bookmark tab. Home: mustard→terracotta; project page: pass `color` (the book's `spineColor`) and `pages` (5 chapters). |
 | `project/ProjectPage.jsx` | The project-page template; mounts `LaptopLayout` (>= 1024px) or `MobileLayout` (one at a time). Styles in `project/project.css`, motion in `project/useProjectMotion.js`. See `CHAPTER_PAGE.md`. |
 | `ImageGallery.jsx` | Legacy: the old chapter-page image gallery. No longer used by the project page. |
 | `ContactModal.jsx` | The contact form; POSTs via `sendContact`. |
@@ -262,6 +263,8 @@ takes only volume/tag/spine colour/key result from the shelf list.
   token classes; don't scatter raw hex codes.
 - **Footer content / links / CTA** → `Footer.jsx`. The footer is fixed and
   reveal-animated; keep it `position: fixed` and keep the `riseStyle` wrapper.
+  The contact email is the single constant in `data/site.js` (`SITE_EMAIL`,
+  `SITE_MAILTO`); GitHub / LinkedIn come from `data/siteLinks.js`.
 
 ## 11. Gotchas / non-obvious things
 
@@ -306,20 +309,29 @@ below `md`:
 The fixed footer is `h-[100dvh] md:h-screen` — mobile uses **dynamic** viewport
 height so the bottom bar isn't hidden behind the browser chrome (the classic
 `100vh` bug). The giant ghost name block is capped `max-h-[38vh] md:max-h-none`
-so the cream strip below always fits on short phones. The top bar (GitHub /
-LinkedIn / email) stacks vertically on mobile (`flex-col … md:flex-row
+so the cream strip below always fits on short phones. On mobile the top bar puts
+GITHUB · LINKEDIN on one row with the email on the row below (`flex-col … md:flex-row
 md:justify-between`) instead of the desktop row. Keep the footer `position:
 fixed` with the `riseStyle` wrapper (§5, §10).
 
-### 12.3 Book modal has a separate mobile layout (`BookModal.jsx`)
-Desktop is a two-page spread (image left / writeup right) with a cover that flips
-around its **left** edge. On phones each page was ~180px wide (unreadable), so a
-`useIsMobile()` hook (`max-width: 767px`) swaps in a **single-page** layout via
-the `MobileSpread` component: same cover-flip motion, but the cover flips **up**
-around its top edge (rotateX) to reveal the image as a top banner, with the
-full-width writeup below. The desktop spread JSX is unchanged — it's just wrapped
-`{isMobile ? <MobileSpread/> : (…original…)}`. Shared `content`/`line` variants,
-`OPEN`/`CLOSE`, and `transitionTo` are reused by both.
+### 12.3 Book preview popup (`components/bookpreview/`)
+`BookPreview.jsx` is the controller (scroll lock, focus trap, keys, `?book=<slug>` URL).
+At >= 1024px it mounts `LaptopBook.jsx` — an open-book spread whose open timeline is:
+the spine pulls out, a spine-coloured "flyer" glides to the table, the cover flips
+around the gutter, then the pages' content staggers in. Below 1024px it mounts
+`MobileSheet.jsx` — a bottom sheet with drag-to-close and swipe prev/next.
+Notes:
+- The screenshot frame uses `object-fit: contain` so the **whole** image shows (the
+  frame takes the spine colour behind it); it is never cropped.
+- Smoothness: no `backdrop-filter` on the overlay (re-blurring the page every frame
+  made the open stutter), the flyer is isolated (`contain`, `will-change`), and
+  `LaptopBook` starts its open timeline two frames after mount with
+  `gsap.ticker.lagSmoothing(200, 33)` for the duration of the open, because
+  `SmoothScroll` turns lag smoothing off globally and a long first frame would
+  otherwise make the timeline skip its start. Lag smoothing is set back to `0` when
+  the open ends, is interrupted, or the popup closes — keep that restore if you edit it.
+- There is no scroll bar inside the popup; the bookmark scroll bar lives on the full
+  project page (`ProjectPage.jsx`).
 
 ### 12.4 Return-from-project: skip intro, land on the shelf
 Returning from a project page skips the Hero intro and opens directly on the
@@ -343,16 +355,24 @@ bookshelf (both mobile and desktop). Flow:
   hidden — the cover opens already on the shelf. `#shelf`'s offset is stable
   (Hero + Statement have fixed heights), so this is valid before any pin engages.
 
-### 12.5 Reading Corner has a mobile timeline (`ReadingCorner.jsx`)
-The desktop 3D "article books" are hover-driven (lift + face-on + Read↗), which
-is dead on touch. On mobile the book row is replaced by `ReadingTimeline` — a
-vertical timeline (terracotta dots on a connecting line) where each row is a
-single-open **accordion** (first item open by default) revealing blurb + read
-time + a **"Read ↗"** link that opens `article.url` in a new tab. Gating:
-`<ReadingTimeline/>` is `md:hidden`; the original books wrapper is `hidden
-md:block` — desktop untouched. Articles gained an optional `readTime` field
-(rendered only when present); the section stays data-driven off the `ARTICLES`
-array, so both layouts pick up new entries automatically.
+### 12.5 Reading Corner (`ReadingCorner.jsx`, `data/articles.js`)
+Content is one array in `src/data/articles.js` (`number`, `kicker`, `title`, `blurb`,
+`readTime`, `url`, `color`), so a new article is one line; desktop shows up to 4 books.
+`ALL_ARTICLES_URL` (same file) drives the centred "All articles →" link; set it to `''`
+to hide it. The URLs are still placeholders until the real Medium links exist.
+- **Desktop**: books stand on a ledge. Each is a real `<a>` (keyboard focusable). On
+  hover / focus (pure CSS, `.rc-*` in `index.css`, on the inner element) it lifts 10px,
+  tilts to `rotateY(-8deg)`, deepens its shadow, shows a cream "N min read · Read →"
+  pill, and the other books dim to 70%. GSAP only animates the outer `.latest-read-item`
+  (drop-in, y -30 → 0, stagger 0.12, `power3.out`) and draws the heading underline.
+  Spine text uses `.book-title` (`rotate(180deg) scaleX(-1)`): the scaleX undoes the
+  mirroring of the 3D side face so it reads bottom-to-top.
+- **Mobile** (`md:hidden`): `ReadingTimeline`, a single-open accordion. Row headers are
+  `<button>`s (>= 56px) with `aria-expanded` / `aria-controls`; the "Read ↗" button is
+  >= 44px.
+- Background is `#15100C` with the Workshop's dot grid (a touch darker than the
+  Workshop's `#1a1410` so the curtain between them stays visible). Bottom padding is
+  120px on desktop so the next section follows right after the shelf.
 
 ### 12.6 The project page's mobile layout
 Unlike the rest of the site, the project page does **not** layer mobile onto one

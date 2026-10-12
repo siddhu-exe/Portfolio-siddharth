@@ -13,10 +13,10 @@ The site is a library.
   still exist in the data (`_CATEGORIES`) but are not shown as separate shelves;
   each row carries a short `tag` stamp instead (ML, SQL, VIZ, …).
 - A **book** = a single **project**, shown as a colored spine row.
-- Clicking a book opens the **book preview** — a modal that flips open like a
+- Clicking a book opens the **book preview** — a popup (`components/bookpreview/`) that flips open like a
   real book and shows the project's image, description, tech stack, and a
-  **View Full Project** button.
-- **View Full Project** navigates (with a full-page book-cover transition, in the
+  **Read the full chapter** button.
+- **Read the full chapter** navigates (with a full-page book-cover transition, in the
   book's own spine colour) to the **project page** at `/projects/:slug` — the full
   five-chapter case study.
 
