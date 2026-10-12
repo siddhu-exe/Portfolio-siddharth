@@ -234,6 +234,13 @@ body {
   transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+/* Phone: the tapped row presses in (scale .98) just before the popup sheet slides up. */
+.shelf-book.is-pressing,
+.shelf-book.is-pressing:active {
+  transform: scale(0.98);
+  transition: transform 110ms ease-out;
+}
+
 /* Reduced motion: no movement at all, only the hover shadow change remains */
 @media (prefers-reduced-motion: reduce) {
   .shelf-book,

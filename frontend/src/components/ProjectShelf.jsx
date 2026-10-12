@@ -2,9 +2,10 @@ import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
-import BookModal from './BookModal.jsx';
+import BookPreview, { initialBookRequest } from './bookpreview/BookPreview.jsx';
 import CursorBadge from './CursorBadge.jsx';
 import { metricOf, pileFor, selectShelfBooks, spineTheme, stampFor } from '../data/shelfBooks.js';
+import { buildBookPreviews, preloadBookImage } from '../data/bookPreview.js';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -14,7 +15,6 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 // false -> desktop uses the same unpinned batch reveal as mobile.
 const PIN_SHELF = false;
 
-const REDUCED = '(prefers-reduced-motion: reduce)';
 const pad = (n) => String(n).padStart(2, '0');
 
 /**
@@ -27,16 +27,17 @@ const pad = (n) => String(n).padStart(2, '0');
  * transitions only. They never share an element.
  */
 export default function ProjectShelf({ projects }) {
-  const [active, setActive] = useState(null);
+  // The open book: { slug, el } (el = the clicked spine; null when opened from a ?book= link)
+  const [open, setOpen] = useState(initialBookRequest);
   const [hovering, setHovering] = useState(false);
   const sectionRef = useRef(null);
   const headerRef = useRef(null);
   const stackRef = useRef(null);
   const listRef = useRef(null);
   const plankRef = useRef(null);
-  const pullTimer = useRef(null);
 
   const books = useMemo(() => selectShelfBooks(projects), [projects]);
+  const previews = useMemo(() => buildBookPreviews(books), [books]);
   // SUBJECTS = distinct tags, in order of first appearance on the shelf
   const subjects = useMemo(() => [...new Set(books.map(stampFor))], [books]);
 
@@ -296,8 +297,6 @@ export default function ProjectShelf({ projects }) {
     };
   }, [books]);
 
-  useLayoutEffect(() => () => clearTimeout(pullTimer.current), []);
-
   // Neighbour response: books beside the hovered/focused one shift a few px.
   // Set on the inner buttons through a CSS custom property (CSS owns the transform).
   const nudge = (i) => {
@@ -310,21 +309,11 @@ export default function ProjectShelf({ projects }) {
     });
   };
 
-  // 220ms pull-out on the inner button, then the modal opens exactly as before.
+  // The popup (BookPreview) plays the pull-out, fly and open itself, starting from this spine.
   const openBook = (p, btn) => {
     setHovering(false);
     nudge(null);
-    if (window.matchMedia(REDUCED).matches) {
-      setActive(p);
-      return;
-    }
-    if (pullTimer.current) return;
-    btn.classList.add('is-pulling');
-    pullTimer.current = setTimeout(() => {
-      pullTimer.current = null;
-      btn.classList.remove('is-pulling');
-      setActive(p);
-    }, 220);
+    setOpen({ slug: p.slug, el: btn });
   };
 
   return (
@@ -398,15 +387,21 @@ export default function ProjectShelf({ projects }) {
                     className="shelf-book grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-2 py-4 pl-9 pr-9 md:flex md:h-[var(--h)] md:gap-6 md:py-0 md:pl-10 md:pr-10"
                     style={{ '--spine': spine, '--foil': foil, '--h': height, color: text }}
                     aria-label={`Open ${p.title}`}
+                    data-book={p.slug}
+                    onPointerDown={() => preloadBookImage(previews[i])}
                     onMouseEnter={() => {
                       setHovering(true);
                       nudge(i);
+                      preloadBookImage(previews[i]);
                     }}
                     onMouseLeave={() => {
                       setHovering(false);
                       nudge(null);
                     }}
-                    onFocus={(e) => e.currentTarget.matches(':focus-visible') && nudge(i)}
+                    onFocus={(e) => {
+                      preloadBookImage(previews[i]);
+                      if (e.currentTarget.matches(':focus-visible')) nudge(i);
+                    }}
                     onBlur={() => nudge(null)}
                     onClick={(e) => openBook(p, e.currentTarget)}
                   >
@@ -471,7 +466,7 @@ export default function ProjectShelf({ projects }) {
         </div>
       </div>
 
-      <BookModal project={active} onClose={() => setActive(null)} />
+      <BookPreview previews={previews} request={open} onClose={() => setOpen(null)} />
     </section>
   );
 }
