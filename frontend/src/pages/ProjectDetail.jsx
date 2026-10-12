@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ProjectPage from '../components/project/ProjectPage.jsx';
 import { usePageTransition } from '../components/PageTransition.jsx';
 import { jumpToSection } from '../components/SmoothScroll.jsx';
@@ -24,6 +25,13 @@ export default function ProjectDetail() {
       jumpToSection('top');
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     };
+    // ScrollTrigger remembers the scroll position of the page we just left and puts it back on
+    // its next refresh (the old pins being torn down + the new page's triggers being created).
+    // That is what dropped production builds part-way down the page: forget it, and pin the
+    // scroll to the top through every refresh during the first moments of the page.
+    ScrollTrigger.clearScrollMemory();
+    ScrollTrigger.addEventListener('refresh', toTop);
+    ScrollTrigger.addEventListener('refreshInit', toTop);
     toTop();
     let raf2;
     const raf1 = requestAnimationFrame(() => {
@@ -31,7 +39,14 @@ export default function ProjectDetail() {
       raf2 = requestAnimationFrame(toTop);
     });
     const late = window.setTimeout(toTop, 450); // as the route cover starts to open
+    const release = window.setTimeout(() => {
+      ScrollTrigger.removeEventListener('refresh', toTop);
+      ScrollTrigger.removeEventListener('refreshInit', toTop);
+    }, 2000);
     return () => {
+      window.clearTimeout(release);
+      ScrollTrigger.removeEventListener('refresh', toTop);
+      ScrollTrigger.removeEventListener('refreshInit', toTop);
       cancelAnimationFrame(raf1);
       if (raf2) cancelAnimationFrame(raf2);
       window.clearTimeout(late);

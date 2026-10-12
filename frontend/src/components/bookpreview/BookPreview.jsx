@@ -116,6 +116,7 @@ export default function BookPreview({ previews, request, onClose }) {
     if (!sessionId) return undefined;
     const sess = sessionRef.current;
     const scrollY = window.scrollY;
+    const startPath = window.location.pathname;
     stopScroll();
 
     const appRoot = document.getElementById('root');
@@ -184,7 +185,9 @@ export default function BookPreview({ previews, request, onClose }) {
       appRoot?.removeAttribute('inert');
       appRoot?.removeAttribute('aria-hidden');
       startScroll();
-      if (Math.abs(window.scrollY - scrollY) > 0.5) window.scrollTo(0, scrollY); // restore exactly
+      // restore exactly, but only on the page the popup was opened on: after "Read the full chapter"
+      // the route has changed and the new page must stay at its own top
+      if (window.location.pathname === startPath && Math.abs(window.scrollY - scrollY) > 0.5) window.scrollTo(0, scrollY);
       slots.reset();
       // focus goes back to the spine that was clicked
       const target = sess.el?.isConnected ? sess.el : null;
