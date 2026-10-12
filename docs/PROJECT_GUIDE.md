@@ -104,7 +104,7 @@ spines), `.scrollbar-none`. Site-wide horizontal padding convention is
 `pages/Home.jsx` is the composition root. The visitor scrolls through this order:
 
 ```
-Hero (cream)                 ← intro, signature draws, name, Menu pill
+Hero (cream)                 ← intro, signature draws then lands in the header, headline, fixed Menu pill
   │  transition #1: hero is sticky; Statement's stepped podium rises over it,
   │                 hero sinks + fades (framer-motion useScroll on statementRef)
 Statement (black)            ← "Every book on this shelf…" pinned word-by-word reveal
@@ -139,7 +139,7 @@ Key structural facts (do not break these):
 **Sections (rendered by Home.jsx, in scroll order):**
 | File | Role |
 |------|------|
-| `Hero.jsx` | Landing: animated signature, typed greeting, big name, Menu pill. |
+| `Hero.jsx` | Landing: signature draws, glides into the header, then the headline/intro/CTAs reveal (see `HOME_HERO.md`). |
 | `Statement.jsx` | Black interlude; scroll-pinned word-by-word text reveal + drawn line. |
 | `ProjectShelf.jsx` | The Project Shelf: published projects as one flat stack of spine rows in `sort_order` (helpers in `data/shelfBooks.js`), with its own scroll/hover motion. Owns `BookModal`. |
 | `Toolbox.jsx` | "Tools Behind Every Chapter" — tech icons hanging on nails. |
@@ -162,7 +162,7 @@ Key structural facts (do not break these):
 | `project/ProjectPage.jsx` | The project-page template; mounts `LaptopLayout` (>= 1024px) or `MobileLayout` (one at a time). Styles in `project/project.css`, motion in `project/useProjectMotion.js`. See `CHAPTER_PAGE.md`. |
 | `ImageGallery.jsx` | Legacy: the old chapter-page image gallery. No longer used by the project page. |
 | `ContactModal.jsx` | The contact form; POSTs via `sendContact`. |
-| `MenuPill.jsx` | The hero's expandable nav pill. |
+| `MenuPill.jsx` | Fixed top-right Menu pill that morphs into the contents panel (portaled, `layoutId`). |
 | `Signature.jsx` | SVG signature with a draw-on animation (`play` prop). |
 | `MaskedRevealText.jsx` | Lines that slide up from a clip mask (`inView` prop). |
 | `Typewriter.jsx` / `CyclingTypewriter.jsx` | Typed text (one-shot / looping). |
@@ -255,8 +255,9 @@ takes only volume/tag/spine colour/key result from the shelf list.
 
 ## 11. Gotchas / non-obvious things
 
-- The **signature draw animation** should play once, when its section enters view
-  (`Signature` takes a `play` prop). Don't trigger it globally on load.
+- The **signature draw animation** plays on the home intro and in the footer
+  (`Signature` takes a `play` prop; `instant` renders it fully drawn). In the hero the
+  same element then lands in the header: see `HOME_HERO.md`.
 - The footer being `fixed` behind `<main>` is intentional (§5). If the footer
   ever "disappears" or shows through a gap mid-page, it's a `z-index` /
   transparent-stage issue in a transition, not the footer itself.
@@ -324,9 +325,8 @@ bookshelf (both mobile and desktop). Flow:
   then `jumpToSection('shelf')`. It also clears the history state
   (`navigate('.', { replace:true, state:null })`) so a **manual reload of `/`
   still plays the intro** from the top.
-- `Hero.jsx` takes `skipIntro`: initial `phase` is `'hero'` (not `'intro'`) and
-  the intro timer is guarded off, so no signature-draw/lift — the hero text block
-  still mounts (off-screen above the shelf).
+- `Hero.jsx` takes `skipIntro`: the signature is placed directly in its header slot
+  (already drawn, no lift) and only the short reveal runs (off-screen above the shelf).
 - `jumpToSection(target)` (`SmoothScroll.jsx`) is the **instant** (no-glide) twin
   of `scrollToSection`; uses Lenis `{ immediate: true }` when active, else native.
   The jump happens while the route-transition cover is still closed, so it's
