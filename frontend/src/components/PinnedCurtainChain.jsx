@@ -25,8 +25,10 @@ gsap.registerPlugin(ScrollTrigger);
  * sections' rendered height and made them appear to vanish).
  *
  * Motion: section i pins once its bottom hits the viewport; section i+1's
- * stage slides up from translateY(100%) to 0 over one viewport of scroll,
- * optionally dwelling fully-covered for `dwellVh` before the pin releases.
+ * stage slides up from translateY(100%) to 0 over `revealVh` of scroll
+ * (default 100), optionally holding first for `startOffsetVh` and dwelling
+ * fully-covered for `dwellVh` before the pin releases. Pin length =
+ * startOffsetVh + revealVh + dwellVh.
  *
  * Usage:
  *   <PinnedCurtainChain
@@ -97,7 +99,9 @@ export default function PinnedCurtainChain({ sections }) {
 
         gsap.set(curtainEl, { yPercent: 100 });
 
-        const revealVh = 100;
+        // Scroll length (in viewport heights) of the curtain itself. Together
+        // with startOffsetVh and dwellVh this is the whole pin length.
+        const revealVh = sections[i + 1].revealVh ?? 100;
         const totalVh = startOffsetVh + revealVh + dwellVh;
         const delayFraction = startOffsetVh / totalVh;
         const revealFraction = revealVh / totalVh;

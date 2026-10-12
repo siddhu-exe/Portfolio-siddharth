@@ -136,8 +136,10 @@ export default function Home() {
         <PinnedCurtainChain
           sections={[
             { node: <ProjectShelf projects={projects} /> },
-            { node: <Toolbox /> },
-            { node: <ReadingCorner />, dwellVh: 70, mode: 'scale' },
+            // Pin lengths are kept short on purpose: the Workshop is a single
+            // viewport of content, so a long pin is just blank scroll around it.
+            { node: <Toolbox />, revealVh: 30 },
+            { node: <ReadingCorner />, startOffsetVh: 20, revealVh: 30, mode: 'scale' },
           ]}
         />
       </main>
