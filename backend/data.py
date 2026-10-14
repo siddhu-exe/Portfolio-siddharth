@@ -100,8 +100,10 @@ _CATEGORIES = [
         [
             (
                 "BitcoinGraphGuard",
-                ["Graph ML"],
-                "A graph model scored on 822k Bitcoin wallets, reaching a PR-AUC of 0.801.",
+                ["Python", "XGBoost", "PyTorch Geometric", "FastAPI", "SHAP", "Captum", "React", "TypeScript", "Docker", "GitHub Actions"],
+                "Temporal fraud detection on the Elliptic++ Bitcoin graph: tabular and graph models "
+                "compared on a strict train-on-past protocol, the step-43 drift diagnosed, and a "
+                "drift-aware API with lag-safe monitoring.",
             ),
             (
                 "Alzheimer's MRI Detection",
@@ -186,6 +188,7 @@ _HEADER_META = {
     "FIFA World Cup Predictor": {"emoji": "⚽", "year": 2026},
     "Delhi Air Quality Risk Forecasting": {"emoji": "🌫️", "year": 2026},
     "LegalRAG": {"emoji": "⚖️", "year": 2026},
+    "BitcoinGraphGuard": {"emoji": "🛡️", "year": 2026},
 }
 
 # Per-project case-study copy, keyed by title. Every field is optional; the
@@ -241,10 +244,48 @@ _DETAILS = {
     },
     "BitcoinGraphGuard": {
         "sort_order": 3,
-        "tag": "DL",
+        "tag": "ML",
         "published": True,
-        "spineColor": "#2B2724",
-        "result": "PR-AUC 0.801 · 822k wallets",
+        "spineColor": "#7A4A12",
+        "result": "0.80 PR-AUC · drift diagnosed · lag-safe monitoring",
+        # Figures and wording come from projects/BitcoinGraphGuard/PORTFOLIO_SITE_GUIDE.md.
+        "subtitle": "Fraud detection that is tested on the future, and knows when it stops working.",
+        "description": "BitcoinGraphGuard benchmarks XGBoost, GraphSAGE, HeteroRGCN and a heterogeneous "
+        "graph transformer on the Elliptic++ Bitcoin dataset (203,769 transactions, 822,942 wallets, "
+        "49 time steps) using temporal splits only. A tuned XGBoost scores 0.80 PR-AUC on steps 35-49 "
+        "and beats every graph model, but every model collapses after step 43. Adversarial validation "
+        "shows covariate drift, not a vanished signal, and walk-forward retraining recovers it only "
+        "when labels arrive quickly. The best model is served through a FastAPI service that labels "
+        "each prediction with how reliable that time step has been, alongside a lag-safe drift "
+        "monitor and a React dashboard.",
+        "problem": "Fraud models trained on the past quietly fail when the world changes, and labels "
+        "arrive too late to notice.",
+        "data_text": "Elliptic++: 203,769 Bitcoin transactions and 822,942 wallets over 49 time steps; "
+        "157,205 transactions are unlabeled and never used as supervision.",
+        "metric": "0.80",
+        "metric_label": "Test PR-AUC (XGBoost, steps 35-49)",
+        "reflection": "The model was fine until the data changed. Knowing when to distrust it, and how "
+        "fast labels arrive, mattered more than a fancier architecture.",
+        "thumbnail": "/images/bitcoingraphguard/07_ui_overview.png",
+        "heroImage": "/images/bitcoingraphguard/01_system_architecture.png",
+        "links": {
+            "github": "https://github.com/siddhu-exe/BitcoinGraphGuard",
+            "demo": "https://bitcoin-graph-delta.vercel.app",
+        },
+        "gallery_overrides": {
+            "architecture": ["/images/bitcoingraphguard/01_system_architecture.png"],
+            "pipeline": ["/images/bitcoingraphguard/03_regime_shift_per_step.png"],
+            "ml": [
+                "/images/bitcoingraphguard/02_model_comparison.png",
+                "/images/bitcoingraphguard/05_xgboost_shap_top_features.png",
+                "/images/bitcoingraphguard/04_retraining_vs_label_delay.png",
+            ],
+            "platform": [
+                "/images/bitcoingraphguard/07_ui_overview.png",
+                "/images/bitcoingraphguard/06_monitoring_signal_tradeoff.png",
+            ],
+            "results": ["/images/bitcoingraphguard/04_retraining_vs_label_delay.png"],
+        },
     },
     "TruthMates": {
         "sort_order": 5,
