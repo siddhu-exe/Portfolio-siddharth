@@ -8,15 +8,15 @@ const CATS = [
   {
     category: 'Data Analytics',
     projects: [
-      { title: 'Customer Churn Analysis', tech: ['Pandas', 'SQL', 'Matplotlib'], sortOrder: 7, tag: 'SQL', published: false, spineColor: '#5C4A3A' },
-      { title: 'Retail Sales Analysis', tech: ['Pandas', 'NumPy', 'Seaborn'], sortOrder: 8, tag: 'SQL', published: false, spineColor: '#3F5B54' },
+      { title: 'Customer Churn Analysis', tech: ['Pandas', 'SQL', 'Matplotlib'], sortOrder: 8, tag: 'SQL', published: false, spineColor: '#5C4A3A' },
+      { title: 'Retail Sales Analysis', tech: ['Pandas', 'NumPy', 'Seaborn'], sortOrder: 9, tag: 'SQL', published: false, spineColor: '#3F5B54' },
     ],
   },
   {
     category: 'Data Visualization',
     projects: [
-      { title: 'Sales Dashboard (Tableau)', tech: ['Tableau', 'SQL', 'Excel'], sortOrder: 9, tag: 'VIZ', published: false, spineColor: '#8C3B2E' },
-      { title: 'IPL Data Visualization', tech: ['Python', 'Plotly', 'Pandas'], sortOrder: 10, tag: 'VIZ', published: false, spineColor: '#D9C3A0' },
+      { title: 'Sales Dashboard (Tableau)', tech: ['Tableau', 'SQL', 'Excel'], sortOrder: 10, tag: 'VIZ', published: false, spineColor: '#8C3B2E' },
+      { title: 'IPL Data Visualization', tech: ['Python', 'Plotly', 'Pandas'], sortOrder: 11, tag: 'VIZ', published: false, spineColor: '#D9C3A0' },
     ],
   },
   {
@@ -71,6 +71,28 @@ const CATS = [
             subtitle: 'The final outcome of the project and its key achievements.',
             images: ['/images/delhi-air-quality-risk-forecasting/50_alert_tradeoff.png', '/images/delhi-air-quality-risk-forecasting/51_diwali_identification.png'],
           },
+        ],
+      },
+      {
+        title: 'MineSafe AI',
+        tech: ['React', 'FastAPI', 'MongoDB', 'XGBoost', 'Prophet', 'Keras', 'Isolation Forest', 'Groq', 'WebSocket'],
+        thumbnail: '/images/minesafe-ai/10_architecture.png',
+        sortOrder: 5,
+        tag: 'ML',
+        published: true,
+        result: '4 trained models · 56K crack images · 60+ endpoints',
+        spineColor: '#4A433C',
+        emoji: '⛏️',
+        year: 2026,
+        description:
+          'MineSafe AI (Rockefeller) is a React + FastAPI + MongoDB platform that scores landslide and rockfall risk for each mine zone and routes alerts to the right people. Four models sit behind one API: XGBoost for zone risk, an EfficientNetV2S crack-severity CNN, Prophet rainfall forecasts for 36 districts, and an Isolation Forest for blast anomalies. Crack photos, blasts and rainfall land on one map, and critical events reach workers through WebSocket and browser push, with Admin, Safety Officer and Field Worker roles. A college team project of four; Siddharth built the frontend, the backend and all four models.',
+        links: { github: 'https://github.com/siddhu-exe/rockefeller', demo: null },
+        gallery: [
+          { key: 'architecture', heading: 'Architecture', subtitle: 'The complete system architecture, from data collection to prediction.', images: ['/images/minesafe-ai/10_architecture.png'] },
+          { key: 'pipeline', heading: 'Data Pipeline', subtitle: 'From raw data to production-ready predictions and features.', images: ['/images/minesafe-ai/20_data_model.png', '/images/minesafe-ai/31_data_distribution.png'] },
+          { key: 'ml', heading: 'Machine Learning', subtitle: 'How the model learns, evaluates, and predicts outcomes.', images: ['/images/minesafe-ai/32_ml_stack.png', '/images/minesafe-ai/35_crack_model.png', '/images/minesafe-ai/36_xgboost_results.png'] },
+          { key: 'platform', heading: 'Platform', subtitle: 'Interactive dashboards and prediction experiences built for users.', images: ['/images/minesafe-ai/33_crack_workflow.png', '/images/minesafe-ai/34_roles.png'] },
+          { key: 'results', heading: 'Results', subtitle: 'The final outcome of the project and its key achievements.', images: ['/images/minesafe-ai/30_risk_scoring.png'] },
         ],
       },
       {
@@ -160,7 +182,7 @@ const CATS = [
       {
         title: 'TruthMates',
         tech: ['CrewAI'],
-        sortOrder: 5,
+        sortOrder: 6,
         tag: 'AGENTS',
         published: true,
         result: '10-agent CrewAI pipeline',
@@ -170,7 +192,7 @@ const CATS = [
       {
         title: 'KalaChain',
         tech: [],
-        sortOrder: 6,
+        sortOrder: 7,
         tag: 'APP',
         published: true,
         result: '1st place · HackX SFIT 2026',

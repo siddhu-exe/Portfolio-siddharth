@@ -86,6 +86,13 @@ _CATEGORIES = [
                 "Delhi monitoring stations.",
             ),
             (
+                "MineSafe AI",
+                ["React", "FastAPI", "MongoDB", "XGBoost", "Prophet", "Keras", "Isolation Forest", "Groq", "WebSocket"],
+                "A full-stack mine-safety platform that scores landslide and rockfall risk per zone "
+                "with four ML models, tracks blasts, cracks and rainfall, and routes alerts to the "
+                "right people in real time.",
+            ),
+            (
                 "FIFA World Cup Predictor",
                 ["Python", "XGBoost", "scikit-learn", "Pandas", "NumPy"],
                 "Dual stage-aware XGBoost models predicting every match of the 48-team "
@@ -189,6 +196,7 @@ _HEADER_META = {
     "Delhi Air Quality Risk Forecasting": {"emoji": "🌫️", "year": 2026},
     "LegalRAG": {"emoji": "⚖️", "year": 2026},
     "BitcoinGraphGuard": {"emoji": "🛡️", "year": 2026},
+    "MineSafe AI": {"emoji": "⛏️", "year": 2026},
 }
 
 # Per-project case-study copy, keyed by title. Every field is optional; the
@@ -287,22 +295,59 @@ _DETAILS = {
             "results": ["/images/bitcoingraphguard/04_retraining_vs_label_delay.png"],
         },
     },
-    "TruthMates": {
+    "MineSafe AI": {
         "sort_order": 5,
+        "tag": "ML",
+        "published": True,
+        "spineColor": "#4A433C",
+        "result": "4 trained models · 56K crack images · 60+ endpoints",
+        # Figures and wording come from projects/Rockefeller/ROCKEFELLER_PORTFOLIO.md.
+        "subtitle": "Zone risk, crack reports and emergency alerts on one map.",
+        "description": "MineSafe AI (Rockefeller) is a React + FastAPI + MongoDB platform that scores "
+        "landslide and rockfall risk for each mine zone and routes alerts to the right people. Four "
+        "models sit behind one API: XGBoost for zone risk, an EfficientNetV2S crack-severity CNN, "
+        "Prophet rainfall forecasts for 36 districts, and an Isolation Forest for blast anomalies. "
+        "Crack photos, blasts and rainfall land on one map, and critical events reach workers through "
+        "WebSocket and browser push, with Admin, Safety Officer and Field Worker roles. A college team "
+        "project of four; Siddharth built the frontend, the backend and all four models.",
+        "problem": "Rainfall, slope stability, blasting and crack inspections live in separate tools, "
+        "so risk is noticed late and alerts reach the wrong people.",
+        "data_text": "45 seeded zones across 24 districts, 56,092 crack images (SDNET2018) and 65,736 "
+        "IMD rainfall records for 36 districts.",
+        "metric": "87.4%",
+        "metric_label": "Crack-model validation accuracy (84.9% majority baseline)",
+        "reflection": "The XGBoost score is on synthetic data, so the real lesson was building a "
+        "resilient system: a rule-engine fallback keeps scoring when a model fails to load.",
+        "thumbnail": "/images/minesafe-ai/10_architecture.png",
+        "heroImage": "/images/minesafe-ai/10_architecture.png",
+        "links": {
+            "github": "https://github.com/siddhu-exe/rockefeller",
+            "demo": None,
+        },
+        "gallery_overrides": {
+            "architecture": ["/images/minesafe-ai/10_architecture.png"],
+            "pipeline": ["/images/minesafe-ai/20_data_model.png", "/images/minesafe-ai/31_data_distribution.png"],
+            "ml": ["/images/minesafe-ai/32_ml_stack.png", "/images/minesafe-ai/35_crack_model.png", "/images/minesafe-ai/36_xgboost_results.png"],
+            "platform": ["/images/minesafe-ai/33_crack_workflow.png", "/images/minesafe-ai/34_roles.png"],
+            "results": ["/images/minesafe-ai/30_risk_scoring.png"],
+        },
+    },
+    "TruthMates": {
+        "sort_order": 6,
         "tag": "AGENTS",
         "published": True,
         "spineColor": "#B5533C",
         "result": "10-agent CrewAI pipeline",
     },
     "KalaChain": {
-        "sort_order": 6,
+        "sort_order": 7,
         "tag": "APP",
         "published": True,
         "spineColor": "#C9963C",
         "result": "1st place · HackX SFIT 2026",
     },
     "Customer Churn Analysis": {
-        "sort_order": 7,
+        "sort_order": 8,
         "tag": "SQL",
         "published": False,
         "spineColor": "#5C4A3A",
@@ -322,7 +367,7 @@ _DETAILS = {
         "statistics ever could.",
     },
     "Retail Sales Analysis": {
-        "sort_order": 8,
+        "sort_order": 9,
         "tag": "SQL",
         "published": False,
         "spineColor": "#3F5B54",
@@ -340,7 +385,7 @@ _DETAILS = {
         "honest, the insights almost wrote themselves.",
     },
     "Sales Dashboard (Tableau)": {
-        "sort_order": 9,
+        "sort_order": 10,
         "tag": "VIZ",
         "published": False,
         "spineColor": "#8C3B2E",
@@ -357,7 +402,7 @@ _DETAILS = {
         "asking for numbers because they already trust the ones on screen.",
     },
     "IPL Data Visualization": {
-        "sort_order": 10,
+        "sort_order": 11,
         "tag": "VIZ",
         "published": False,
         "spineColor": "#D9C3A0",
