@@ -72,8 +72,8 @@ function ArticleBook({ article }) {
                 <span className="mt-2 block text-[13.5px] leading-snug text-white/[.82]">{article.blurb}</span>
               </span>
 
-              <span className="mt-3 block border-t border-white/20 pt-2 text-[8.5px] font-semibold uppercase tracking-[0.2em] text-white/60">
-                S. Dongardive
+              <span className="mt-3 block border-t border-white/20 pt-2 font-display text-[11px] italic tracking-[0.1em] text-white/70">
+                Siddharth Dongardive
               </span>
             </span>
           </span>

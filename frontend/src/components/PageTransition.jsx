@@ -13,6 +13,60 @@ export const usePageTransition = () => useContext(Ctx);
  * book), the route swaps underneath while it's closed, then it swings open to
  * reveal the new page.
  */
+/**
+ * One composited layer only: the cover swings shut from the left hinge going INTO a book, and from
+ * the right hinge coming BACK to the library (landAt set). Transform + opacity only, no extra
+ * moving layers, so it stays on the GPU. Text appears with a single fade.
+ */
+function Cover({ state, onSettled }) {
+  const closing = state.phase === 'in';
+  const back = Boolean(state.landAt);
+  const open = back ? 90 : -90;
+  const origin = back ? 'right center' : 'left center';
+
+  return (
+    <div className="fixed inset-0 z-[100]" style={{ perspective: '1800px' }}>
+      <motion.div
+        className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden"
+        style={{ transformOrigin: origin, backgroundColor: state.color, backfaceVisibility: 'hidden', willChange: 'transform' }}
+        initial={{ rotateY: open }}
+        animate={{ rotateY: closing ? 0 : open }}
+        transition={{ duration: closing ? 0.7 : 0.8, ease: [0.45, 0, 0.2, 1] }}
+        onAnimationComplete={onSettled}
+      >
+        {/* static tonal depth, spine gutter and frame */}
+        <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/30" />
+        <span
+          className={`pointer-events-none absolute inset-y-0 w-16 from-black/50 to-transparent ${
+            back ? 'right-0 bg-gradient-to-l' : 'left-0 bg-gradient-to-r'
+          }`}
+        />
+        <span className="pointer-events-none absolute inset-4 rounded-xl border border-cream/30 md:inset-6" />
+
+        <motion.div
+          className="relative flex flex-col items-center px-10 text-center text-cream"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: closing ? 1 : 0 }}
+          transition={{ duration: 0.35, delay: closing ? 0.35 : 0 }}
+        >
+          {state.category && (
+            <span className="font-display text-[11px] font-medium uppercase tracking-[0.42em] text-cream/80 md:text-sm">
+              {state.category}
+            </span>
+          )}
+          <span className="mt-4 max-w-3xl font-display text-4xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
+            {state.title}
+          </span>
+          <span className="mt-7 h-px w-12 bg-terracotta" />
+          <span className="mt-5 font-display text-sm italic tracking-[0.14em] text-cream/85 md:text-lg">
+            Siddharth Dongardive
+          </span>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function PageTransitionProvider({ children }) {
   const [state, setState] = useState(null); // { path, color, title, category, phase }
   const navigate = useNavigate();
@@ -42,58 +96,7 @@ export default function PageTransitionProvider({ children }) {
     <Ctx.Provider value={transitionTo}>
       {children}
 
-      {state && (
-        <div className="fixed inset-0 z-[100]" style={{ perspective: '1800px' }}>
-          {/* sweeping shadow cast by the cover as it closes */}
-          <motion.div
-            className="absolute inset-0 bg-black"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: state.phase === 'in' ? 0.55 : 0 }}
-            transition={{ duration: state.phase === 'in' ? 0.65 : 0.75, ease: 'easeOut' }}
-          />
-
-          {/* the cover */}
-          <motion.div
-            className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden"
-            style={{
-              transformOrigin: 'left center',
-              backgroundColor: state.color,
-              backfaceVisibility: 'hidden',
-            }}
-            initial={{ rotateY: -92 }}
-            animate={{ rotateY: state.phase === 'in' ? 0 : -92 }}
-            transition={{
-              duration: state.phase === 'in' ? 0.75 : 0.85,
-              ease: [0.76, 0, 0.24, 1],
-            }}
-            onAnimationComplete={onCoverSettled}
-          >
-            {/* cloth texture + tonal depth */}
-            <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/30" />
-            <span className="pointer-events-none absolute inset-0 opacity-20 [background:repeating-linear-gradient(45deg,transparent_0,transparent_4px,rgba(255,255,255,0.05)_4px,rgba(255,255,255,0.05)_5px)]" />
-            {/* spine gutter on the hinge side + foil frame */}
-            <span className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-black/50 to-transparent" />
-            <span className="pointer-events-none absolute inset-4 rounded-xl border border-white/25 md:inset-6" />
-            <span className="pointer-events-none absolute inset-5 rounded-lg border border-white/10 md:inset-8" />
-
-            {/* cover imprint */}
-            <div className="relative flex flex-col items-center px-10 text-center">
-              {state.category && (
-                <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-white/60 md:text-xs">
-                  {state.category}
-                </span>
-              )}
-              <span className="mt-3 max-w-3xl text-3xl font-bold leading-tight tracking-tight text-white md:text-6xl">
-                {state.title}
-              </span>
-              <span className="mt-6 h-px w-12 bg-white/40" />
-              <span className="mt-4 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/60 md:text-xs">
-                S. Dongardive
-              </span>
-            </div>
-          </motion.div>
-        </div>
-      )}
+      {state && <Cover state={state} onSettled={onCoverSettled} />}
     </Ctx.Provider>
   );
 }
