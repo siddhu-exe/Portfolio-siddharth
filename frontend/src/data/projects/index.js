@@ -5,9 +5,10 @@ import legalrag from './legalrag.js';
 import delhi from './delhi-air-quality-risk-forecasting.js';
 import bitcoin from './bitcoingraphguard.js';
 import fifa from './fifa-world-cup-predictor.js';
+import minesafe from './minesafe-ai.js';
 import truthmates from './truthmates.js';
 import kalachain from './kalachain.js';
 
 export const projectContent = Object.fromEntries(
-  [legalrag, delhi, bitcoin, fifa, truthmates, kalachain].map((p) => [p.slug, p])
+  [legalrag, delhi, bitcoin, fifa, minesafe, truthmates, kalachain].map((p) => [p.slug, p])
 );
