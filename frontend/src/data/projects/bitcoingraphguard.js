@@ -7,7 +7,7 @@ export default {
   slug: 'bitcoingraphguard',
   title: 'BitcoinGraphGuard',
   tagline:
-    'Temporal fraud detection on the Elliptic++ Bitcoin graph, tested on the future, with a drift-aware API that knows when it stops working.',
+    'A Bitcoin fraud detector that knows when to stop trusting itself, built on real Elliptic++ data and tested on the future, never a random split.',
   year: 2026,
   links: {
     demo: 'https://bitcoin-graph-delta.vercel.app',
@@ -17,7 +17,7 @@ export default {
   // Shelf popup only (data/bookPreview.js); the project page ignores this block.
   preview: {
     summary:
-      'XGBoost, GraphSAGE, HeteroRGCN and HGT are benchmarked on Elliptic++ with strict temporal splits. A tuned XGBoost wins at 0.80 PR-AUC, and the step-43 collapse is diagnosed as covariate drift.',
+      'XGBoost, GraphSAGE, HeteroRGCN and HGT are benchmarked on Elliptic++ with strict temporal splits. A tuned XGBoost wins at 0.80 PR-AUC, all four collapse after step 43, and retraining recovers only if labels arrive fast.',
     image: {
       src: '/images/bitcoingraphguard/07_ui_overview.png',
       alt: 'BitcoinGraphGuard dashboard overview page with the headline and four project cards.',
@@ -42,14 +42,14 @@ export default {
     { value: '49', label: 'Automated tests' },
   ],
   overview: {
-    lead: 'BitcoinGraphGuard tests fraud models on the future, not a random split. Its real focus is knowing when a model stops working.',
-    leadAccent: 'knowing when',
+    lead: 'BitcoinGraphGuard is a Bitcoin fraud detector that knows when to stop trusting itself. It tests models on the future, not a random split, and watches for the moment they stop working.',
+    leadAccent: 'stop trusting itself',
     approach:
       'XGBoost, GraphSAGE, HeteroRGCN and a heterogeneous graph transformer are compared under one frozen temporal protocol, then the step-43 collapse is diagnosed.',
     evaluation:
-      'Fit on steps 1-24, validate on 25-34, test on 35-49. PR-AUC is the primary metric, and retraining is tested walk-forward under label delay.',
+      'Fit on steps 1-24, validate on 25-34, test on 35-49. PR-AUC is the primary metric, and retraining is tested walk-forward under label delay. Alerts can be ranked top-K per step instead of using one fixed threshold; the best possible recall is the sum over steps of min(K, positives) divided by total positives.',
     serving:
-      'A FastAPI service labels every prediction with how reliable that time step has been, next to a lag-safe drift monitor and a React dashboard.',
+      'A FastAPI service labels every prediction with how reliable that time step has been, next to a lag-safe drift monitor and a React dashboard at bitcoin-graph-delta.vercel.app.',
   },
   stack: [
     { group: 'Models', items: ['XGBoost', 'PyTorch Geometric'] },
@@ -89,7 +89,7 @@ export default {
       ],
       figures: [
         {
-          src: '/images/bitcoingraphguard/01_system_architecture.png',
+          src: '/images/bitcoingraphguard/card-03_system_architecture.png',
           caption: 'Dataset to notebooks to artifacts, then the API, the monitor and the dashboard.',
           alt: 'System architecture diagram of BitcoinGraphGuard from the Elliptic++ dataset through notebooks and saved artifacts to the API, monitor and dashboard.',
         },
@@ -141,7 +141,7 @@ export default {
         { title: 'SHAP, Captum, relation ablation', direction: 'what each model relies on' },
       ],
       finding:
-        'A well-tuned XGBoost beat every graph model under the same protocol. The graph models were tuned less deeply, so this is a result for this protocol, not a claim about graph methods. XGBoost relies 61.5% on local features, and Local_feature_53 is its top SHAP feature.',
+        'A well-tuned XGBoost beat every graph model under the same protocol (0.80 against 0.62 for GraphSAGE). All four models then collapsed after step 43: XGBoost fell from 0.92 PR-AUC on steps 35-42 to 0.04 on steps 43-49. The graph models were tuned less deeply, so this is a result for this protocol, not a claim about graph methods. XGBoost relies 61.5% on local features, and Local_feature_53 is its top SHAP feature.',
       figures: [
         {
           src: '/images/bitcoingraphguard/02_model_comparison.png',
@@ -149,14 +149,19 @@ export default {
           alt: 'Bar chart of test PR-AUC for XGBoost, GraphSAGE, HGT, MLP, HeteroRGCN, logistic regression and the prevalence baseline.',
         },
         {
+          src: '/images/bitcoingraphguard/card-02_before_after_step43.png',
+          caption: 'All four models, PR-AUC on steps 35-42 versus 43-49.',
+          alt: 'Bar chart of PR-AUC for XGBoost, GraphSAGE, HeteroRGCN and HGT before and after step 43, with every model collapsing to about 0.04 to 0.06.',
+        },
+        {
+          src: '/images/bitcoingraphguard/card-01_label_delay_recovery.png',
+          caption: 'Frozen versus expanding-window retraining by label delay, steps 43-49, with 95% intervals.',
+          alt: 'Chart of PR-AUC for a frozen model and expanding-window retraining at label delays of 1, 2, 3 and 5 steps: 0.69, 0.39, 0.14 and 0.11.',
+        },
+        {
           src: '/images/bitcoingraphguard/05_xgboost_shap_top_features.png',
           caption: 'The 15 features XGBoost relies on most, by SHAP value.',
           alt: 'Bar chart of the top 15 SHAP features for the XGBoost model.',
-        },
-        {
-          src: '/images/bitcoingraphguard/04_retraining_vs_label_delay.png',
-          caption: 'Static versus expanding-window retraining by label delay, with 95% intervals.',
-          alt: 'Chart of PR-AUC for static and expanding-window retraining policies at label delays of 1 to 5 steps.',
         },
       ],
     },
@@ -176,7 +181,7 @@ export default {
         },
         {
           title: 'Lag-safe monitor',
-          body: 'A decision at step t reads labels from steps up to t minus the delay only. LagViolationError blocks anything that would read a label not yet available.',
+          body: 'A decision at step t reads labels from steps up to t minus the delay only. With a one-step delay the label-free score-shift channel fires at step 43 and the performance channel at step 44, with no critical alarm in steps 35-42. Validated on one drift event.',
         },
         {
           title: 'CI consistency gates',
@@ -197,7 +202,7 @@ export default {
       metrics: [
         { value: '0.80', label: 'Test PR-AUC (XGBoost)' },
         { value: '0.92 → 0.04', label: 'PR-AUC, steps 35-42 vs 43-49' },
-        { value: '0.69', label: 'PR-AUC with retraining at 1-step delay' },
+        { value: '0.69 → 0.14', label: 'PR-AUC with retraining at a 1-step vs 3-step label delay (0.39 at 2, 0.11 at 5; frozen 0.04)' },
       ],
       table: {
         title: 'Test scoreboard, steps 35-49',
@@ -216,6 +221,7 @@ export default {
         'Tune the graph models as deeply as XGBoost to make the comparison fair.',
         'Validate the monitoring thresholds on more than one dataset and one regime change.',
         'Add experiment tracking and data versioning (planned, not built).',
+        'Limits to keep in mind: one drift event, the real label delay is unknown, and XGBoost is the deployed model.',
       ],
     },
   },

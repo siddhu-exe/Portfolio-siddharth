@@ -128,7 +128,7 @@ const CATS = [
       {
         title: 'BitcoinGraphGuard',
         tech: ['Python', 'XGBoost', 'PyTorch Geometric', 'FastAPI', 'SHAP', 'Captum', 'React', 'TypeScript', 'Docker', 'GitHub Actions'],
-        thumbnail: '/images/bitcoingraphguard/07_ui_overview.png',
+        thumbnail: '/images/bitcoingraphguard/card-thumbnail.png',
         sortOrder: 3,
         tag: 'ML',
         published: true,
@@ -137,14 +137,14 @@ const CATS = [
         emoji: '🛡️',
         year: 2026,
         description:
-          'BitcoinGraphGuard benchmarks XGBoost, GraphSAGE, HeteroRGCN and a heterogeneous graph transformer on the Elliptic++ Bitcoin dataset (203,769 transactions, 822,942 wallets, 49 time steps) using temporal splits only. A tuned XGBoost scores 0.80 PR-AUC on steps 35-49 and beats every graph model, but every model collapses after step 43. Adversarial validation shows covariate drift, not a vanished signal, and walk-forward retraining recovers it only when labels arrive quickly. The best model is served through a FastAPI service that labels each prediction with how reliable that time step has been, alongside a lag-safe drift monitor and a React dashboard.',
+          'BitcoinGraphGuard is a Bitcoin fraud detector that knows when to stop trusting itself, built on real Elliptic++ data (203,769 transactions, 822,942 wallets, about 4.4M edges, 49 time steps) and tested on the future, never a random split. A tuned XGBoost scores 0.80 PR-AUC on steps 35-49 and beats the best graph model (0.62), but all four models collapse after step 43. Walk-forward retraining recovers performance only when labels arrive fast: 0.69 PR-AUC at a one-step label delay, 0.39 at two, 0.14 at three and 0.11 at five. The best model is served through a FastAPI service that labels each prediction with how reliable that time step has been, alongside a lag-safe drift monitor and a React dashboard.',
         links: { github: 'https://github.com/siddhu-exe/BitcoinGraphGuard', demo: 'https://bitcoin-graph-delta.vercel.app' },
         gallery: [
-          { key: 'architecture', heading: 'Architecture', subtitle: 'The complete system architecture, from data collection to prediction.', images: ['/images/bitcoingraphguard/01_system_architecture.png'] },
+          { key: 'architecture', heading: 'Architecture', subtitle: 'The complete system architecture, from data collection to prediction.', images: ['/images/bitcoingraphguard/card-03_system_architecture.png'] },
           { key: 'pipeline', heading: 'Data Pipeline', subtitle: 'From raw data to production-ready predictions and features.', images: ['/images/bitcoingraphguard/03_regime_shift_per_step.png'] },
-          { key: 'ml', heading: 'Machine Learning', subtitle: 'How the model learns, evaluates, and predicts outcomes.', images: ['/images/bitcoingraphguard/02_model_comparison.png', '/images/bitcoingraphguard/05_xgboost_shap_top_features.png', '/images/bitcoingraphguard/04_retraining_vs_label_delay.png'] },
+          { key: 'ml', heading: 'Machine Learning', subtitle: 'How the model learns, evaluates, and predicts outcomes.', images: ['/images/bitcoingraphguard/02_model_comparison.png', '/images/bitcoingraphguard/card-02_before_after_step43.png', '/images/bitcoingraphguard/card-01_label_delay_recovery.png'] },
           { key: 'platform', heading: 'Platform', subtitle: 'Interactive dashboards and prediction experiences built for users.', images: ['/images/bitcoingraphguard/07_ui_overview.png', '/images/bitcoingraphguard/06_monitoring_signal_tradeoff.png'] },
-          { key: 'results', heading: 'Results', subtitle: 'The final outcome of the project and its key achievements.', images: ['/images/bitcoingraphguard/04_retraining_vs_label_delay.png'] },
+          { key: 'results', heading: 'Results', subtitle: 'The final outcome of the project and its key achievements.', images: ['/images/bitcoingraphguard/card-01_label_delay_recovery.png'] },
         ],
       },
       { title: "Alzheimer's MRI Detection", tech: ['TensorFlow', 'CNN', 'OpenCV'] },
