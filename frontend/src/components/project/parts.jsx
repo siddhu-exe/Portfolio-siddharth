@@ -46,13 +46,16 @@ export function FigureImage({ fig, fallbackAlt, dark = false, className = '' }) 
         dark ? 'border border-[rgba(245,240,234,.16)] bg-[#F5F0EA]' : 'pp-card'
       } ${className}`}
     >
-      <img
-        src={fig.src}
-        alt={altOf(fig, fallbackAlt)}
-        loading="lazy"
-        decoding="async"
-        className="block h-auto w-full rounded-[8px]"
-      />
+      <picture>
+        {fig.mobileSrc && <source media="(max-width: 1023px)" srcSet={fig.mobileSrc} />}
+        <img
+          src={fig.src}
+          alt={altOf(fig, fallbackAlt)}
+          loading="lazy"
+          decoding="async"
+          className="block h-auto w-full rounded-[8px]"
+        />
+      </picture>
     </div>
   );
 }

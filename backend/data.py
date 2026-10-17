@@ -80,10 +80,9 @@ _CATEGORIES = [
         [
             (
                 "Delhi Air Quality Risk Forecasting",
-                ["Python", "PostgreSQL", "LightGBM", "Statsmodels", "Streamlit"],
-                "Operational multi-horizon forecasting (1h, 6h, 24h), cost-sensitive "
-                "CPCB risk alerting, and econometric policy evaluation across 7 continuous "
-                "Delhi monitoring stations.",
+                ["Python", "PostgreSQL", "LightGBM", "Statsmodels", "FastAPI", "React"],
+                "Hourly AQI and PM2.5 forecasts for 7 Delhi stations, scored against "
+                "persistence, on a live pipeline (GitHub Actions, Supabase, FastAPI, React).",
             ),
             (
                 "MineSafe AI",
@@ -412,27 +411,27 @@ _DETAILS = {
         "pointing at one idea per view, the whole thing clicked.",
     },
     "Delhi Air Quality Risk Forecasting": {
-        "subtitle": "Forecasts, alerts and a causal test, all scored against persistence.",
-        # Project Shelf fields. Figures come from projects/Air quality risk forecasting/.
+        "subtitle": "Hourly forecasts for seven Delhi stations, all scored against persistence.",
+        # Project Shelf fields. Figures come from the project repo's portfolio/images.
         "sort_order": 2,
         "tag": "ML",
         "published": True,
-        "result": "+11% 24h skill vs persistence · MAE 98.24 → 34.11",
+        "result": "6h skill vs persistence −0.05 → +0.30 · a rule beats ML at 1h",
         "spineColor": "#2F4A3A",
-        "thumbnail": "/images/delhi-air-quality-risk-forecasting/40_dashboard_overview.png",
-        "heroImage": "/images/delhi-air-quality-risk-forecasting/40_dashboard_overview.png",
-        "description": "An end-to-end operational ML system and econometric audit delivering 1h/6h/24h air quality forecasts, automated CPCB/GRAP emergency risk alerts, and causal evaluation of Delhi's Diwali firecracker ban across 7 continuous monitoring stations.",
+        "thumbnail": "/images/delhi-air-quality-risk-forecasting/dashboard_overview_desktop.webp",
+        "heroImage": "/images/delhi-air-quality-risk-forecasting/dashboard_overview_desktop.webp",
+        "description": "Hourly air-quality forecasts for seven Delhi stations, every one scored against \"copy the last value\", on a live pipeline that found and fixed the gap between the data the models were trained on and the data they are served.",
         "links": {
             "github": "https://github.com/siddhu-exe/Air-Quality-Risk-Forecasting",
-            "demo": "https://siddhu-exe-air-quality-risk-forecasting-dashboardapp-w5wwow.streamlit.app/",
+            "demo": "https://air-quality-risk-forecasting.vercel.app",
             "kaggle": "https://www.kaggle.com/datasets/siddharthdongardive/delhi-air-quality-monitoring-dataset-2023-2026",
         },
         "gallery_overrides": {
-            "architecture": ["/images/delhi-air-quality-risk-forecasting/10_architecture.png"],
-            "pipeline": ["/images/delhi-air-quality-risk-forecasting/20_data_model.png", "/images/delhi-air-quality-risk-forecasting/21_splits_timeline.png"],
-            "ml": ["/images/delhi-air-quality-risk-forecasting/30_skill_vs_persistence.png", "/images/delhi-air-quality-risk-forecasting/31_extrapolation_fix.png", "/images/delhi-air-quality-risk-forecasting/32_episode_forecast.png"],
-            "platform": ["/images/delhi-air-quality-risk-forecasting/40_dashboard_overview.png", "/images/delhi-air-quality-risk-forecasting/43_dashboard_model_health.png"],
-            "results": ["/images/delhi-air-quality-risk-forecasting/50_alert_tradeoff.png", "/images/delhi-air-quality-risk-forecasting/51_diwali_identification.png"],
+            "architecture": ["/images/delhi-air-quality-risk-forecasting/10_architecture.webp"],
+            "pipeline": ["/images/delhi-air-quality-risk-forecasting/21_splits_timeline.webp"],
+            "ml": ["/images/delhi-air-quality-risk-forecasting/60_train_serve_skew.webp", "/images/delhi-air-quality-risk-forecasting/61_baselines_by_horizon.webp", "/images/delhi-air-quality-risk-forecasting/31_extrapolation_fix.webp", "/images/delhi-air-quality-risk-forecasting/32_episode_forecast.webp"],
+            "platform": ["/images/delhi-air-quality-risk-forecasting/dashboard_overview_desktop.webp", "/images/delhi-air-quality-risk-forecasting/dashboard_model_health_desktop.webp", "/images/delhi-air-quality-risk-forecasting/dashboard_stations_desktop.webp"],
+            "results": ["/images/delhi-air-quality-risk-forecasting/62_replay_skill.webp", "/images/delhi-air-quality-risk-forecasting/30_skill_vs_persistence.webp", "/images/delhi-air-quality-risk-forecasting/50_alert_tradeoff.webp", "/images/delhi-air-quality-risk-forecasting/51_diwali_identification.webp"],
         },
     },
     "FIFA World Cup Predictor": {

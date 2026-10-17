@@ -170,6 +170,7 @@ export function buildProjectPage(slug, books) {
     demo: realUrl(c.links?.demo),
     github: realUrl(c.links?.github),
     kaggle: realUrl(c.links?.kaggle),
+    api: realUrl(c.links?.api),
   };
 
   const chaptersData = normaliseChapters(c.chapters, links);

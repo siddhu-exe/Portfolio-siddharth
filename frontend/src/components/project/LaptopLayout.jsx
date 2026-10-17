@@ -107,6 +107,7 @@ function Hero({ page }) {
     page.links.demo && { href: page.links.demo, label: 'LIVE DEMO', cls: 'bg-terracotta text-[#1A1410]' },
     page.links.kaggle && { href: page.links.kaggle, label: 'KAGGLE', cls: 'bg-[#20BEFF] text-ink' },
     page.links.github && { href: page.links.github, label: 'GITHUB', cls: 'bg-ink text-cream' },
+    page.links.api && { href: page.links.api, label: 'API DOCS', cls: 'border border-ink/40 bg-cream text-ink' },
   ].filter(Boolean);
   return (
     <header className="pp-12 items-stretch pt-16">
